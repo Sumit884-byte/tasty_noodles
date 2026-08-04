@@ -6,10 +6,15 @@
     <title>SLURP! - Tastiest Noodles on the Planet</title>
     <meta name="description" content="SLURP! — The tastiest noodles on the planet. Try to catch them, then order Dragon Breath Chili Oil, Midnight Tonkotsu, and Garlic Butter Dan Dan.">
     <link rel="icon" type="image/png" href="assets/slurp-logo.png">
+    <meta property="og:title" content="SLURP! — Tastiest Noodles on the Planet">
+    <meta property="og:description" content="Try to catch the noodles, build your bowl, and slurp the tastiest comfort food on Earth.">
+    <meta property="og:image" content="https://tastynoodles.vercel.app/assets/slurp-logo.png">
+    <meta property="og:url" content="https://tastynoodles.vercel.app">
+    <meta name="twitter:card" content="summary_large_image">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js for lightweight state management -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -666,13 +671,56 @@
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .skip-link {
+            position: absolute;
+            top: -100%;
+            left: 1rem;
+            z-index: 100;
+            background: #ea580c;
+            color: white;
+            font-weight: 800;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: top 0.2s ease;
+        }
+        .skip-link:focus {
+            top: 1rem;
+            outline: 2px solid #1c1917;
+            outline-offset: 2px;
+        }
+        .cart-badge {
+            min-width: 1.25rem;
+            height: 1.25rem;
+            line-height: 1.25rem;
+            font-size: 0.65rem;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .splash-scene { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
+            .splash-smear, .splash-strand, .splash-garnish, .splash-cluster-main, .splash-cluster-sat, .splash-modal, .splash-backdrop { animation: none !important; opacity: 1 !important; }
+            .globe-texture-track, .globe-orbit, .globe-noodle-ring, .alien-rider, .story-star, .alien-trail, .plate-steam-wisp { animation: none !important; }
+        }
     </style>
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('slurpApp', () => ({
                 thrown: new URLSearchParams(window.location.search).has('splash'),
-                cleaned: false,
+                mobileMenuOpen: false,
                 plateSaved: false,
+                orderPlaced: false,
+                checkoutError: '',
+                cart: [],
+                menuCatalog: {
+                    'dragon-breath': { name: 'Dragon Breath Chili Oil', price: 14.99 },
+                    'midnight-tonkotsu': { name: 'Midnight Tonkotsu', price: 16.50 },
+                    'garlic-dan-dan': { name: 'Garlic Butter Dan Dan', price: 15.20 },
+                },
                 customPlate: {
                     broth: 'tonkotsu',
                     noodles: 'thick',
@@ -695,6 +743,47 @@
                     { id: 'sesame', label: 'Sesame' },
                     { id: 'peanut', label: 'Crushed Peanuts' },
                 ],
+                navLinks: [
+                    { href: '#hero', label: 'The Dare' },
+                    { href: '#menu', label: 'Noodle Vault' },
+                    { href: '#build', label: 'Build Your Bowl' },
+                    { href: '#story', label: 'Galactic Slurp' },
+                    { href: '#reviews', label: 'Slurp Squad' },
+                    { href: '#social', label: 'Social Slurp' },
+                ],
+                closeMobileMenu() { this.mobileMenuOpen = false; },
+                handleEscape() {
+                    if (this.thrown) this.dismissSplash();
+                    else if (this.mobileMenuOpen) this.mobileMenuOpen = false;
+                },
+                dismissSplash() { this.thrown = false; },
+                throwNoodles() {
+                    this.thrown = true;
+                    this.$nextTick(() => {
+                        if (typeof replaySplash === 'function') replaySplash();
+                        this.$refs.splashDismiss?.focus();
+                    });
+                },
+                addToCart(key) {
+                    const item = this.menuCatalog[key];
+                    if (!item) return;
+                    this.cart.push({
+                        id: `${key}-${Date.now()}`,
+                        key,
+                        name: item.name,
+                        price: item.price,
+                    });
+                    this.checkoutError = '';
+                    this.orderPlaced = false;
+                },
+                removeFromCart(id) {
+                    this.cart = this.cart.filter((item) => item.id !== id);
+                },
+                get cartCount() { return this.cart.length; },
+                get cartTotal() {
+                    return this.cart.reduce((sum, item) => sum + item.price, 0);
+                },
+                formatPrice(amount) { return `$${amount.toFixed(2)}`; },
                 toggleTopping(id) {
                     const i = this.customPlate.toppings.indexOf(id);
                     if (i >= 0) this.customPlate.toppings.splice(i, 1);
@@ -728,14 +817,35 @@
                     return `${noodle} swimming in your chosen broth, loaded with ${tops}.`;
                 },
                 savePlate() {
+                    this.cart.push({
+                        id: `custom-${Date.now()}`,
+                        key: 'custom',
+                        name: this.plateLabel,
+                        detail: this.plateDescription,
+                        price: 15.99,
+                    });
                     this.plateSaved = true;
+                    this.checkoutError = '';
+                    this.orderPlaced = false;
                     setTimeout(() => { this.plateSaved = false; }, 3000);
+                },
+                submitOrder() {
+                    this.checkoutError = '';
+                    if (this.cart.length === 0) {
+                        this.checkoutError = 'Add at least one bowl from the menu or Build Your Bowl first.';
+                        return;
+                    }
+                    this.orderPlaced = true;
+                    this.cart = [];
+                    window.scrollTo({ top: document.getElementById('checkout')?.offsetTop ?? 0, behavior: 'smooth' });
                 },
             }));
         });
     </script>
 </head>
-<body class="bg-amber-50 text-stone-900 font-sans antialiased overflow-x-hidden bg-grid" x-data="slurpApp()">
+<body class="bg-amber-50 text-stone-900 font-sans antialiased overflow-x-hidden bg-grid" x-data="slurpApp()" @keydown.escape.window="handleEscape()">
+
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
     <svg width="0" height="0" class="absolute" aria-hidden="true">
         <defs>
@@ -748,29 +858,56 @@
     </svg>
 
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-40 bg-amber-50/80 backdrop-blur-md border-b border-amber-200">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#hero" class="inline-block shrink-0">
-                <img src="assets/slurp-logo.png" alt="SLURP! — Tastiest Noodles on the Planet" class="slurp-logo">
-            </a>
-            <div class="hidden md:flex space-x-8 font-bold text-stone-700">
-                <a href="#hero" class="hover:text-orange-600 transition">The Dare</a>
-                <a href="#menu" class="hover:text-orange-600 transition">Noodle Vault</a>
-                <a href="#build" class="hover:text-orange-600 transition">Build Your Bowl</a>
-                <a href="#story" class="hover:text-orange-600 transition">Galactic Slurp</a>
-                <a href="#reviews" class="hover:text-orange-600 transition">Slurp Squad</a>
+    <header>
+        <nav class="fixed top-0 w-full z-40 bg-amber-50/80 backdrop-blur-md border-b border-amber-200" aria-label="Main navigation">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center gap-3">
+                <a href="#hero" class="inline-block shrink-0" @click="closeMobileMenu()">
+                    <img src="assets/slurp-logo.png" alt="SLURP! — Tastiest Noodles on the Planet" class="slurp-logo" width="400" height="267">
+                </a>
+                <div class="hidden md:flex space-x-8 font-bold text-stone-700">
+                    <template x-for="link in navLinks" :key="link.href">
+                        <a :href="link.href" class="hover:text-orange-600 transition" x-text="link.label"></a>
+                    </template>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <a href="#checkout" @click="closeMobileMenu()" :aria-label="cartCount > 0 ? `Checkout, ${cartCount} items in cart` : 'Checkout'" class="noodle-order-btn noodle-order-btn--nav relative z-[2] text-white font-extrabold px-4 md:px-6 py-2.5 rounded-full shadow-lg hover:scale-105 transition transform active:scale-95 inline-flex items-center gap-2">
+                        Checkout
+                        <span x-show="cartCount > 0" x-cloak class="cart-badge inline-flex items-center justify-center rounded-full bg-stone-900 text-white font-black px-1" x-text="cartCount"></span>
+                    </a>
+                    <button type="button"
+                            class="md:hidden w-10 h-10 flex items-center justify-center rounded-xl border-2 border-stone-900 bg-white font-black text-stone-900"
+                            @click="mobileMenuOpen = !mobileMenuOpen"
+                            :aria-expanded="mobileMenuOpen.toString()"
+                            aria-controls="mobile-menu">
+                        <span x-show="!mobileMenuOpen" aria-hidden="true">☰</span>
+                        <span x-show="mobileMenuOpen" x-cloak aria-hidden="true">✕</span>
+                        <span class="sr-only" x-text="mobileMenuOpen ? 'Close menu' : 'Open menu'"></span>
+                    </button>
+                </div>
             </div>
-            <a href="#checkout" class="noodle-order-btn noodle-order-btn--nav relative z-[2] text-white font-extrabold px-6 py-2.5 rounded-full shadow-lg hover:scale-105 transition transform active:scale-95">
-                Checkout
-            </a>
-        </div>
-    </nav>
+            <div id="mobile-menu"
+                 x-show="mobileMenuOpen"
+                 x-cloak
+                 x-transition
+                 class="md:hidden border-t border-amber-200 bg-amber-50/95 backdrop-blur-md px-6 py-4 space-y-3 font-bold text-stone-700">
+                <template x-for="link in navLinks" :key="link.href">
+                    <a :href="link.href" class="block py-2 hover:text-orange-600 transition" @click="closeMobileMenu()" x-text="link.label"></a>
+                </template>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content">
 
     <!-- Hero Section -->
     <section id="hero" class="min-h-screen relative flex items-center justify-center pt-24 pb-12 px-4 overflow-hidden">
         
         <!-- Screen Splat Overlay -->
         <div x-show="thrown" 
+             x-cloak
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="splash-title"
              x-transition:leave="transition ease-in duration-200"
              x-transition:leave-start="opacity-100"
              x-transition:leave-end="opacity-0"
@@ -864,9 +1001,9 @@
 
             <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none z-[60]">
                 <div class="splash-modal text-center text-white p-6 md:p-8 rounded-2xl pointer-events-auto max-w-sm w-full mx-4">
-                    <p class="text-2xl md:text-3xl font-black text-amber-400 mb-2 drop-shadow-sm">SPLAAAT! 🍜</p>
+                    <p id="splash-title" class="text-2xl md:text-3xl font-black text-amber-400 mb-2 drop-shadow-sm">SPLAAAT! 🍜</p>
                     <p class="font-bold text-lg md:text-xl mb-4 text-white/95 drop-shadow-sm">Oh... you couldn't catch that? Too slow!</p>
-                    <button @click="thrown = false" class="bg-orange-500 hover:bg-orange-600 text-white font-black px-4 py-2.5 rounded-lg text-sm transition shadow-lg">
+                    <button x-ref="splashDismiss" @click="dismissSplash()" class="bg-orange-500 hover:bg-orange-600 text-white font-black px-4 py-2.5 rounded-lg text-sm transition shadow-lg">
                         Wipe Screen & Place Order
                     </button>
                 </div>
@@ -905,7 +1042,7 @@
                 </div>
 
                 <!-- Interactive Throw Trigger -->
-                <button @click="thrown = true; $nextTick(() => replaySplash())"
+                <button @click="throwNoodles()"
                         class="w-full bg-red-600 hover:bg-red-700 text-white text-xl font-black py-4 px-6 rounded-2xl border-2 border-stone-900 shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center justify-center gap-3">
                     <i data-lucide="hand"></i>
                     TRY AND CATCH THIS! 🍜
@@ -939,7 +1076,7 @@
                 <div class="noodle-card bg-amber-50 rounded-3xl p-6 shadow-[6px_6px_0px_0px_rgba(28,25,23,1)] flex flex-col justify-between hover:-translate-y-1 transition transform">
                     <div>
                         <div class="relative h-48 bg-red-100 rounded-2xl mb-4 overflow-hidden border-2 border-stone-900">
-                            <img src="assets/chili-noodles.jpg" alt="Chili Noodles" class="w-full h-full object-cover">
+                            <img src="assets/chili-noodles.jpg" alt="Chili Noodles" class="w-full h-full object-cover" loading="lazy" width="600" height="400">
                             <span class="absolute top-3 right-3 bg-red-600 text-white font-black text-xs px-3 py-1 rounded-full uppercase">🌶️ Spicy AF</span>
                         </div>
                         <h3 class="text-2xl font-black text-stone-900 mb-2">Dragon Breath Chili Oil</h3>
@@ -949,7 +1086,7 @@
                     </div>
                     <div class="flex items-center justify-between border-t-2 border-stone-200 pt-4">
                         <span class="text-2xl font-black text-stone-900">$14.99</span>
-                        <button class="bg-stone-900 hover:bg-orange-600 text-white font-black px-4 py-2 rounded-xl text-sm transition">
+                        <button type="button" @click="addToCart('dragon-breath')" class="bg-stone-900 hover:bg-orange-600 text-white font-black px-4 py-2 rounded-xl text-sm transition">
                             Add To Bowl
                         </button>
                     </div>
@@ -959,7 +1096,7 @@
                 <div class="noodle-card bg-amber-50 rounded-3xl p-6 shadow-[6px_6px_0px_0px_rgba(28,25,23,1)] flex flex-col justify-between hover:-translate-y-1 transition transform">
                     <div>
                         <div class="relative h-48 bg-amber-100 rounded-2xl mb-4 overflow-hidden border-2 border-stone-900">
-                            <img src="assets/tonkotsu-ramen.jpg" alt="Ramen" class="w-full h-full object-cover">
+                            <img src="assets/tonkotsu-ramen.jpg" alt="Ramen" class="w-full h-full object-cover" loading="lazy" width="600" height="400">
                             <span class="absolute top-3 right-3 bg-amber-500 text-white font-black text-xs px-3 py-1 rounded-full uppercase">⭐ Best Seller</span>
                         </div>
                         <h3 class="text-2xl font-black text-stone-900 mb-2">Midnight Tonkotsu</h3>
@@ -969,7 +1106,7 @@
                     </div>
                     <div class="flex items-center justify-between border-t-2 border-stone-200 pt-4">
                         <span class="text-2xl font-black text-stone-900">$16.50</span>
-                        <button class="bg-stone-900 hover:bg-orange-600 text-white font-black px-4 py-2 rounded-xl text-sm transition">
+                        <button type="button" @click="addToCart('midnight-tonkotsu')" class="bg-stone-900 hover:bg-orange-600 text-white font-black px-4 py-2 rounded-xl text-sm transition">
                             Add To Bowl
                         </button>
                     </div>
@@ -979,7 +1116,7 @@
                 <div class="noodle-card bg-amber-50 rounded-3xl p-6 shadow-[6px_6px_0px_0px_rgba(28,25,23,1)] flex flex-col justify-between hover:-translate-y-1 transition transform">
                     <div>
                         <div class="relative h-48 bg-green-100 rounded-2xl mb-4 overflow-hidden border-2 border-stone-900">
-                            <img src="assets/dan-dan-noodles.jpg" alt="Dan Dan Noodles" class="w-full h-full object-cover">
+                            <img src="assets/dan-dan-noodles.jpg" alt="Dan Dan Noodles" class="w-full h-full object-cover" loading="lazy" width="600" height="400">
                             <span class="absolute top-3 right-3 bg-green-600 text-white font-black text-xs px-3 py-1 rounded-full uppercase">🌱 Umami Bomb</span>
                         </div>
                         <h3 class="text-2xl font-black text-stone-900 mb-2">Garlic Butter Dan Dan</h3>
@@ -989,7 +1126,7 @@
                     </div>
                     <div class="flex items-center justify-between border-t-2 border-stone-200 pt-4">
                         <span class="text-2xl font-black text-stone-900">$15.20</span>
-                        <button class="bg-stone-900 hover:bg-orange-600 text-white font-black px-4 py-2 rounded-xl text-sm transition">
+                        <button type="button" @click="addToCart('garlic-dan-dan')" class="bg-stone-900 hover:bg-orange-600 text-white font-black px-4 py-2 rounded-xl text-sm transition">
                             Add To Bowl
                         </button>
                     </div>
@@ -1070,6 +1207,7 @@
                                         @click="customPlate.broth = opt.id"
                                         class="build-chip px-4 py-2 rounded-xl text-sm"
                                         :class="customPlate.broth === opt.id ? 'build-chip--active' : 'bg-white text-stone-900'"
+                                        :aria-pressed="(customPlate.broth === opt.id).toString()"
                                         x-text="opt.label"></button>
                             </template>
                         </div>
@@ -1083,6 +1221,7 @@
                                         @click="customPlate.noodles = opt.id"
                                         class="build-chip px-4 py-2 rounded-xl text-sm"
                                         :class="customPlate.noodles === opt.id ? 'build-chip--active' : 'bg-white text-stone-900'"
+                                        :aria-pressed="(customPlate.noodles === opt.id).toString()"
                                         x-text="opt.label"></button>
                             </template>
                         </div>
@@ -1096,6 +1235,7 @@
                                         @click="toggleTopping(opt.id)"
                                         class="build-chip px-4 py-2 rounded-xl text-sm"
                                         :class="hasTopping(opt.id) ? 'build-chip--active' : 'bg-white text-stone-900'"
+                                        :aria-pressed="hasTopping(opt.id).toString()"
                                         x-text="opt.label"></button>
                             </template>
                         </div>
@@ -1110,7 +1250,7 @@
                         <p x-show="plateSaved"
                            x-cloak
                            class="plate-toast mt-3 text-center text-sm font-black text-orange-600 uppercase">
-                            Plate locked in. Chef Marco approves.
+                            Plate added to checkout! Chef Marco approves.
                         </p>
                     </div>
                 </div>
@@ -1234,7 +1374,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto mb-12 text-left">
                 <div class="noodle-card bg-amber-50 rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]">
                     <div class="noodle-card-inner relative h-40 bg-red-100">
-                        <img src="assets/chili-noodles.jpg" alt="" class="w-full h-full object-cover">
+                        <img src="assets/chili-noodles.jpg" alt="Social post preview of Dragon Breath chili oil noodles" class="w-full h-full object-cover" loading="lazy" width="600" height="400">
                         <span class="absolute top-2 left-2 bg-black/70 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full">Reel · 0:14</span>
                     </div>
                     <div class="p-3">
@@ -1244,7 +1384,7 @@
                 </div>
                 <div class="noodle-card bg-amber-50 rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]">
                     <div class="noodle-card-inner relative h-40 bg-amber-100">
-                        <img src="assets/tonkotsu-ramen.jpg" alt="" class="w-full h-full object-cover">
+                        <img src="assets/tonkotsu-ramen.jpg" alt="Social post preview of steaming tonkotsu ramen" class="w-full h-full object-cover" loading="lazy" width="600" height="400">
                         <span class="absolute top-2 left-2 bg-black/70 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full">Story · Live</span>
                     </div>
                     <div class="p-3">
@@ -1254,7 +1394,7 @@
                 </div>
                 <div class="noodle-card bg-amber-50 rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] sm:col-span-1">
                     <div class="noodle-card-inner relative h-40 bg-green-100">
-                        <img src="assets/dan-dan-noodles.jpg" alt="" class="w-full h-full object-cover">
+                        <img src="assets/dan-dan-noodles.jpg" alt="Social post preview of slow-mo noodle pull" class="w-full h-full object-cover" loading="lazy" width="600" height="400">
                         <span class="absolute top-2 left-2 bg-black/70 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full">TikTok · 0:08</span>
                     </div>
                     <div class="p-3">
@@ -1269,7 +1409,7 @@
             </p>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 max-w-3xl mx-auto">
-                <button type="button" class="noodle-card group bg-amber-50 p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:-translate-y-1 transition transform text-left cursor-default">
+                <button type="button" aria-disabled="true" title="Visual demo only — follow links coming soon" class="noodle-card group bg-amber-50 p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:-translate-y-1 transition transform text-left cursor-default">
                     <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCAF45] flex items-center justify-center mb-3 border-2 border-stone-900 shadow-[2px_2px_0px_0px_rgba(28,25,23,1)]">
                         <svg class="social-brand-icon text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 11-2.881.001 1.44 1.44 0 012.881-.001z"/></svg>
                     </div>
@@ -1278,7 +1418,7 @@
                     <p class="text-xs font-bold text-stone-500">847K slurpers</p>
                 </button>
 
-                <button type="button" class="noodle-card group bg-amber-50 p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:-translate-y-1 transition transform text-left cursor-default">
+                <button type="button" aria-disabled="true" title="Visual demo only — follow links coming soon" class="noodle-card group bg-amber-50 p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:-translate-y-1 transition transform text-left cursor-default">
                     <div class="w-11 h-11 rounded-xl bg-black flex items-center justify-center mb-3 border-2 border-stone-900 shadow-[2px_2px_0px_0px_rgba(249,115,22,1)]">
                         <svg class="social-brand-icon text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                     </div>
@@ -1287,7 +1427,7 @@
                     <p class="text-xs font-bold text-stone-500">312K hot takes</p>
                 </button>
 
-                <button type="button" class="noodle-card group bg-amber-50 p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:-translate-y-1 transition transform text-left cursor-default">
+                <button type="button" aria-disabled="true" title="Visual demo only — follow links coming soon" class="noodle-card group bg-amber-50 p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:-translate-y-1 transition transform text-left cursor-default">
                     <div class="w-11 h-11 rounded-xl bg-[#FF0000] flex items-center justify-center mb-3 border-2 border-stone-900 shadow-[2px_2px_0px_0px_rgba(28,25,23,1)]">
                         <svg class="social-brand-icon text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                     </div>
@@ -1296,7 +1436,7 @@
                     <p class="text-xs font-bold text-stone-500">1.2M bowl cams</p>
                 </button>
 
-                <button type="button" class="noodle-card group bg-amber-50 p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:-translate-y-1 transition transform text-left cursor-default">
+                <button type="button" aria-disabled="true" title="Visual demo only — follow links coming soon" class="noodle-card group bg-amber-50 p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:-translate-y-1 transition transform text-left cursor-default">
                     <div class="w-11 h-11 rounded-xl bg-black flex items-center justify-center mb-3 border-2 border-stone-900 shadow-[2px_2px_0px_0px_rgba(28,25,23,1)]">
                         <svg class="social-brand-icon text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
                     </div>
@@ -1326,22 +1466,46 @@
 
             <div class="noodle-card bg-white rounded-3xl p-6 md:p-8 shadow-[8px_8px_0px_0px_rgba(28,25,23,1)]">
                 <p class="text-xs font-black uppercase text-orange-600 mb-4">Your Slurp Summary</p>
-                <ul class="space-y-3 mb-6 font-bold text-stone-700">
-                    <li class="flex justify-between border-b-2 border-dashed border-stone-200 pb-2">
-                        <span>Pick a bowl from the <a href="#menu" class="text-orange-600 underline decoration-wavy hover:text-orange-700">Noodle Vault</a></span>
-                        <span class="text-stone-400">—</span>
+
+                <div x-show="orderPlaced" x-cloak class="mb-6 rounded-2xl border-2 border-green-600 bg-green-50 p-4 text-center" role="status">
+                    <p class="text-lg font-black text-green-800">Order received! 🍜</p>
+                    <p class="text-sm font-bold text-green-700 mt-1">Your noodles are sprinting to your door.</p>
+                </div>
+
+                <p x-show="checkoutError" x-cloak class="mb-4 text-sm font-black text-red-600" role="alert" x-text="checkoutError"></p>
+
+                <ul class="space-y-3 mb-6 font-bold text-stone-700" x-show="cartCount > 0" x-cloak>
+                    <template x-for="item in cart" :key="item.id">
+                        <li class="flex justify-between items-start gap-3 border-b-2 border-dashed border-stone-200 pb-2">
+                            <div class="text-left">
+                                <span x-text="item.name"></span>
+                                <p x-show="item.detail" class="text-xs font-semibold text-stone-500 mt-0.5" x-text="item.detail"></p>
+                            </div>
+                            <div class="flex items-center gap-2 shrink-0">
+                                <span x-text="formatPrice(item.price)"></span>
+                                <button type="button" @click="removeFromCart(item.id)" class="text-xs font-black uppercase text-red-600 hover:text-red-800" :aria-label="`Remove ${item.name}`">Remove</button>
+                            </div>
+                        </li>
+                    </template>
+                    <li class="flex justify-between pt-1 text-stone-900 text-lg">
+                        <span>Total</span>
+                        <span x-text="formatPrice(cartTotal)"></span>
                     </li>
                 </ul>
 
-                <form class="space-y-4" onsubmit="event.preventDefault(); alert('Order received! Your noodles are sprinting to your door. 🍜');">
+                <p x-show="cartCount === 0 && !orderPlaced" class="mb-6 font-bold text-stone-500 text-sm">
+                    Your bowl is empty — pick from the <a href="#menu" class="text-orange-600 underline decoration-wavy hover:text-orange-700">Noodle Vault</a> or <a href="#build" class="text-orange-600 underline decoration-wavy hover:text-orange-700">Build Your Bowl</a>.
+                </p>
+
+                <form class="space-y-4" @submit.prevent="submitOrder()">
                     <div>
                         <label for="checkout-name" class="block text-sm font-black uppercase text-stone-700 mb-1">Name</label>
-                        <input id="checkout-name" name="name" type="text" required placeholder="Captain Slurper"
+                        <input id="checkout-name" name="name" type="text" required placeholder="Captain Slurper" autocomplete="name"
                                class="w-full px-4 py-3 rounded-xl border-2 border-stone-900 font-bold text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500">
                     </div>
                     <div>
                         <label for="checkout-address" class="block text-sm font-black uppercase text-stone-700 mb-1">Delivery Address</label>
-                        <input id="checkout-address" name="address" type="text" required placeholder="123 Noodle Lane"
+                        <input id="checkout-address" name="address" type="text" required placeholder="123 Noodle Lane" autocomplete="street-address"
                                class="w-full px-4 py-3 rounded-xl border-2 border-stone-900 font-bold text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500">
                     </div>
                     <button type="submit"
@@ -1352,6 +1516,8 @@
             </div>
         </div>
     </section>
+
+    </main>
 
     <!-- Footer / Final CTA -->
     <footer class="bg-stone-900 text-white py-12 border-t-4 border-stone-900">
