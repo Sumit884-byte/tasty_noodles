@@ -8,21 +8,31 @@ A playful comfort-food landing page for an imaginary noodle shop. Built for the 
 
 GitHub: **https://github.com/Sumit884-byte/tasty_noodles**
 
-## CodePen
+## Deploy on Vercel
 
-Open the project in the CodePen editor (images load from the live deploy):
+The live site auto-deploys from `main` on [Vercel](https://vercel.com):
+
+1. Fork or clone [github.com/Sumit884-byte/tasty_noodles](https://github.com/Sumit884-byte/tasty_noodles)
+2. Import the repo in Vercel (static site — no build command needed)
+3. Deploy — `index.html` is served at the project root
+
+## Deploy on CodePen
 
 **https://tastynoodles.vercel.app/codepen/**
 
-1. Click **Open in CodePen**
-2. Log in and click **Save**
-3. Set the pen to **Public** and share your pen URL
+1. Open the link above and click **Open in CodePen**
+2. Log in to CodePen (free account works)
+3. Click **Save**, set the pen to **Public**, and share your pen URL
+
+Images load from the Vercel deploy, so you don't upload assets to CodePen.
 
 To regenerate the export after editing `index.html`:
 
 ```bash
 python3 scripts/build-codepen.py
 ```
+
+Then push to GitHub so Vercel picks up the updated `/codepen/` page.
 
 ## Features
 

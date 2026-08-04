@@ -252,7 +252,7 @@ For a challenge submission or portfolio piece, one `index.html` that you can ope
 
 🍜 **Live demo:** [tastynoodles.vercel.app](https://tastynoodles.vercel.app)
 
-✏️ **CodePen:** [Open in CodePen editor](https://tastynoodles.vercel.app/codepen/) — one click loads the full pen; save while logged in to publish.
+✏️ **CodePen:** [Deploy on CodePen](https://tastynoodles.vercel.app/codepen/) — open the link, click **Open in CodePen**, log in, **Save**, set **Public**, share your pen URL.
 
 📦 **Source code:** [github.com/Sumit884-byte/tasty_noodles](https://github.com/Sumit884-byte/tasty_noodles)
 

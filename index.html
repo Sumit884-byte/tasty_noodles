@@ -282,6 +282,35 @@
             padding: 0.9375rem 1.75rem;
             font-size: 1.0625rem;
         }
+        .footer-dev-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: 1px solid #44403c;
+            background: #292524;
+            color: #fafaf9;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: border-color 0.15s, background 0.15s, color 0.15s;
+        }
+        .footer-dev-link:hover {
+            border-color: #f59e0b;
+            background: #1c1917;
+            color: #fbbf24;
+        }
+        .footer-dev-steps {
+            text-align: left;
+        }
+        .footer-dev-steps summary {
+            cursor: pointer;
+            list-style: none;
+        }
+        .footer-dev-steps summary::-webkit-details-marker {
+            display: none;
+        }
         .checkout-float {
             position: fixed;
             bottom: 1rem;
@@ -1957,6 +1986,29 @@
                       class="collect-btn__count"
                       x-text="cartCount"></span>
             </a>
+
+            <div class="mt-10 pt-8 border-t border-stone-800 max-w-xl mx-auto">
+                <p class="text-xs font-black uppercase tracking-widest text-stone-500 mb-3">Developers</p>
+                <p class="text-sm text-stone-400 mb-5">
+                    Single-file comfort-food landing page for the DEV Frontend Challenge. You're on the live demo — fork it or remix on CodePen.
+                </p>
+                <div class="flex flex-wrap justify-center gap-3 mb-6">
+                    <a href="https://tastynoodles.vercel.app" class="footer-dev-link" target="_blank" rel="noopener noreferrer">Live Demo</a>
+                    <a href="https://github.com/Sumit884-byte/tasty_noodles" class="footer-dev-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="/codepen/" class="footer-dev-link">Deploy on CodePen</a>
+                </div>
+                <details class="footer-dev-steps text-sm text-stone-400 bg-stone-800/60 rounded-2xl p-4 border border-stone-700/80">
+                    <summary class="font-bold text-stone-200">How to deploy on CodePen</summary>
+                    <ol class="mt-3 space-y-2.5 list-decimal list-inside leading-relaxed">
+                        <li>Open <a href="/codepen/" class="text-amber-400 underline underline-offset-2 hover:text-amber-300">tastynoodles.vercel.app/codepen</a>.</li>
+                        <li>Click <strong class="text-stone-200">Open in CodePen</strong> (log in if prompted).</li>
+                        <li>In the CodePen editor, click <strong class="text-stone-200">Save</strong> and set the pen to <strong class="text-stone-200">Public</strong>.</li>
+                        <li>Share your pen URL — images load from this Vercel deploy, so no asset upload needed.</li>
+                    </ol>
+                    <p class="mt-3 text-xs text-stone-500">Regenerate the export after editing <code class="text-amber-200/90">index.html</code>: <code class="text-amber-200/90">python3 scripts/build-codepen.py</code></p>
+                </details>
+            </div>
+
             <p class="text-xs text-stone-600 mt-8">© 2026 SLURP Inc. No screens were permanently damaged in the making of this page.</p>
         </div>
     </footer>

@@ -101,25 +101,48 @@ if __name__ == "__main__":
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Open SLURP! on CodePen</title>
   <style>
-    body {{ font-family: system-ui, sans-serif; max-width: 36rem; margin: 4rem auto; padding: 0 1.5rem; line-height: 1.55; color: #1c1917; }}
-    h1 {{ font-size: 1.75rem; margin-bottom: 0.5rem; }}
+    body {{ font-family: system-ui, sans-serif; max-width: 42rem; margin: 3rem auto; padding: 0 1.5rem 4rem; line-height: 1.6; color: #1c1917; }}
+    h1 {{ font-size: 1.875rem; margin-bottom: 0.35rem; }}
+    h2 {{ font-size: 1.125rem; margin: 2rem 0 0.75rem; }}
     p {{ color: #57534e; }}
-    .btn {{ display: inline-block; background: #1c1917; color: #fff; border: none; border-radius: 9999px; padding: 0.875rem 1.5rem; font-weight: 700; cursor: pointer; text-decoration: none; }}
+    .hero {{ background: linear-gradient(135deg, #fff7ed, #fef3c7); border: 1px solid #fed7aa; border-radius: 1.25rem; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }}
+    .hero a {{ color: #c2410c; font-weight: 700; }}
+    .btn {{ display: inline-block; background: #1c1917; color: #fff; border: none; border-radius: 9999px; padding: 0.875rem 1.5rem; font-weight: 700; cursor: pointer; font-size: 1rem; }}
     .btn:hover {{ background: #ea580c; }}
-    ol {{ padding-left: 1.25rem; }}
-    code {{ background: #fef3c7; padding: 0.1rem 0.35rem; border-radius: 0.25rem; }}
+    ol, ul {{ padding-left: 1.25rem; color: #57534e; }}
+    li {{ margin-bottom: 0.5rem; }}
+    code {{ background: #fef3c7; padding: 0.1rem 0.35rem; border-radius: 0.25rem; font-size: 0.9em; }}
+    .links {{ display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }}
+    .links a {{ color: #c2410c; font-weight: 600; text-decoration: none; border-bottom: 1px solid #fdba74; }}
   </style>
 </head>
 <body>
-  <h1>SLURP! on CodePen</h1>
-  <p>One click opens the full project in the CodePen editor. Images load from the live Vercel deploy.</p>
+  <div class="hero">
+    <p style="margin:0;font-size:0.75rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#9a3412;">Live demo</p>
+    <p style="margin:0.35rem 0 0;"><a href="https://tastynoodles.vercel.app">tastynoodles.vercel.app</a> — full SLURP! site on Vercel</p>
+  </div>
+  <h1>Deploy SLURP! on CodePen</h1>
+  <p>This page loads the full HTML, CSS, and JavaScript into the CodePen editor. Bowl photos and logos load from the live Vercel deploy, so you don't upload assets separately.</p>
   <p><button type="button" class="btn" id="open">Open in CodePen</button></p>
+
+  <h2>Steps</h2>
   <ol>
-    <li>Log in to CodePen (free account works).</li>
-    <li>Click <strong>Save</strong> in the editor.</li>
-    <li>Set visibility to <strong>Public</strong> and copy your pen URL.</li>
+    <li>Click <strong>Open in CodePen</strong> above (create a free CodePen account if needed).</li>
+    <li>Review the pen in the editor — HTML, CSS, and JS are pre-filled.</li>
+    <li>Click <strong>Save</strong>, name your pen, and set visibility to <strong>Public</strong>.</li>
+    <li>Copy your pen URL from the browser and share it.</li>
   </ol>
-  <p><small>Live site: <a href="https://tastynoodles.vercel.app">tastynoodles.vercel.app</a></small></p>
+
+  <h2>After you edit the repo</h2>
+  <p>Regenerate this export whenever <code>index.html</code> changes:</p>
+  <p><code>python3 scripts/build-codepen.py</code></p>
+  <p>Then redeploy to Vercel so <code>/codepen/</code> stays in sync.</p>
+
+  <div class="links">
+    <a href="https://tastynoodles.vercel.app">Live demo</a>
+    <a href="https://github.com/Sumit884-byte/tasty_noodles">GitHub</a>
+    <a href="https://dev.to/challenges/frontend-2026-07-29">DEV Challenge</a>
+  </div>
   <script id="pen-data" type="application/json">{data_json_safe}</script>
   <script>
     document.getElementById('open').addEventListener('click', () => {{
