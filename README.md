@@ -8,6 +8,22 @@ A playful comfort-food landing page for an imaginary noodle shop. Built for the 
 
 GitHub: **https://github.com/Sumit884-byte/tasty_noodles**
 
+## CodePen
+
+Open the project in the CodePen editor (images load from the live deploy):
+
+**https://tastynoodles.vercel.app/codepen/**
+
+1. Click **Open in CodePen**
+2. Log in and click **Save**
+3. Set the pen to **Public** and share your pen URL
+
+To regenerate the export after editing `index.html`:
+
+```bash
+python3 scripts/build-codepen.py
+```
+
 ## Features
 
 - Interactive noodle splash hero animation
