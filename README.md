@@ -11,10 +11,12 @@ GitHub: **https://github.com/Sumit884-byte/tasty_noodles**
 ## Features
 
 - Interactive noodle splash hero animation
-- Noodle Vault menu with three signature bowls
-- Build Your Bowl — live CSS plate preview
+- Noodle Vault — 6 bowls with CollectUI-style cards and category filters
+- Build Your Bowl — live CSS plate preview (thick, thin, or broth-only)
+- Pan India store finder — 15 locations across 12 cities with directions
+- Slurp Squad — 8 customer testimonials
 - Galactic Slurp story section with a Three.js 3D spinning globe
-- Social feed preview + checkout flow
+- CollectUI-style cart bar + checkout flow
 
 ## Stack
 

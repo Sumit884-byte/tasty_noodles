@@ -163,42 +163,172 @@
             z-index: 1;
             overflow: visible;
         }
-        .noodle-order-btn {
+        /* CollectUI-style checkout buttons */
+        .collect-btn {
             position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            color: #fff;
+            background: #1c1917;
             border: none;
-            overflow: visible;
-            background: transparent !important;
-            --noodle-btn-stroke: 5px;
-            isolation: isolate;
-        }
-        .noodle-order-btn::before {
-            content: '';
-            position: absolute;
-            inset: var(--noodle-btn-stroke);
             border-radius: 9999px;
-            z-index: -1;
-            transition: background-color 0.2s, transform 0.2s;
+            box-shadow: 0 4px 14px rgba(28, 25, 23, 0.22);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            text-decoration: none;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
-        .noodle-order-btn--nav::before {
-            background-color: #ea580c;
+        .collect-btn:hover {
+            background: #292524;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 22px rgba(28, 25, 23, 0.28);
         }
-        .noodle-order-btn--nav:hover::before {
-            background-color: #c2410c;
+        .collect-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(28, 25, 23, 0.18);
         }
-        .noodle-order-btn--footer::before {
-            background-color: #f97316;
+        .collect-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
-        .noodle-order-btn--footer:hover::before {
-            background-color: #ea580c;
+        .collect-btn:disabled:hover {
+            transform: none;
+            box-shadow: none;
+            background: #1c1917;
         }
-        .noodle-frame-pill {
-            position: absolute;
-            inset: 0;
+        .collect-btn--accent:disabled:hover {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 55%, #c2410c 100%);
+        }
+        .collect-btn--nav {
+            min-width: 2.75rem;
+            height: 2.75rem;
+            padding: 0 0.75rem;
+            font-size: 0.8125rem;
+        }
+        .collect-btn__icon {
+            width: 1.125rem;
+            height: 1.125rem;
+            flex-shrink: 0;
+        }
+        .collect-btn__count {
+            min-width: 1.25rem;
+            height: 1.25rem;
+            padding: 0 0.35rem;
+            background: #f97316;
+            color: #fff;
+            border-radius: 9999px;
+            font-size: 0.6875rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .collect-btn--accent {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 55%, #c2410c 100%);
+            box-shadow: 0 4px 18px rgba(249, 115, 22, 0.38);
+        }
+        .collect-btn--accent:hover {
+            background: linear-gradient(135deg, #fb923c 0%, #f97316 55%, #ea580c 100%);
+            box-shadow: 0 8px 24px rgba(249, 115, 22, 0.42);
+        }
+        .collect-btn--cart {
             width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            overflow: visible;
+            justify-content: space-between;
+            padding: 0.9375rem 1.125rem;
+            font-size: 0.9375rem;
+        }
+        .collect-btn__cart-left {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            min-width: 0;
+        }
+        .collect-btn__cart-items {
+            background: rgba(255, 255, 255, 0.14);
+            padding: 0.2rem 0.55rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .collect-btn__cart-label {
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+        .collect-btn__cart-right {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        .collect-btn__cart-arrow {
+            width: 1rem;
+            height: 1rem;
+            opacity: 0.85;
+        }
+        .collect-btn--submit {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 800;
+        }
+        .collect-btn--footer {
+            padding: 0.9375rem 1.75rem;
+            font-size: 1.0625rem;
+        }
+        .checkout-float {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 35;
+            width: calc(100% - 1.5rem);
+            max-width: 24rem;
+        }
+        .checkout-float__shell {
+            background: #fff;
+            border-radius: 1.25rem;
+            padding: 0.375rem;
+            box-shadow:
+                0 12px 40px rgba(28, 25, 23, 0.16),
+                0 2px 8px rgba(28, 25, 23, 0.06);
+        }
+        @media (min-width: 768px) {
+            .collect-btn--nav {
+                padding: 0 1.125rem;
+            }
+        }
+        @media (max-width: 767px) {
+            .checkout-float {
+                bottom: 0;
+                left: 0;
+                right: 0;
+                transform: none;
+                width: 100%;
+                max-width: none;
+            }
+            .checkout-float__shell {
+                border-radius: 1.25rem 1.25rem 0 0;
+                padding: 0.5rem 0.5rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
+                box-shadow: 0 -8px 32px rgba(28, 25, 23, 0.12);
+            }
+            .collect-btn--cart:active,
+            .collect-btn--cart:hover {
+                transform: none;
+            }
+            .collect-btn--footer {
+                width: 100%;
+                max-width: 20rem;
+            }
+            body.has-cart-bar {
+                padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+            }
         }
         .social-brand-icon {
             width: 1.35rem;
@@ -211,6 +341,11 @@
             display: block;
             transform: rotate(-2deg);
             filter: drop-shadow(1px 2px 0 rgba(28, 25, 23, 0.15));
+        }
+        @media (max-width: 767px) {
+            .slurp-logo {
+                height: 2.25rem;
+            }
         }
         .slurp-logo--footer {
             height: 3.5rem;
@@ -492,6 +627,8 @@
             justify-content: center;
             min-height: 320px;
             padding: 1.5rem;
+            background: radial-gradient(circle at 50% 60%, #fff7ed 0%, #fef3c7 55%, transparent 70%);
+            border-radius: 1.25rem;
         }
         .plate-steam {
             position: absolute;
@@ -522,6 +659,15 @@
             box-shadow: 8px 8px 0 0 #1c1917;
             overflow: hidden;
         }
+        .plate-bowl::before {
+            content: '';
+            position: absolute;
+            inset: 6%;
+            border-radius: 50%;
+            background: linear-gradient(160deg, #ffffff 0%, #f5f5f4 45%, #e7e5e4 100%);
+            z-index: 0;
+            pointer-events: none;
+        }
         .plate-bowl::after {
             content: '';
             position: absolute;
@@ -529,28 +675,30 @@
             border-radius: 50%;
             box-shadow: inset 0 8px 16px rgba(28, 25, 23, 0.15);
             pointer-events: none;
-            z-index: 4;
+            z-index: 5;
         }
         .plate-broth {
             position: absolute;
-            inset: 14%;
+            inset: 22%;
             border-radius: 50%;
             background: var(--broth-color, #f5e6c8);
             transition: background 0.35s ease;
             box-shadow: inset 0 -6px 12px rgba(28, 25, 23, 0.12);
+            z-index: 1;
         }
         .plate-sheen {
             position: absolute;
-            inset: 14%;
+            inset: 22%;
             border-radius: 50%;
             background: radial-gradient(ellipse at 30% 25%, rgba(255, 120, 40, 0.45), transparent 55%);
             pointer-events: none;
-            z-index: 2;
+            z-index: 3;
         }
         .plate-noodles {
             position: absolute;
-            inset: 18%;
-            z-index: 1;
+            inset: 26% 20%;
+            z-index: 2;
+            pointer-events: none;
         }
         .noodle-strand {
             position: absolute;
@@ -564,21 +712,21 @@
         }
         .plate-noodles--thick .noodle-strand { height: 8px; }
         .plate-noodles--thin .noodle-strand { height: 4px; }
-        .noodle-strand:nth-child(1)  { --rot: -35deg; width: 62%; top: 22%; left: 18%; transform: rotate(-35deg); }
-        .noodle-strand:nth-child(2)  { --rot: 12deg;  width: 55%; top: 32%; left: 22%; transform: rotate(12deg); }
-        .noodle-strand:nth-child(3)  { --rot: -8deg;  width: 68%; top: 42%; left: 14%; transform: rotate(-8deg); }
-        .noodle-strand:nth-child(4)  { --rot: 28deg;  width: 50%; top: 52%; left: 28%; transform: rotate(28deg); }
-        .noodle-strand:nth-child(5)  { --rot: -22deg; width: 58%; top: 58%; left: 20%; transform: rotate(-22deg); }
-        .noodle-strand:nth-child(6)  { --rot: 45deg;  width: 44%; top: 38%; left: 38%; transform: rotate(45deg); }
-        .noodle-strand:nth-child(7)  { --rot: -48deg; width: 48%; top: 48%; left: 10%; transform: rotate(-48deg); }
-        .noodle-strand:nth-child(8)  { --rot: 5deg;   width: 52%; top: 28%; left: 32%; transform: rotate(5deg); }
-        .noodle-strand:nth-child(9)  { --rot: -15deg; width: 46%; top: 62%; left: 32%; transform: rotate(-15deg); }
-        .noodle-strand:nth-child(10) { --rot: 18deg;  width: 40%; top: 18%; left: 42%; transform: rotate(18deg); }
+        .noodle-strand:nth-child(1)  { --rot: -28deg; width: 46%; top: 26%; left: 24%; transform: rotate(-28deg); }
+        .noodle-strand:nth-child(2)  { --rot: 14deg;  width: 42%; top: 38%; left: 28%; transform: rotate(14deg); }
+        .noodle-strand:nth-child(3)  { --rot: -6deg;  width: 48%; top: 48%; left: 22%; transform: rotate(-6deg); }
+        .noodle-strand:nth-child(4)  { --rot: 22deg;  width: 38%; top: 56%; left: 32%; transform: rotate(22deg); }
+        .noodle-strand:nth-child(5)  { --rot: -18deg; width: 40%; top: 32%; left: 38%; transform: rotate(-18deg); }
+        .noodle-strand:nth-child(6)  { --rot: 38deg;  width: 34%; top: 44%; left: 40%; transform: rotate(38deg); }
+        .noodle-strand:nth-child(7)  { --rot: -42deg; width: 36%; top: 52%; left: 18%; transform: rotate(-42deg); }
+        .noodle-strand:nth-child(8)  { --rot: 8deg;   width: 32%; top: 22%; left: 36%; transform: rotate(8deg); }
+        .noodle-strand:nth-child(9)  { --rot: -12deg; width: 30%; top: 60%; left: 36%; transform: rotate(-12deg); }
+        .noodle-strand:nth-child(10) { --rot: 16deg;  width: 28%; top: 34%; left: 14%; transform: rotate(16deg); }
         .plate-toppings {
             position: absolute;
-            inset: 14%;
+            inset: 22%;
             border-radius: 50%;
-            z-index: 3;
+            z-index: 4;
             pointer-events: none;
         }
         .topping-scallion span {
@@ -705,11 +853,52 @@
             outline: 2px solid #1c1917;
             outline-offset: 2px;
         }
-        .cart-badge {
-            min-width: 1.25rem;
-            height: 1.25rem;
-            line-height: 1.25rem;
-            font-size: 0.65rem;
+
+        /* CollectUI-inspired food delivery cards */
+        .menu-cat-scroll {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .menu-cat-scroll::-webkit-scrollbar { display: none; }
+        .menu-cat-pill {
+            transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .menu-cat-pill--active {
+            transform: translateY(-2px);
+        }
+        .food-card-collect {
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .food-card-collect:hover {
+            transform: translateY(-4px);
+            box-shadow: 8px 10px 0 0 rgba(28, 25, 23, 1);
+        }
+        .food-card-add-btn {
+            box-shadow: 3px 3px 0 0 rgba(28, 25, 23, 1);
+            transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .food-card-add-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 1px 1px 0 0 rgba(28, 25, 23, 1);
+        }
+        .food-card-add-btn:active {
+            transform: scale(0.95);
+        }
+        .review-avatar {
+            width: 2.75rem;
+            height: 2.75rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 900;
+            border: 2px solid #1c1917;
+            flex-shrink: 0;
+        }
+        .review-stars {
+            letter-spacing: 0.05em;
+            color: #f59e0b;
         }
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
@@ -733,11 +922,40 @@
                 orderPlaced: false,
                 checkoutError: '',
                 cart: [],
-                menuCatalog: {
-                    'dragon-breath': { name: 'Dragon Breath Chili Oil', price: 14.99 },
-                    'midnight-tonkotsu': { name: 'Midnight Tonkotsu', price: 16.50 },
-                    'garlic-dan-dan': { name: 'Garlic Butter Dan Dan', price: 15.20 },
+                selectedMenuCategory: 'all',
+                menuCategories: [
+                    { id: 'all', label: 'All Bowls' },
+                    { id: 'spicy', label: '🔥 Spicy' },
+                    { id: 'bestseller', label: '⭐ Best Sellers' },
+                    { id: 'comfort', label: '🍛 Comfort' },
+                    { id: 'indo', label: '🇮🇳 Indo-Chinese' },
+                    { id: 'wok', label: '🥢 Wok Tossed' },
+                ],
+                menuItems: [
+                    { key: 'dragon-breath', name: 'Dragon Breath Chili Oil', price: 14.99, categories: ['spicy'], image: 'assets/chili-noodles.jpg', alt: 'Chili noodles in garlic oil', badge: '🌶️ Spicy AF', badgeColor: 'bg-red-600', imageBg: 'bg-red-100', rating: 4.9, prep: '12 min', desc: 'Hand-pulled thick noodles bathed in searing garlic chili oil, crispy scallions, and toasted sesame seeds.' },
+                    { key: 'midnight-tonkotsu', name: 'Midnight Tonkotsu', price: 16.50, categories: ['bestseller', 'comfort'], image: 'assets/tonkotsu-ramen.jpg', alt: 'Rich tonkotsu ramen bowl', badge: '⭐ Best Seller', badgeColor: 'bg-amber-500', imageBg: 'bg-amber-100', rating: 5.0, prep: '18 min', desc: '18-hour simmered ultra-rich broth, tender chashu pork, jammy egg, and silk thin ramen noodles.' },
+                    { key: 'garlic-dan-dan', name: 'Garlic Butter Dan Dan', price: 15.20, categories: ['comfort'], image: 'assets/dan-dan-noodles.jpg', alt: 'Dan dan noodles with sesame', badge: '🌱 Umami Bomb', badgeColor: 'bg-green-600', imageBg: 'bg-green-100', rating: 4.8, prep: '14 min', desc: 'Szechuan sesame paste blend with caramelized minced mushrooms, roasted garlic butter, and crushed peanuts.' },
+                    { key: 'manchow-madness', name: 'Bombay Street Manchow', price: 13.99, categories: ['indo'], image: 'assets/manchow-noodles.jpg', alt: 'Bombay Street Manchow soup noodles', badge: '🇮🇳 Desi Hit', badgeColor: 'bg-orange-600', imageBg: 'bg-orange-100', rating: 4.7, prep: '10 min', desc: 'Tangy Indo-Chinese broth, crispy fried noodles on top, spring onions, and a vinegar-chili kick that wakes you up.' },
+                    { key: 'golden-curry-udon', name: 'Golden Curry Udon', price: 15.99, categories: ['comfort'], image: 'assets/curry-udon.jpg', alt: 'Golden Curry Udon with rich broth', badge: '🍛 Cozy', badgeColor: 'bg-yellow-600', imageBg: 'bg-yellow-100', rating: 4.9, prep: '15 min', desc: 'Thick chewy udon in a silky Japanese curry broth, potato chunks, sweet carrots, and a soft-boiled egg crown.' },
+                    { key: 'peanut-yakisoba', name: 'Peanut Crunch Yakisoba', price: 14.50, categories: ['wok'], image: 'assets/yakisoba-noodles.jpg', alt: 'Peanut Crunch Yakisoba stir-fry noodles', badge: '🔥 Wok Tossed', badgeColor: 'bg-stone-800', imageBg: 'bg-stone-200', rating: 4.6, prep: '11 min', desc: 'Smoky wok-charred noodles, shredded cabbage, bell peppers, peanut sauce drizzle, and a lime squeeze finish.' },
+                ],
+                get menuCatalog() {
+                    return Object.fromEntries(this.menuItems.map((item) => [item.key, { name: item.name, price: item.price }]));
                 },
+                get filteredMenuItems() {
+                    if (this.selectedMenuCategory === 'all') return this.menuItems;
+                    return this.menuItems.filter((item) => item.categories.includes(this.selectedMenuCategory));
+                },
+                testimonials: [
+                    { quote: 'I tried to catch it and got broth on my iPad.', author: 'Sarah K.', role: 'Failed Catcher', initials: 'SK', color: 'bg-orange-200 text-orange-900', rating: 5 },
+                    { quote: 'The Dragon Breath Chili Oil changed my life\'s trajectory.', author: 'Dave M.', role: 'Serial Slurper', initials: 'DM', color: 'bg-red-200 text-red-900', rating: 5 },
+                    { quote: 'Walked into the Bandra store for one bowl. Left with three and zero regrets.', author: 'Priya S.', role: 'Mumbai Regular', initials: 'PS', color: 'bg-amber-200 text-amber-900', rating: 5 },
+                    { quote: 'My chopsticks gave up before I did. Respect.', author: 'Arjun V.', role: 'Bengaluru Bowl Hunter', initials: 'AV', color: 'bg-green-200 text-green-900', rating: 4 },
+                    { quote: 'The noodles moved so fast I sprained my wrist reaching. Worth it.', author: 'Meera T.', role: 'Delhi Daredevil', initials: 'MT', color: 'bg-purple-200 text-purple-900', rating: 5 },
+                    { quote: 'I built a custom bowl so good the chef asked for my number.', author: 'Rohan K.', role: 'Custom Plate Legend', initials: 'RK', color: 'bg-sky-200 text-sky-900', rating: 5 },
+                    { quote: 'Midnight Tonkotsu at 2 AM in Hyderabad. Sleep is overrated anyway.', author: 'Ananya R.', role: 'Night Slurper', initials: 'AR', color: 'bg-rose-200 text-rose-900', rating: 5 },
+                    { quote: 'Told my friends I\'d share. That was a lie. No regrets.', author: 'Vikram P.', role: 'Selfish Slurper', initials: 'VP', color: 'bg-lime-200 text-lime-900', rating: 4 },
+                ],
                 customPlate: {
                     broth: 'tonkotsu',
                     noodles: 'thick',
@@ -751,6 +969,7 @@
                 noodleOptions: [
                     { id: 'thick', label: 'Hand-Pulled Thick' },
                     { id: 'thin', label: 'Silk Thin' },
+                    { id: 'none', label: 'Broth Only' },
                 ],
                 toppingOptions: [
                     { id: 'scallion', label: 'Scallion' },
@@ -765,10 +984,43 @@
                     { href: '#menu', label: 'Noodle Vault' },
                     { href: '#build', label: 'Build Your Bowl' },
                     { href: '#story', label: 'Galactic Slurp' },
+                    { href: '#stores', label: 'Find Stores' },
                     { href: '#reviews', label: 'Slurp Squad' },
                     { href: '#social', label: 'Social Slurp' },
                 ],
+                selectedStoreCity: 'all',
+                storeSearch: '',
+                storeLocations: [
+                    { id: 'mum-1', city: 'Mumbai', state: 'Maharashtra', name: 'SLURP! Bandra', address: '12 Linking Road, Bandra West', pincode: '400050', hours: '11 AM – 11 PM', phone: '+91 22 6123 4501' },
+                    { id: 'mum-2', city: 'Mumbai', state: 'Maharashtra', name: 'SLURP! Lower Parel', address: 'Unit 4, Phoenix Mills, Senapati Bapat Marg', pincode: '400013', hours: '11 AM – 11 PM', phone: '+91 22 6123 4502' },
+                    { id: 'del-1', city: 'Delhi', state: 'NCR', name: 'SLURP! Connaught Place', address: 'Block M, Inner Circle, Connaught Place', pincode: '110001', hours: '11 AM – 11 PM', phone: '+91 11 6123 4601' },
+                    { id: 'del-2', city: 'Delhi', state: 'NCR', name: 'SLURP! Saket', address: 'Select Citywalk, District Centre, Saket', pincode: '110017', hours: '11 AM – 11 PM', phone: '+91 11 6123 4602' },
+                    { id: 'blr-1', city: 'Bengaluru', state: 'Karnataka', name: 'SLURP! Indiranagar', address: '100 Feet Road, HAL 2nd Stage, Indiranagar', pincode: '560038', hours: '11 AM – 11 PM', phone: '+91 80 6123 4701' },
+                    { id: 'blr-2', city: 'Bengaluru', state: 'Karnataka', name: 'SLURP! Koramangala', address: '80 Feet Road, 5th Block, Koramangala', pincode: '560095', hours: '11 AM – 11 PM', phone: '+91 80 6123 4702' },
+                    { id: 'hyd-1', city: 'Hyderabad', state: 'Telangana', name: 'SLURP! Jubilee Hills', address: 'Road No. 36, Jubilee Hills Check Post', pincode: '500033', hours: '11 AM – 11 PM', phone: '+91 40 6123 4801' },
+                    { id: 'che-1', city: 'Chennai', state: 'Tamil Nadu', name: 'SLURP! Nungambakkam', address: 'Khader Nawaz Khan Road, Nungambakkam', pincode: '600034', hours: '11 AM – 11 PM', phone: '+91 44 6123 4901' },
+                    { id: 'kol-1', city: 'Kolkata', state: 'West Bengal', name: 'SLURP! Park Street', address: '22 Park Street, Near Maidan', pincode: '700016', hours: '11 AM – 11 PM', phone: '+91 33 6123 5001' },
+                    { id: 'pun-1', city: 'Pune', state: 'Maharashtra', name: 'SLURP! Koregaon Park', address: 'Lane 7, North Main Road, Koregaon Park', pincode: '411001', hours: '11 AM – 11 PM', phone: '+91 20 6123 5101' },
+                    { id: 'ahm-1', city: 'Ahmedabad', state: 'Gujarat', name: 'SLURP! Satellite', address: 'SG Highway, Near ISKCON Bridge, Satellite', pincode: '380015', hours: '11 AM – 11 PM', phone: '+91 79 6123 5201' },
+                    { id: 'jai-1', city: 'Jaipur', state: 'Rajasthan', name: 'SLURP! C-Scheme', address: 'MI Road, C-Scheme, Near Statue Circle', pincode: '302001', hours: '11 AM – 11 PM', phone: '+91 141 6123 5301' },
+                    { id: 'lko-1', city: 'Lucknow', state: 'Uttar Pradesh', name: 'SLURP! Gomti Nagar', address: 'Vibhuti Khand, Gomti Nagar', pincode: '226010', hours: '11 AM – 11 PM', phone: '+91 522 6123 5401' },
+                    { id: 'chd-1', city: 'Chandigarh', state: 'Punjab', name: 'SLURP! Sector 17', address: 'Sector 17-C, Near City Centre', pincode: '160017', hours: '11 AM – 11 PM', phone: '+91 172 6123 5501' },
+                    { id: 'koc-1', city: 'Kochi', state: 'Kerala', name: 'SLURP! Marine Drive', address: 'Shanmugham Road, Marine Drive', pincode: '682031', hours: '11 AM – 11 PM', phone: '+91 484 6123 5601' },
+                ],
                 closeMobileMenu() { this.mobileMenuOpen = false; },
+                goToCheckout(event) {
+                    if (event) event.preventDefault();
+                    this.closeMobileMenu();
+                    const checkout = document.getElementById('checkout');
+                    if (checkout) {
+                        const root = document.documentElement;
+                        const prev = root.style.scrollBehavior;
+                        root.style.scrollBehavior = 'auto';
+                        checkout.scrollIntoView({ block: 'start' });
+                        root.style.scrollBehavior = prev;
+                    }
+                    history.pushState(null, '', '#checkout');
+                },
                 handleEscape() {
                     if (this.thrown) this.dismissSplash();
                     else if (this.mobileMenuOpen) this.mobileMenuOpen = false;
@@ -822,7 +1074,9 @@
                     return names[this.customPlate.broth] || 'Custom Slurp';
                 },
                 get plateDescription() {
-                    const noodle = this.customPlate.noodles === 'thick'
+                    const noodle = this.customPlate.noodles === 'none'
+                        ? 'broth only — no noodles yet'
+                        : this.customPlate.noodles === 'thick'
                         ? 'hand-pulled thick noodles'
                         : 'silk-thin noodles';
                     const tops = this.customPlate.toppings.length
@@ -854,30 +1108,57 @@
                     }
                     this.orderPlaced = true;
                     this.cart = [];
-                    window.scrollTo({ top: document.getElementById('checkout')?.offsetTop ?? 0, behavior: 'smooth' });
+                    const checkoutEl = document.getElementById('checkout');
+                    if (checkoutEl) {
+                        const root = document.documentElement;
+                        const prev = root.style.scrollBehavior;
+                        root.style.scrollBehavior = 'auto';
+                        checkoutEl.scrollIntoView({ block: 'start' });
+                        root.style.scrollBehavior = prev;
+                    }
+                },
+                get storeCities() {
+                    return [...new Set(this.storeLocations.map((s) => s.city))].sort();
+                },
+                get filteredStores() {
+                    let list = this.storeLocations;
+                    if (this.selectedStoreCity !== 'all') {
+                        list = list.filter((s) => s.city === this.selectedStoreCity);
+                    }
+                    const q = this.storeSearch.trim().toLowerCase();
+                    if (q) {
+                        list = list.filter((s) =>
+                            s.city.toLowerCase().includes(q)
+                            || s.state.toLowerCase().includes(q)
+                            || s.name.toLowerCase().includes(q)
+                            || s.address.toLowerCase().includes(q)
+                            || s.pincode.includes(q)
+                        );
+                    }
+                    return list;
+                },
+                directionsUrl(store) {
+                    const query = encodeURIComponent(`${store.name}, ${store.address}, ${store.city}, ${store.state} ${store.pincode}, India`);
+                    return `https://www.google.com/maps/search/?api=1&query=${query}`;
+                },
+                phoneHref(phone) {
+                    return `tel:${phone.replace(/\s/g, '')}`;
                 },
             }));
         });
     </script>
 </head>
-<body class="bg-amber-50 text-stone-900 font-sans antialiased overflow-x-hidden bg-grid" x-data="slurpApp()" @keydown.escape.window="handleEscape()">
+<body class="bg-amber-50 text-stone-900 font-sans antialiased overflow-x-hidden bg-grid"
+      x-data="slurpApp()"
+      @keydown.escape.window="handleEscape()"
+      :class="cartCount > 0 && !orderPlaced ? 'has-cart-bar' : ''">
 
     <a href="#main-content" class="skip-link">Skip to main content</a>
-
-    <svg width="0" height="0" class="absolute" aria-hidden="true">
-        <defs>
-            <linearGradient id="noodle-btn-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#FEF3C7"/>
-                <stop offset="35%" stop-color="#F59E0B"/>
-                <stop offset="100%" stop-color="#451A03"/>
-            </linearGradient>
-        </defs>
-    </svg>
 
     <!-- Navigation -->
     <header>
         <nav class="fixed top-0 w-full z-40 bg-amber-50/80 backdrop-blur-md border-b border-amber-200" aria-label="Main navigation">
-            <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center gap-3">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center gap-2 sm:gap-3">
                 <a href="#hero" class="inline-block shrink-0" @click="closeMobileMenu()">
                     <img src="assets/slurp-logo.png" alt="SLURP! — Tastiest Noodles on the Planet" class="slurp-logo" width="400" height="267">
                 </a>
@@ -887,9 +1168,18 @@
                     </template>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
-                    <a href="#checkout" @click="closeMobileMenu()" :aria-label="cartCount > 0 ? `Checkout, ${cartCount} items in cart` : 'Checkout'" class="noodle-order-btn noodle-order-btn--nav relative z-[2] text-white font-extrabold px-4 md:px-6 py-2.5 rounded-full shadow-lg hover:scale-105 transition transform active:scale-95 inline-flex items-center gap-2">
-                        Checkout
-                        <span x-show="cartCount > 0" x-cloak class="cart-badge inline-flex items-center justify-center rounded-full bg-stone-900 text-white font-black px-1" x-text="cartCount"></span>
+                    <a href="#checkout"
+                       @click.prevent="goToCheckout($event)"
+                       :aria-label="cartCount > 0 ? `Checkout, ${cartCount} items in cart` : 'Checkout'"
+                       class="collect-btn collect-btn--nav">
+                        <svg class="collect-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M6 13h12l-1.5 6H7.5L6 13z"/><path d="M6 13l-1.5-5h15L18 13"/><circle cx="9" cy="20" r="1"/><circle cx="15" cy="20" r="1"/>
+                        </svg>
+                        <span class="hidden md:inline">Checkout</span>
+                        <span x-show="cartCount > 0"
+                              x-cloak
+                              class="collect-btn__count"
+                              x-text="cartCount"></span>
                     </a>
                     <button type="button"
                             class="md:hidden w-10 h-10 flex items-center justify-center rounded-xl border-2 border-stone-900 bg-white font-black text-stone-900"
@@ -1086,70 +1376,52 @@
                 </p>
             </div>
 
-            <!-- Product Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
-                <!-- Noodle 1: Spiced Chili Oil -->
-                <div class="noodle-card bg-amber-50 rounded-3xl p-6 shadow-[6px_6px_0px_0px_rgba(28,25,23,1)] flex flex-col justify-between hover:-translate-y-1 transition transform">
-                    <div>
-                        <div class="relative h-48 bg-red-100 rounded-2xl mb-4 overflow-hidden border-2 border-stone-900">
-                            <img src="assets/chili-noodles.jpg" alt="Chili Noodles" class="w-full h-full object-cover" loading="lazy" width="600" height="400">
-                            <span class="absolute top-3 right-3 bg-red-600 text-white font-black text-xs px-3 py-1 rounded-full uppercase">🌶️ Spicy AF</span>
-                        </div>
-                        <h3 class="text-2xl font-black text-stone-900 mb-2">Dragon Breath Chili Oil</h3>
-                        <p class="text-sm font-medium text-stone-600 mb-4">
-                            Hand-pulled thick noodles bathed in searing garlic chili oil, crispy scallions, and toasted sesame seeds.
-                        </p>
-                    </div>
-                    <div class="flex items-center justify-between border-t-2 border-stone-200 pt-4">
-                        <span class="text-2xl font-black text-stone-900">$14.99</span>
-                        <button type="button" @click="addToCart('dragon-breath')" class="bg-stone-900 hover:bg-orange-600 text-white font-black px-4 py-2 rounded-xl text-sm transition">
-                            Add To Bowl
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Noodle 2: Rich Tonkotsu Ramen -->
-                <div class="noodle-card bg-amber-50 rounded-3xl p-6 shadow-[6px_6px_0px_0px_rgba(28,25,23,1)] flex flex-col justify-between hover:-translate-y-1 transition transform">
-                    <div>
-                        <div class="relative h-48 bg-amber-100 rounded-2xl mb-4 overflow-hidden border-2 border-stone-900">
-                            <img src="assets/tonkotsu-ramen.jpg" alt="Ramen" class="w-full h-full object-cover" loading="lazy" width="600" height="400">
-                            <span class="absolute top-3 right-3 bg-amber-500 text-white font-black text-xs px-3 py-1 rounded-full uppercase">⭐ Best Seller</span>
-                        </div>
-                        <h3 class="text-2xl font-black text-stone-900 mb-2">Midnight Tonkotsu</h3>
-                        <p class="text-sm font-medium text-stone-600 mb-4">
-                            18-hour simmered ultra-rich broth, tender chashu pork, jammy egg, and silk thin ramen noodles.
-                        </p>
-                    </div>
-                    <div class="flex items-center justify-between border-t-2 border-stone-200 pt-4">
-                        <span class="text-2xl font-black text-stone-900">$16.50</span>
-                        <button type="button" @click="addToCart('midnight-tonkotsu')" class="bg-stone-900 hover:bg-orange-600 text-white font-black px-4 py-2 rounded-xl text-sm transition">
-                            Add To Bowl
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Noodle 3: Garlic Butter Dan Dan -->
-                <div class="noodle-card bg-amber-50 rounded-3xl p-6 shadow-[6px_6px_0px_0px_rgba(28,25,23,1)] flex flex-col justify-between hover:-translate-y-1 transition transform">
-                    <div>
-                        <div class="relative h-48 bg-green-100 rounded-2xl mb-4 overflow-hidden border-2 border-stone-900">
-                            <img src="assets/dan-dan-noodles.jpg" alt="Dan Dan Noodles" class="w-full h-full object-cover" loading="lazy" width="600" height="400">
-                            <span class="absolute top-3 right-3 bg-green-600 text-white font-black text-xs px-3 py-1 rounded-full uppercase">🌱 Umami Bomb</span>
-                        </div>
-                        <h3 class="text-2xl font-black text-stone-900 mb-2">Garlic Butter Dan Dan</h3>
-                        <p class="text-sm font-medium text-stone-600 mb-4">
-                            Szechuan sesame paste blend with caramelized minced mushrooms, roasted garlic butter, and crushed peanuts.
-                        </p>
-                    </div>
-                    <div class="flex items-center justify-between border-t-2 border-stone-200 pt-4">
-                        <span class="text-2xl font-black text-stone-900">$15.20</span>
-                        <button type="button" @click="addToCart('garlic-dan-dan')" class="bg-stone-900 hover:bg-orange-600 text-white font-black px-4 py-2 rounded-xl text-sm transition">
-                            Add To Bowl
-                        </button>
-                    </div>
-                </div>
-
+            <!-- CollectUI-style category filter -->
+            <div class="menu-cat-scroll flex gap-2 overflow-x-auto pb-2 mb-10 -mx-1 px-1" role="tablist" aria-label="Filter menu by category">
+                <template x-for="cat in menuCategories" :key="cat.id">
+                    <button type="button"
+                            role="tab"
+                            @click="selectedMenuCategory = cat.id"
+                            :aria-selected="selectedMenuCategory === cat.id"
+                            :class="selectedMenuCategory === cat.id ? 'menu-cat-pill--active bg-orange-500 text-white shadow-[3px_3px_0px_0px_rgba(28,25,23,1)]' : 'bg-white text-stone-700 hover:bg-orange-50 shadow-[2px_2px_0px_0px_rgba(28,25,23,1)]'"
+                            class="menu-cat-pill shrink-0 text-xs font-black uppercase tracking-wide px-4 py-2.5 rounded-full border-2 border-stone-900 transition-all"
+                            x-text="cat.label"></button>
+                </template>
             </div>
+
+            <!-- CollectUI-style food card grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <template x-for="item in filteredMenuItems" :key="item.key">
+                    <article class="food-card-collect noodle-card bg-amber-50 rounded-3xl p-5 shadow-[6px_6px_0px_0px_rgba(28,25,23,1)] flex flex-col">
+                        <div class="relative h-52 rounded-2xl mb-4 overflow-hidden border-2 border-stone-900" :class="item.imageBg">
+                            <img :src="item.image" :alt="item.alt" class="w-full h-full object-cover" loading="lazy" width="600" height="400">
+                            <span class="absolute top-3 left-3 text-white font-black text-[10px] px-2.5 py-1 rounded-full uppercase border border-white/30 backdrop-blur-sm" :class="item.badgeColor" x-text="item.badge"></span>
+                            <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-stone-800 font-black text-[10px] px-2 py-1 rounded-full border border-stone-900/20" x-text="item.prep"></span>
+                            <button type="button"
+                                    @click="addToCart(item.key)"
+                                    :aria-label="`Add ${item.name} to bowl`"
+                                    class="food-card-add-btn absolute -bottom-3 -right-3 w-12 h-12 rounded-full bg-stone-900 hover:bg-orange-600 text-white font-black text-2xl leading-none border-2 border-stone-900 flex items-center justify-center z-10">
+                                +
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <div class="flex items-center gap-1.5">
+                                <span class="review-stars text-sm" aria-hidden="true">★</span>
+                                <span class="text-sm font-black text-stone-900" x-text="item.rating.toFixed(1)"></span>
+                            </div>
+                            <span class="text-2xl font-black text-stone-900" x-text="formatPrice(item.price)"></span>
+                        </div>
+                        <h3 class="text-xl font-black text-stone-900 mb-2 leading-tight" x-text="item.name"></h3>
+                        <p class="text-sm font-medium text-stone-600 flex-1" x-text="item.desc"></p>
+                    </article>
+                </template>
+            </div>
+
+            <p x-show="filteredMenuItems.length === 0"
+               x-cloak
+               class="text-center font-black text-stone-600 py-12">
+                No bowls in this category yet — try another filter.
+            </p>
         </div>
     </section>
 
@@ -1178,7 +1450,10 @@
                         <div class="plate-bowl">
                             <div class="plate-broth" :style="`--broth-color: ${brothColor}`"></div>
                             <div class="plate-sheen" x-show="customPlate.broth === 'chili' || hasTopping('chili')" x-cloak></div>
-                            <div class="plate-noodles" :class="customPlate.noodles === 'thick' ? 'plate-noodles--thick' : 'plate-noodles--thin'">
+                            <div class="plate-noodles"
+                                 x-show="customPlate.noodles !== 'none'"
+                                 x-cloak
+                                 :class="customPlate.noodles === 'thick' ? 'plate-noodles--thick' : 'plate-noodles--thin'">
                                 <div class="noodle-strand" style="--i:0"></div>
                                 <div class="noodle-strand" style="--i:1"></div>
                                 <div class="noodle-strand" style="--i:2"></div>
@@ -1343,21 +1618,131 @@
         </div>
     </section>
 
+    <!-- Find Physical Stores -->
+    <section id="stores" class="py-20 bg-amber-50 border-t-4 border-stone-900">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-10">
+                <span class="inline-block bg-orange-100 border-2 border-orange-500 text-orange-700 font-black text-xs px-4 py-1.5 rounded-full uppercase tracking-wider mb-5">
+                    📍 Pan India · Walk In &amp; Slurp
+                </span>
+                <h2 class="text-3xl md:text-5xl font-black text-stone-900 uppercase mb-4 leading-tight">
+                    Find A <span class="text-orange-600">Physical Store</span> Near You
+                </h2>
+                <p class="text-lg font-bold text-stone-600 max-w-2xl mx-auto">
+                    SLURP! kitchens are open across India. Pick your city, grab the address, and show up hungry — no delivery required.
+                </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 mb-6">
+                <label class="sr-only" for="store-search">Search stores</label>
+                <input id="store-search"
+                       type="search"
+                       x-model="storeSearch"
+                       placeholder="Search by city, area, or pincode…"
+                       class="flex-1 px-4 py-3 rounded-xl border-2 border-stone-900 font-bold text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white shadow-[3px_3px_0px_0px_rgba(28,25,23,1)]">
+                <p class="sm:self-center text-sm font-black text-stone-500 uppercase tracking-wide whitespace-nowrap" aria-live="polite">
+                    <span x-text="filteredStores.length"></span> location<span x-show="filteredStores.length !== 1">s</span>
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mb-8" role="tablist" aria-label="Filter stores by city">
+                <button type="button"
+                        role="tab"
+                        @click="selectedStoreCity = 'all'"
+                        :aria-selected="selectedStoreCity === 'all'"
+                        :class="selectedStoreCity === 'all' ? 'bg-orange-500 text-white border-stone-900' : 'bg-white text-stone-700 border-stone-900 hover:bg-orange-50'"
+                        class="text-xs font-black uppercase tracking-wide px-3 py-2 rounded-full border-2 shadow-[2px_2px_0px_0px_rgba(28,25,23,1)] transition-colors">
+                    All Cities
+                </button>
+                <template x-for="city in storeCities" :key="city">
+                    <button type="button"
+                            role="tab"
+                            @click="selectedStoreCity = city"
+                            :aria-selected="selectedStoreCity === city"
+                            :class="selectedStoreCity === city ? 'bg-orange-500 text-white border-stone-900' : 'bg-white text-stone-700 border-stone-900 hover:bg-orange-50'"
+                            class="text-xs font-black uppercase tracking-wide px-3 py-2 rounded-full border-2 shadow-[2px_2px_0px_0px_rgba(28,25,23,1)] transition-colors"
+                            x-text="city"></button>
+                </template>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5" x-show="filteredStores.length > 0">
+                <template x-for="store in filteredStores" :key="store.id">
+                    <article class="noodle-card bg-white p-5 rounded-2xl text-left shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] flex flex-col">
+                        <div class="flex items-start justify-between gap-3 mb-3">
+                            <div>
+                                <p class="text-xs font-black uppercase tracking-widest text-orange-600 mb-1" x-text="`${store.city}, ${store.state}`"></p>
+                                <h3 class="text-xl font-black text-stone-900" x-text="store.name"></h3>
+                            </div>
+                            <span class="shrink-0 bg-amber-100 border-2 border-stone-900 text-stone-800 text-[10px] font-black uppercase px-2 py-1 rounded-full">Open</span>
+                        </div>
+                        <address class="not-italic text-stone-700 font-bold text-sm leading-relaxed mb-4">
+                            <span x-text="store.address"></span><br>
+                            <span x-text="`${store.city} – ${store.pincode}`"></span>
+                        </address>
+                        <dl class="grid grid-cols-1 gap-2 text-sm font-bold text-stone-600 mb-5">
+                            <div class="flex gap-2">
+                                <dt class="text-stone-400 uppercase text-xs tracking-wide shrink-0">Hours</dt>
+                                <dd x-text="store.hours"></dd>
+                            </div>
+                            <div class="flex gap-2">
+                                <dt class="text-stone-400 uppercase text-xs tracking-wide shrink-0">Phone</dt>
+                                <dd>
+                                    <a :href="phoneHref(store.phone)" class="text-orange-600 hover:underline" x-text="store.phone"></a>
+                                </dd>
+                            </div>
+                        </dl>
+                        <a :href="directionsUrl(store)"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="mt-auto inline-flex items-center justify-center gap-2 w-full bg-stone-900 hover:bg-orange-600 text-white font-black py-3 px-4 rounded-xl border-2 border-stone-900 shadow-[3px_3px_0px_0px_rgba(249,115,22,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all text-sm uppercase tracking-wide">
+                            Get Directions
+                        </a>
+                    </article>
+                </template>
+            </div>
+
+            <div x-show="filteredStores.length === 0"
+                 x-cloak
+                 class="noodle-card bg-white p-10 rounded-2xl text-center shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]">
+                <p class="text-xl font-black text-stone-900 mb-2">No stores match that search.</p>
+                <p class="text-stone-600 font-bold mb-4">Try another city or clear your filters.</p>
+                <button type="button"
+                        @click="selectedStoreCity = 'all'; storeSearch = ''"
+                        class="bg-orange-500 hover:bg-orange-600 text-white font-black py-2.5 px-5 rounded-full border-2 border-stone-900 uppercase text-sm tracking-wide">
+                    Show All Stores
+                </button>
+            </div>
+
+            <p class="mt-10 text-center text-sm font-bold text-stone-500 max-w-xl mx-auto">
+                New kitchens opening monthly. Can't find your city yet? Order online above — or follow us for the next SLURP! drop near you.
+            </p>
+        </div>
+    </section>
+
     <!-- Social Proof / Fun Section -->
     <section id="reviews" class="py-16 bg-amber-400 border-t-4 border-stone-900">
         <div class="max-w-5xl mx-auto px-6 text-center">
             <h2 class="text-3xl md:text-5xl font-black text-stone-900 uppercase mb-8">
                 "People Who Failed To Catch The <span class="noodle-word">Noodles</span> Say..."
             </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="noodle-card bg-white p-6 rounded-2xl text-left shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]">
-                    <p class="font-extrabold text-stone-800 text-lg mb-2">"I tried to catch it and got broth on my iPad."</p>
-                    <p class="text-sm font-bold text-stone-500">- Sarah K., Failed Catcher</p>
-                </div>
-                <div class="noodle-card bg-white p-6 rounded-2xl text-left shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]">
-                    <p class="font-extrabold text-stone-800 text-lg mb-2">"The Dragon Breath Chili Oil changed my life's trajectory."</p>
-                    <p class="text-sm font-bold text-stone-500">- Dave M., Serial Slurper</p>
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+                <template x-for="(t, i) in testimonials" :key="i">
+                    <article class="noodle-card bg-white p-6 rounded-2xl text-left shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="review-avatar" :class="t.color" x-text="t.initials" :aria-label="t.author"></div>
+                            <div class="min-w-0">
+                                <p class="font-black text-stone-900" x-text="t.author"></p>
+                                <p class="text-xs font-bold text-stone-500 uppercase tracking-wide" x-text="t.role"></p>
+                                <p class="review-stars text-sm mt-1" :aria-label="`${t.rating} out of 5 stars`">
+                                    <template x-for="star in 5" :key="star">
+                                        <span x-text="star <= t.rating ? '★' : '☆'"></span>
+                                    </template>
+                                </p>
+                            </div>
+                        </div>
+                        <p class="font-extrabold text-stone-800 text-lg leading-snug">"<span x-text="t.quote"></span>"</p>
+                    </article>
+                </template>
             </div>
         </div>
     </section>
@@ -1523,8 +1908,10 @@
                                class="w-full px-4 py-3 rounded-xl border-2 border-stone-900 font-bold text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500">
                     </div>
                     <button type="submit"
-                            class="w-full bg-orange-600 hover:bg-orange-700 text-white text-xl font-black py-4 px-6 rounded-2xl border-2 border-stone-900 shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all">
-                        PLACE ORDER — SLURP ON! 🍜
+                            :disabled="cartCount === 0 || orderPlaced"
+                            class="collect-btn collect-btn--accent collect-btn--submit">
+                        <span x-text="orderPlaced ? 'Order Placed! 🍜' : 'Place Order — Slurp On!'"></span>
+                        <svg x-show="!orderPlaced && cartCount > 0" x-cloak class="collect-btn__cart-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                     </button>
                 </form>
             </div>
@@ -1533,14 +1920,42 @@
 
     </main>
 
+    <!-- Floating checkout bar (CollectUI-style) -->
+    <div x-show="cartCount > 0 && !orderPlaced"
+         x-cloak
+         x-transition
+         class="checkout-float"
+         role="complementary"
+         aria-label="Quick checkout">
+        <div class="checkout-float__shell">
+            <a href="#checkout"
+               @click.prevent="goToCheckout($event)"
+               :aria-label="`Checkout ${cartCount} items, total ${formatPrice(cartTotal)}`"
+               class="collect-btn collect-btn--cart">
+                <span class="collect-btn__cart-left">
+                    <span class="collect-btn__cart-items" x-text="`${cartCount} item${cartCount === 1 ? '' : 's'}`"></span>
+                    <span class="collect-btn__cart-label">View Cart</span>
+                </span>
+                <span class="collect-btn__cart-right">
+                    <span x-text="formatPrice(cartTotal)"></span>
+                    <svg class="collect-btn__cart-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </span>
+            </a>
+        </div>
+    </div>
+
     <!-- Footer / Final CTA -->
     <footer class="bg-stone-900 text-white py-12 border-t-4 border-stone-900">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <img src="assets/slurp-logo.png" alt="" class="slurp-logo slurp-logo--footer" aria-hidden="true">
             <h3 class="text-3xl font-black text-amber-400 uppercase mb-4">Stop Staring, Start Slurping</h3>
             <p class="text-stone-400 font-medium mb-6">Hot, fresh noodles delivered to your doorstep in 30 minutes or less.</p>
-            <a href="#checkout" class="noodle-order-btn noodle-order-btn--footer relative z-[2] text-white text-lg font-black px-8 py-4 rounded-full shadow-lg transition transform hover:scale-105 inline-block">
-                HEAD TO CHECKOUT
+            <a href="#checkout" @click.prevent="goToCheckout($event)" class="collect-btn collect-btn--accent collect-btn--footer">
+                Head To Checkout
+                <span x-show="cartCount > 0"
+                      x-cloak
+                      class="collect-btn__count"
+                      x-text="cartCount"></span>
             </a>
             <p class="text-xs text-stone-600 mt-8">© 2026 SLURP Inc. No screens were permanently damaged in the making of this page.</p>
         </div>
@@ -1625,95 +2040,6 @@
             return d;
         }
 
-        function appendWaveSegment(path, segment) {
-            return `${path} ${segment.replace(/^M\s+[\d.]+\s+[\d.]+\s*/, '')}`;
-        }
-
-        function capWavyPath(cx, cy, r, amp, bumps, side) {
-            const steps = Math.max(12, bumps * 3);
-            let d = '';
-            for (let i = 0; i <= steps; i++) {
-                const t = i / steps;
-                const angle = side === 'right'
-                    ? -Math.PI / 2 + t * Math.PI
-                    : Math.PI / 2 + t * Math.PI;
-                const wave = amp * Math.sin(t * bumps * Math.PI);
-                const rr = r + wave;
-                const x = cx + rr * Math.cos(angle);
-                const y = cy + rr * Math.sin(angle);
-                d += `${i === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)} `;
-            }
-            return d.trim();
-        }
-
-        function stadiumWavyPath(w, h, inset, amp, bumps) {
-            const radius = h / 2;
-            const capR = Math.max(radius - inset, 1);
-            const top = inset;
-            const bottom = h - inset;
-            const leftCx = radius;
-            const rightCx = w - radius;
-            const cy = h / 2;
-            const flatLen = Math.max(w - h, 0);
-            const flatBumps = Math.max(2, Math.round((flatLen / h) * bumps));
-            const capBumps = Math.max(4, Math.round(bumps * 0.45));
-
-            if (flatLen < 2) {
-                const steps = 96;
-                let d = '';
-                for (let i = 0; i <= steps; i++) {
-                    const t = (i / steps) * Math.PI * 2;
-                    const wave = amp * Math.sin(t * bumps);
-                    const x = w / 2 + (capR + wave) * Math.cos(t);
-                    const y = h / 2 + (capR + wave) * Math.sin(t);
-                    d += `${i === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)} `;
-                }
-                return d + 'Z';
-            }
-
-            let d = noodleWaveH(top, leftCx, rightCx, amp);
-            d = appendWaveSegment(d, capWavyPath(rightCx, cy, capR, amp, capBumps, 'right'));
-            d = appendWaveSegment(d, noodleWaveH(bottom, rightCx, leftCx, amp));
-            d = appendWaveSegment(d, capWavyPath(leftCx, cy, capR, amp, capBumps, 'left'));
-            return d + 'Z';
-        }
-
-        function attachNoodlePillFrame(el, { stroke = 3.5, amp = 1.2, bumps = 14 } = {}) {
-            if (el.querySelector('.noodle-frame-pill')) return;
-
-            const inset = stroke / 2;
-            el.style.setProperty('--noodle-btn-stroke', `${stroke}px`);
-            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            svg.setAttribute('aria-hidden', 'true');
-            svg.setAttribute('preserveAspectRatio', 'none');
-            svg.classList.add('noodle-frame-pill');
-
-            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            path.setAttribute('fill', 'none');
-            path.setAttribute('stroke', 'url(#noodle-btn-gradient)');
-            path.setAttribute('stroke-width', stroke);
-            path.setAttribute('stroke-linecap', 'round');
-            path.setAttribute('stroke-linejoin', 'round');
-            path.setAttribute('vector-effect', 'non-scaling-stroke');
-            svg.appendChild(path);
-
-            const render = () => {
-                const w = Math.max(el.offsetWidth, 1);
-                const h = Math.max(el.offsetHeight, 1);
-                const bumpCount = Math.max(10, Math.round((w / h) * bumps));
-                const pad = stroke;
-                svg.setAttribute('viewBox', `${-pad} ${-pad} ${w + pad * 2} ${h + pad * 2}`);
-                path.setAttribute('d', stadiumWavyPath(w, h, inset, amp, bumpCount));
-            };
-
-            el.appendChild(svg);
-            render();
-            requestAnimationFrame(render);
-            if (typeof ResizeObserver !== 'undefined') {
-                new ResizeObserver(render).observe(el);
-            }
-        }
-
         function attachNoodleFrame(el, { stroke = 3, amp = 1.8, inset = 3, strokes = ['#1c1917'] } = {}) {
             if (el.querySelector('.noodle-frame')) return;
 
@@ -1747,9 +2073,6 @@
 
         document.querySelectorAll('.noodle-card').forEach((el) =>
             attachNoodleFrame(el, { stroke: 3.2, amp: 2, inset: 3.5 })
-        );
-        document.querySelectorAll('.noodle-order-btn').forEach((el) =>
-            attachNoodlePillFrame(el, { stroke: 5, amp: 1.15, bumps: 16 })
         );
     </script>
     <script type="module">
