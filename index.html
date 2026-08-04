@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLURP! - Tastiest Noodles on the Planet</title>
+    <meta name="description" content="SLURP! — The tastiest noodles on the planet. Try to catch them, then order Dragon Breath Chili Oil, Midnight Tonkotsu, and Garlic Butter Dan Dan.">
+    <link rel="icon" type="image/png" href="assets/slurp-logo.png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js for lightweight state management -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        html {
+            scroll-padding-top: 5.5rem;
+        }
+        @keyframes splash-screen-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes splash-scene-in {
+            0% {
+                opacity: 0;
+                transform: scale(1.25) rotate(4deg);
+                filter: blur(8px) brightness(1.12);
+            }
+            60% {
+                opacity: 1;
+                transform: scale(0.98) rotate(-1deg);
+                filter: blur(0) brightness(1);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+                filter: blur(0) brightness(1);
+            }
+        }
+        @keyframes smear-draw {
+            from { stroke-dashoffset: 1; opacity: 0; }
+            to { stroke-dashoffset: 0; opacity: 1; }
+        }
+        @keyframes cluster-slam {
+            0% { transform: translate(18%, 22%) scale(0.25) rotate(28deg); opacity: 0; }
+            65% { transform: translate(-2%, -2%) scale(1.06) rotate(-4deg); opacity: 1; }
+            100% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+        }
+        @keyframes cluster-fly {
+            0% { transform: translate(-40%, -35%) scale(0.15) rotate(-35deg); opacity: 0; }
+            70% { transform: translate(3%, 2%) scale(1.08) rotate(6deg); opacity: 1; }
+            100% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+        }
+        @keyframes strand-pop {
+            from { stroke-dashoffset: 1; opacity: 0; }
+            to { stroke-dashoffset: 0; opacity: 1; }
+        }
+        @keyframes garnish-burst {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            70% { transform: scale(1.25) rotate(var(--spin, 20deg)); opacity: 1; }
+            100% { transform: scale(1) rotate(var(--spin, 20deg)); opacity: 1; }
+        }
+        @keyframes splash-shake {
+            0%, 100% { transform: translate(0, 0); }
+            20% { transform: translate(-6px, 4px); }
+            40% { transform: translate(5px, -3px); }
+            60% { transform: translate(-3px, -2px); }
+            80% { transform: translate(2px, 3px); }
+        }
+        @keyframes splash-modal-in {
+            0% {
+                opacity: 0;
+                transform: scale(0.85) rotate(-4deg) translateY(20px);
+            }
+            70% {
+                opacity: 1;
+                transform: scale(1.03) rotate(2deg) translateY(-4px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(2deg) translateY(0);
+            }
+        }
+        .splash-backdrop {
+            animation: splash-screen-in 0.12s ease-out forwards;
+            background-color: #F9F8F3;
+        }
+        .splash-scene {
+            animation:
+                splash-scene-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+                splash-shake 0.35s ease-out 0.18s;
+        }
+        .splash-smear {
+            stroke-dasharray: 1;
+            stroke-dashoffset: 1;
+            animation: smear-draw 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            filter: blur(0.6px);
+        }
+        .splash-smear-1 { animation-delay: 0.05s; }
+        .splash-smear-2 { animation-delay: 0.12s; }
+        .splash-smear-3 { animation-delay: 0.2s; }
+        .splash-cluster-main {
+            transform-origin: 75% 75%;
+            animation: cluster-slam 0.48s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+        }
+        .splash-cluster-sat {
+            transform-origin: 20% 22%;
+            animation: cluster-fly 0.42s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+        }
+        .splash-strand {
+            stroke-dasharray: 1;
+            stroke-dashoffset: 1;
+            animation: strand-pop 0.35s ease-out forwards;
+        }
+        .splash-garnish {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: garnish-burst 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        .splash-modal {
+            animation: splash-modal-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.28s both;
+            background: rgba(28, 25, 23, 0.42);
+            backdrop-filter: blur(40px) saturate(1.35);
+            -webkit-backdrop-filter: blur(40px) saturate(1.35);
+            border: 2px solid rgba(249, 115, 22, 0.9);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.28),
+                inset 0 1px 0 rgba(255, 255, 255, 0.12);
+            z-index: 60;
+        }
+        .bg-grid {
+            background-image: radial-gradient(#f97316 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* Wavy noodle-strand card borders — SVG frames injected by script */
+        .noodle-card,
+        .noodle-card-inner {
+            position: relative;
+            border: none !important;
+        }
+        .noodle-card {
+            overflow: visible;
+        }
+        .noodle-card-inner {
+            overflow: hidden;
+        }
+        .noodle-frame {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: visible;
+        }
+        .noodle-order-btn {
+            position: relative;
+            border: none;
+            overflow: visible;
+            background: transparent !important;
+            --noodle-btn-stroke: 5px;
+            isolation: isolate;
+        }
+        .noodle-order-btn::before {
+            content: '';
+            position: absolute;
+            inset: var(--noodle-btn-stroke);
+            border-radius: 9999px;
+            z-index: -1;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .noodle-order-btn--nav::before {
+            background-color: #ea580c;
+        }
+        .noodle-order-btn--nav:hover::before {
+            background-color: #c2410c;
+        }
+        .noodle-order-btn--footer::before {
+            background-color: #f97316;
+        }
+        .noodle-order-btn--footer:hover::before {
+            background-color: #ea580c;
+        }
+        .noodle-frame-pill {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: visible;
+        }
+        .social-brand-icon {
+            width: 1.35rem;
+            height: 1.35rem;
+            flex-shrink: 0;
+        }
+        .slurp-logo {
+            height: 2.75rem;
+            width: auto;
+            display: block;
+            transform: rotate(-2deg);
+            filter: drop-shadow(1px 2px 0 rgba(28, 25, 23, 0.15));
+        }
+        .slurp-logo--footer {
+            height: 3.5rem;
+            margin: 0 auto 1rem;
+            transform: rotate(-1deg);
+        }
+
+        /* Galactic noodle story — spinning globe + alien departure */
+        @keyframes earth-map-scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+        @keyframes globe-wobble {
+            0%, 100% { transform: rotate(-8deg); }
+            50% { transform: rotate(8deg); }
+        }
+        @keyframes globe-ring-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes alien-blast-off {
+            0%, 16% {
+                transform: translate(calc(-50% + 110px), calc(-50% + 20px)) scale(1) rotate(-15deg);
+                opacity: 1;
+            }
+            30% {
+                transform: translate(calc(-50% + 136px), calc(-50% - 10px)) scale(1.06) rotate(-6deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(calc(-50% + 172px), calc(-50% - 62px)) scale(1) rotate(8deg);
+                opacity: 1;
+            }
+            75% {
+                transform: translate(calc(-50% + 224px), calc(-50% - 135px)) scale(0.8) rotate(16deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(calc(-50% + 276px), calc(-50% - 218px)) scale(0.4) rotate(24deg);
+                opacity: 0;
+            }
+        }
+        @keyframes alien-wave {
+            0%, 100% { transform: rotate(-18deg); }
+            50% { transform: rotate(8deg); }
+        }
+        @keyframes thruster-flicker {
+            0%, 100% { opacity: 0.85; transform: scaleX(1); }
+            50% { opacity: 1; transform: scaleX(1.15); }
+        }
+        @keyframes star-twinkle {
+            0%, 100% { opacity: 0.35; }
+            50% { opacity: 1; }
+        }
+        @keyframes noodle-trail {
+            from { stroke-dashoffset: 120; opacity: 0; }
+            to { stroke-dashoffset: 0; opacity: 0.7; }
+        }
+        .story-stars {
+            background-image:
+                radial-gradient(1px 1px at 10% 20%, #fff, transparent),
+                radial-gradient(1px 1px at 30% 65%, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 55% 15%, #fde68a, transparent),
+                radial-gradient(1px 1px at 72% 42%, #fff, transparent),
+                radial-gradient(1px 1px at 88% 78%, #fff, transparent),
+                radial-gradient(1px 1px at 15% 88%, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 92% 12%, #fde68a, transparent),
+                radial-gradient(1px 1px at 45% 92%, #fff, transparent);
+        }
+        .story-star { animation: star-twinkle 2.4s ease-in-out infinite; }
+        .story-star:nth-child(2) { animation-delay: 0.4s; }
+        .story-star:nth-child(3) { animation-delay: 0.9s; }
+        .story-star:nth-child(4) { animation-delay: 1.3s; }
+        .globe-stage {
+            perspective: 900px;
+        }
+        .globe-orbit {
+            animation: globe-wobble 6s ease-in-out infinite;
+            position: relative;
+            z-index: 10;
+        }
+        .globe {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+            background: #0369a1;
+            box-shadow:
+                inset -22px -22px 40px rgba(0, 0, 0, 0.45),
+                inset 10px 10px 22px rgba(255, 255, 255, 0.14),
+                0 0 0 4px #1c1917,
+                0 0 55px rgba(56, 189, 248, 0.4),
+                0 0 90px rgba(59, 130, 246, 0.18);
+        }
+        .globe-texture-track {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            width: 200%;
+            height: 100%;
+            animation: earth-map-scroll 2.8s linear infinite;
+            animation-delay: -0.7s;
+            will-change: transform;
+        }
+        .globe-texture-track img {
+            width: 50%;
+            height: 100%;
+            flex-shrink: 0;
+            object-fit: cover;
+            display: block;
+            filter: saturate(1.12) contrast(1.08) brightness(1.04);
+        }
+        .globe::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 50% 50%, transparent 66%, rgba(0, 0, 0, 0.22) 100%),
+                radial-gradient(ellipse 48% 40% at 32% 28%, rgba(255, 255, 255, 0.32) 0%, transparent 52%);
+            pointer-events: none;
+            z-index: 2;
+        }
+        .globe::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            box-shadow: inset 0 0 18px 3px rgba(125, 211, 252, 0.28);
+            pointer-events: none;
+            z-index: 3;
+        }
+        .globe-noodle-ring {
+            position: absolute;
+            inset: -18px;
+            border: 3px dashed #f97316;
+            border-radius: 50%;
+            opacity: 0.55;
+            animation: globe-ring-spin 1.2s linear infinite reverse;
+        }
+        .alien-path {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .alien-rider {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 56px;
+            height: 72px;
+            z-index: 20;
+            animation: alien-blast-off 4.5s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+        }
+        .alien-head {
+            width: 44px;
+            height: 52px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #86efac, #4ade80 55%, #22c55e);
+            border-radius: 50% 50% 45% 45%;
+            border: 3px solid #1c1917;
+            position: relative;
+            box-shadow: 0 4px 0 #1c1917;
+        }
+        .alien-eye {
+            position: absolute;
+            top: 18px;
+            width: 12px;
+            height: 16px;
+            background: #1c1917;
+            border-radius: 50%;
+        }
+        .alien-eye::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+        }
+        .alien-eye-left { left: 8px; }
+        .alien-eye-right { right: 8px; }
+        .alien-body {
+            width: 22px;
+            height: 18px;
+            margin: 2px auto 0;
+            background: #4ade80;
+            border: 3px solid #1c1917;
+            border-radius: 8px;
+        }
+        .alien-arm {
+            position: absolute;
+            top: 58px;
+            width: 22px;
+            height: 6px;
+            background: #4ade80;
+            border: 2px solid #1c1917;
+            border-radius: 999px;
+            transform-origin: left center;
+        }
+        .alien-arm-left {
+            left: -4px;
+            animation: alien-wave 0.6s ease-in-out infinite;
+        }
+        .alien-arm-right {
+            right: -18px;
+            width: 28px;
+            transform: rotate(25deg);
+        }
+        .alien-bowl {
+            position: absolute;
+            right: -22px;
+            top: -4px;
+            width: 18px;
+            height: 10px;
+            background: #f97316;
+            border: 2px solid #1c1917;
+            border-radius: 0 0 10px 10px;
+        }
+        .alien-bowl::before {
+            content: '🍜';
+            position: absolute;
+            top: -14px;
+            left: 1px;
+            font-size: 10px;
+            line-height: 1;
+        }
+        .alien-thruster {
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            width: 14px;
+            height: 18px;
+            margin-left: -7px;
+            background: linear-gradient(180deg, #fb923c, #ef4444, transparent);
+            border-radius: 0 0 50% 50%;
+            animation: thruster-flicker 0.15s linear infinite;
+            filter: blur(0.5px);
+        }
+        .alien-trail {
+            stroke-dasharray: 120;
+            stroke-dashoffset: 120;
+            animation: noodle-trail 4.5s ease-out infinite;
+        }
+
+        /* Custom plate builder — pure CSS bowl preview */
+        @keyframes steam-rise {
+            0% { opacity: 0; transform: translateY(0) scaleX(1); }
+            20% { opacity: 0.55; }
+            100% { opacity: 0; transform: translateY(-28px) scaleX(1.3); }
+        }
+        @keyframes noodle-wiggle {
+            0%, 100% { transform: rotate(var(--rot)) scale(1); }
+            50% { transform: rotate(calc(var(--rot) + 3deg)) scale(1.02); }
+        }
+        .plate-stage {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 320px;
+            padding: 1.5rem;
+        }
+        .plate-steam {
+            position: absolute;
+            top: 12%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 18px;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .plate-steam-wisp {
+            width: 8px;
+            height: 32px;
+            background: linear-gradient(to top, rgba(255,255,255,0.5), transparent);
+            border-radius: 50%;
+            animation: steam-rise 2.4s ease-out infinite;
+        }
+        .plate-steam-wisp:nth-child(2) { animation-delay: 0.6s; height: 40px; }
+        .plate-steam-wisp:nth-child(3) { animation-delay: 1.2s; width: 6px; }
+        .plate-bowl {
+            position: relative;
+            width: 260px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #fafaf9 0%, #e7e5e4 55%, #d6d3d1 100%);
+            border: 4px solid #1c1917;
+            box-shadow: 8px 8px 0 0 #1c1917;
+            overflow: hidden;
+        }
+        .plate-bowl::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            box-shadow: inset 0 8px 16px rgba(28, 25, 23, 0.15);
+            pointer-events: none;
+            z-index: 4;
+        }
+        .plate-broth {
+            position: absolute;
+            inset: 14%;
+            border-radius: 50%;
+            background: var(--broth-color, #f5e6c8);
+            transition: background 0.35s ease;
+            box-shadow: inset 0 -6px 12px rgba(28, 25, 23, 0.12);
+        }
+        .plate-sheen {
+            position: absolute;
+            inset: 14%;
+            border-radius: 50%;
+            background: radial-gradient(ellipse at 30% 25%, rgba(255, 120, 40, 0.45), transparent 55%);
+            pointer-events: none;
+            z-index: 2;
+        }
+        .plate-noodles {
+            position: absolute;
+            inset: 18%;
+            z-index: 1;
+        }
+        .noodle-strand {
+            position: absolute;
+            height: 6px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #fde68a, #fbbf24, #fde68a);
+            box-shadow: 0 1px 0 rgba(28, 25, 23, 0.2);
+            transform-origin: center;
+            animation: noodle-wiggle 3s ease-in-out infinite;
+            animation-delay: calc(var(--i) * 0.15s);
+        }
+        .plate-noodles--thick .noodle-strand { height: 8px; }
+        .plate-noodles--thin .noodle-strand { height: 4px; }
+        .noodle-strand:nth-child(1)  { --rot: -35deg; width: 62%; top: 22%; left: 18%; transform: rotate(-35deg); }
+        .noodle-strand:nth-child(2)  { --rot: 12deg;  width: 55%; top: 32%; left: 22%; transform: rotate(12deg); }
+        .noodle-strand:nth-child(3)  { --rot: -8deg;  width: 68%; top: 42%; left: 14%; transform: rotate(-8deg); }
+        .noodle-strand:nth-child(4)  { --rot: 28deg;  width: 50%; top: 52%; left: 28%; transform: rotate(28deg); }
+        .noodle-strand:nth-child(5)  { --rot: -22deg; width: 58%; top: 58%; left: 20%; transform: rotate(-22deg); }
+        .noodle-strand:nth-child(6)  { --rot: 45deg;  width: 44%; top: 38%; left: 38%; transform: rotate(45deg); }
+        .noodle-strand:nth-child(7)  { --rot: -48deg; width: 48%; top: 48%; left: 10%; transform: rotate(-48deg); }
+        .noodle-strand:nth-child(8)  { --rot: 5deg;   width: 52%; top: 28%; left: 32%; transform: rotate(5deg); }
+        .noodle-strand:nth-child(9)  { --rot: -15deg; width: 46%; top: 62%; left: 32%; transform: rotate(-15deg); }
+        .noodle-strand:nth-child(10) { --rot: 18deg;  width: 40%; top: 18%; left: 42%; transform: rotate(18deg); }
+        .plate-toppings {
+            position: absolute;
+            inset: 14%;
+            border-radius: 50%;
+            z-index: 3;
+            pointer-events: none;
+        }
+        .topping-scallion span {
+            position: absolute;
+            width: 10px;
+            height: 4px;
+            background: #22c55e;
+            border-radius: 2px;
+            box-shadow: 0 0 0 1px rgba(21, 128, 61, 0.4);
+        }
+        .topping-scallion span:nth-child(1) { top: 28%; left: 35%; transform: rotate(-20deg); }
+        .topping-scallion span:nth-child(2) { top: 45%; left: 55%; transform: rotate(35deg); }
+        .topping-scallion span:nth-child(3) { top: 58%; left: 28%; transform: rotate(10deg); }
+        .topping-scallion span:nth-child(4) { top: 38%; left: 62%; transform: rotate(-45deg); }
+        .topping-scallion span:nth-child(5) { top: 52%; left: 42%; transform: rotate(55deg); }
+        .topping-egg {
+            position: absolute;
+            top: 32%;
+            left: 38%;
+            width: 36px;
+            height: 18px;
+            background: #fef3c7;
+            border-radius: 0 0 36px 36px;
+            border: 2px solid #1c1917;
+            box-shadow: inset 0 -6px 0 #fbbf24;
+        }
+        .topping-egg::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 10px;
+            background: #f59e0b;
+            border-radius: 50%;
+            opacity: 0.85;
+        }
+        .topping-chashu span {
+            position: absolute;
+            height: 14px;
+            background: linear-gradient(180deg, #fda4af, #fb7185);
+            border: 1.5px solid #1c1917;
+            border-radius: 4px;
+        }
+        .topping-chashu span:nth-child(1) { width: 28px; top: 48%; left: 22%; transform: rotate(-12deg); }
+        .topping-chashu span:nth-child(2) { width: 24px; top: 55%; left: 48%; transform: rotate(18deg); }
+        .topping-chili {
+            position: absolute;
+            top: 40%;
+            left: 52%;
+            width: 6px;
+            height: 6px;
+            background: #dc2626;
+            border-radius: 50%;
+            box-shadow:
+                12px -8px 0 #ef4444,
+                -10px 6px 0 #b91c1c,
+                6px 14px 0 #dc2626,
+                -14px -4px 0 #ef4444,
+                20px 4px 0 #b91c1c,
+                -6px 16px 0 #dc2626;
+        }
+        .topping-sesame span {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fef3c7;
+            border-radius: 50%;
+            box-shadow: 0 0 0 0.5px #d6d3d1;
+        }
+        .topping-sesame span:nth-child(1) { top: 30%; left: 48%; }
+        .topping-sesame span:nth-child(2) { top: 42%; left: 58%; }
+        .topping-sesame span:nth-child(3) { top: 50%; left: 38%; }
+        .topping-sesame span:nth-child(4) { top: 56%; left: 52%; }
+        .topping-sesame span:nth-child(5) { top: 44%; left: 32%; }
+        .topping-sesame span:nth-child(6) { top: 36%; left: 62%; }
+        .topping-peanut span {
+            position: absolute;
+            width: 8px;
+            height: 5px;
+            background: #d97706;
+            border-radius: 50%;
+            border: 1px solid #92400e;
+        }
+        .topping-peanut span:nth-child(1) { top: 46%; left: 30%; transform: rotate(20deg); }
+        .topping-peanut span:nth-child(2) { top: 54%; left: 58%; transform: rotate(-15deg); }
+        .topping-peanut span:nth-child(3) { top: 38%; left: 52%; transform: rotate(40deg); }
+        .topping-peanut span:nth-child(4) { top: 60%; left: 40%; transform: rotate(-30deg); }
+        .build-chip {
+            border: 2px solid #1c1917;
+            font-weight: 800;
+            transition: all 0.15s ease;
+        }
+        .build-chip--active {
+            background-color: #ea580c;
+            color: white;
+            box-shadow: 3px 3px 0 0 #1c1917;
+        }
+        .build-chip:not(.build-chip--active):hover {
+            background-color: #fed7aa;
+        }
+        .plate-toast {
+            animation: plate-toast-in 0.3s ease;
+        }
+        @keyframes plate-toast-in {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('slurpApp', () => ({
+                thrown: new URLSearchParams(window.location.search).has('splash'),
+                cleaned: false,
+                plateSaved: false,
+                customPlate: {
+                    broth: 'tonkotsu',
+                    noodles: 'thick',
+                    toppings: ['scallion'],
+                },
+                brothOptions: [
+                    { id: 'tonkotsu', label: 'Tonkotsu' },
+                    { id: 'chili', label: 'Dragon Chili' },
+                    { id: 'sesame', label: 'Sesame Dan Dan' },
+                ],
+                noodleOptions: [
+                    { id: 'thick', label: 'Hand-Pulled Thick' },
+                    { id: 'thin', label: 'Silk Thin' },
+                ],
+                toppingOptions: [
+                    { id: 'scallion', label: 'Scallion' },
+                    { id: 'egg', label: 'Jammy Egg' },
+                    { id: 'chashu', label: 'Chashu' },
+                    { id: 'chili', label: 'Chili Crisp' },
+                    { id: 'sesame', label: 'Sesame' },
+                    { id: 'peanut', label: 'Crushed Peanuts' },
+                ],
+                toggleTopping(id) {
+                    const i = this.customPlate.toppings.indexOf(id);
+                    if (i >= 0) this.customPlate.toppings.splice(i, 1);
+                    else this.customPlate.toppings.push(id);
+                },
+                hasTopping(id) {
+                    return this.customPlate.toppings.includes(id);
+                },
+                get brothColor() {
+                    const map = { tonkotsu: '#f5e6c8', chili: '#e85d04', sesame: '#c4956a' };
+                    return map[this.customPlate.broth] || '#f5e6c8';
+                },
+                get plateLabel() {
+                    const names = {
+                        tonkotsu: 'Midnight Tonkotsu Dream',
+                        chili: 'Dragon Breath Custom',
+                        sesame: 'Sesame Slurp Special',
+                    };
+                    return names[this.customPlate.broth] || 'Custom Slurp';
+                },
+                get plateDescription() {
+                    const noodle = this.customPlate.noodles === 'thick'
+                        ? 'hand-pulled thick noodles'
+                        : 'silk-thin noodles';
+                    const tops = this.customPlate.toppings.length
+                        ? this.customPlate.toppings
+                            .map((t) => this.toppingOptions.find((o) => o.id === t)?.label)
+                            .filter(Boolean)
+                            .join(', ')
+                        : 'nothing but pure noodle confidence';
+                    return `${noodle} swimming in your chosen broth, loaded with ${tops}.`;
+                },
+                savePlate() {
+                    this.plateSaved = true;
+                    setTimeout(() => { this.plateSaved = false; }, 3000);
+                },
+            }));
+        });
+    </script>
+</head>
+<body class="bg-amber-50 text-stone-900 font-sans antialiased overflow-x-hidden bg-grid" x-data="slurpApp()">
+
+    <svg width="0" height="0" class="absolute" aria-hidden="true">
+        <defs>
+            <linearGradient id="noodle-btn-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FEF3C7"/>
+                <stop offset="35%" stop-color="#F59E0B"/>
+                <stop offset="100%" stop-color="#451A03"/>
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-40 bg-amber-50/80 backdrop-blur-md border-b border-amber-200">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#hero" class="inline-block shrink-0">
+                <img src="assets/slurp-logo.png" alt="SLURP! — Tastiest Noodles on the Planet" class="slurp-logo">
+            </a>
+            <div class="hidden md:flex space-x-8 font-bold text-stone-700">
+                <a href="#hero" class="hover:text-orange-600 transition">The Dare</a>
+                <a href="#menu" class="hover:text-orange-600 transition">Noodle Vault</a>
+                <a href="#build" class="hover:text-orange-600 transition">Build Your Bowl</a>
+                <a href="#story" class="hover:text-orange-600 transition">Galactic Slurp</a>
+                <a href="#reviews" class="hover:text-orange-600 transition">Slurp Squad</a>
+            </div>
+            <a href="#checkout" class="noodle-order-btn noodle-order-btn--nav relative z-[2] text-white font-extrabold px-6 py-2.5 rounded-full shadow-lg hover:scale-105 transition transform active:scale-95">
+                Checkout
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen relative flex items-center justify-center pt-24 pb-12 px-4 overflow-hidden">
+        
+        <!-- Screen Splat Overlay -->
+        <div x-show="thrown" 
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 z-50 overflow-hidden">
+            
+            <div class="splash-backdrop absolute inset-0"></div>
+
+            <svg class="splash-scene absolute inset-0 w-full h-full pointer-events-none select-none" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                <defs>
+                    <linearGradient id="noodle-a" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#E8C07A"/>
+                        <stop offset="100%" stop-color="#B58450"/>
+                    </linearGradient>
+                    <linearGradient id="noodle-b" x1="100%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#D4A373"/>
+                        <stop offset="100%" stop-color="#9A6838"/>
+                    </linearGradient>
+                    <linearGradient id="sauce-smear" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#4A2C1D" stop-opacity="0.95"/>
+                        <stop offset="55%" stop-color="#6B3E2A" stop-opacity="0.75"/>
+                        <stop offset="100%" stop-color="#4A2C1D" stop-opacity="0.15"/>
+                    </linearGradient>
+                    <radialGradient id="sauce-pool" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#5C3824" stop-opacity="0.55"/>
+                        <stop offset="100%" stop-color="#4A2C1D" stop-opacity="0"/>
+                    </radialGradient>
+                </defs>
+
+                <!-- Sauce splatters (short streaks, not one solid beam) -->
+                <path class="splash-smear splash-smear-1" pathLength="1" d="M780,560 Q720,500 660,450" fill="none" stroke="url(#sauce-smear)" stroke-width="18" stroke-linecap="round" opacity="0.85"/>
+                <path class="splash-smear splash-smear-2" pathLength="1" d="M820,590 Q760,520 690,460" fill="none" stroke="url(#sauce-smear)" stroke-width="14" stroke-linecap="round" opacity="0.7"/>
+                <path class="splash-smear splash-smear-3" pathLength="1" d="M650,480 Q590,420 530,370" fill="none" stroke="#4A2C1D" stroke-width="10" stroke-linecap="round" opacity="0.4"/>
+                <path class="splash-smear splash-smear-2" pathLength="1" d="M560,420 Q500,370 450,330" fill="none" stroke="#6B3E2A" stroke-width="8" stroke-linecap="round" opacity="0.3"/>
+                <path class="splash-smear splash-smear-3" pathLength="1" d="M480,360 Q430,310 380,270" fill="none" stroke="#4A2C1D" stroke-width="6" stroke-linecap="round" opacity="0.22"/>
+                <path class="splash-smear splash-smear-1" pathLength="1" d="M240,200 Q200,170 160,145" fill="none" stroke="url(#sauce-smear)" stroke-width="10" stroke-linecap="round" opacity="0.55"/>
+                <path class="splash-smear splash-smear-2" pathLength="1" d="M210,230 Q175,200 140,175" fill="none" stroke="#6B3E2A" stroke-width="7" stroke-linecap="round" opacity="0.35"/>
+                <ellipse cx="710" cy="510" rx="140" ry="90" fill="url(#sauce-pool)" opacity="0.7"/>
+                <ellipse cx="170" cy="160" rx="70" ry="50" fill="url(#sauce-pool)" opacity="0.55"/>
+
+                <!-- Main cluster bottom-right -->
+                <g class="splash-cluster-main">
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.1s" d="M580,620 Q640,560 700,530 T820,490 T900,470" fill="none" stroke="url(#noodle-a)" stroke-width="9" stroke-linecap="round"/>
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.14s" d="M600,580 Q670,520 740,500 T860,455" fill="none" stroke="url(#noodle-b)" stroke-width="7" stroke-linecap="round"/>
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.18s" d="M620,650 Q690,590 760,560 T890,520" fill="none" stroke="url(#noodle-a)" stroke-width="8" stroke-linecap="round"/>
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.12s" d="M650,540 Q710,500 770,485 T850,460 T920,445" fill="none" stroke="#C9956A" stroke-width="6" stroke-linecap="round"/>
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.16s" d="M640,600 Q720,540 790,515 T880,485" fill="none" stroke="url(#noodle-b)" stroke-width="10" stroke-linecap="round"/>
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.2s" d="M670,630 Q740,570 810,545 T930,505" fill="none" stroke="url(#noodle-a)" stroke-width="7" stroke-linecap="round"/>
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.22s" d="M690,560 Q750,520 820,500 T910,475" fill="none" stroke="#A67240" stroke-width="5" stroke-linecap="round"/>
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.08s" d="M610,610 Q680,550 750,525 T870,490 T950,465" fill="none" stroke="url(#noodle-b)" stroke-width="6" stroke-linecap="round"/>
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.24s" d="M700,640 Q770,590 840,565 T960,530" fill="none" stroke="url(#noodle-a)" stroke-width="8" stroke-linecap="round"/>
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.11s" d="M660,570 Q730,510 800,490 T920,450" fill="none" stroke="#D4A373" stroke-width="4" stroke-linecap="round"/>
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.19s" d="M630,630 Q710,560 780,530 T900,490" fill="none" stroke="url(#noodle-b)" stroke-width="9" stroke-linecap="round"/>
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.26s" d="M720,620 Q790,560 860,535 T980,495" fill="none" stroke="url(#noodle-a)" stroke-width="6" stroke-linecap="round"/>
+                    <!-- protein chunks -->
+                    <rect class="splash-garnish" style="--spin:12deg;animation-delay:.25s" x="740" y="510" width="28" height="20" rx="6" fill="#8B5E3C" transform="rotate(12 754 520)"/>
+                    <rect class="splash-garnish" style="--spin:-18deg;animation-delay:.3s" x="810" y="535" width="24" height="18" rx="5" fill="#7A4F32" transform="rotate(-18 822 544)"/>
+                    <rect class="splash-garnish" style="--spin:25deg;animation-delay:.28s" x="680" y="555" width="22" height="16" rx="4" fill="#9A6848" transform="rotate(25 691 563)"/>
+                </g>
+
+                <!-- Satellite cluster top-left -->
+                <g class="splash-cluster-sat">
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.22s" d="M90,180 Q130,150 170,140 T250,125 T310,118" fill="none" stroke="url(#noodle-a)" stroke-width="7" stroke-linecap="round"/>
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.26s" d="M100,210 Q150,175 200,160 T290,140" fill="none" stroke="url(#noodle-b)" stroke-width="6" stroke-linecap="round"/>
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.3s" d="M110,150 Q160,120 210,110 T300,95" fill="none" stroke="#C9956A" stroke-width="5" stroke-linecap="round"/>
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.28s" d="M80,200 Q140,165 190,150 T280,130 T340,120" fill="none" stroke="url(#noodle-a)" stroke-width="8" stroke-linecap="round"/>
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.32s" d="M120,130 Q170,105 220,95 T310,80" fill="none" stroke="url(#noodle-b)" stroke-width="4" stroke-linecap="round"/>
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.24s" d="M95,170 Q145,140 195,128 T285,108" fill="none" stroke="#A67240" stroke-width="6" stroke-linecap="round"/>
+                    <!-- trailing strand -->
+                    <path class="splash-strand" pathLength="1" style="animation-delay:.34s" d="M200,120 Q220,200 240,280 T270,400" fill="none" stroke="url(#noodle-a)" stroke-width="5" stroke-linecap="round" opacity="0.85"/>
+                </g>
+
+                <!-- Mid-air stray strands -->
+                <path class="splash-strand" pathLength="1" style="animation-delay:.2s" d="M420,320 Q460,280 500,260 T580,230" fill="none" stroke="url(#noodle-b)" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+                <path class="splash-strand" pathLength="1" style="animation-delay:.27s" d="M350,400 Q390,360 430,340 T510,310" fill="none" stroke="#D4A373" stroke-width="3" stroke-linecap="round" opacity="0.65"/>
+                <path class="splash-strand" pathLength="1" style="animation-delay:.31s" d="M480,380 Q520,340 560,320 T640,290" fill="none" stroke="url(#noodle-a)" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+
+                <!-- Scallions & chili flecks -->
+                <ellipse class="splash-garnish" style="--spin:30deg;animation-delay:.32s" cx="520" cy="380" rx="9" ry="4" fill="#4F772D" transform="rotate(30 520 380)"/>
+                <ellipse class="splash-garnish" style="--spin:-20deg;animation-delay:.35s" cx="780" cy="490" rx="10" ry="4" fill="#4F772D" transform="rotate(-20 780 490)"/>
+                <ellipse class="splash-garnish" style="--spin:45deg;animation-delay:.38s" cx="850" cy="520" rx="8" ry="3.5" fill="#5A8F32" transform="rotate(45 850 520)"/>
+                <ellipse class="splash-garnish" style="--spin:10deg;animation-delay:.33s" cx="230" cy="175" rx="8" ry="3.5" fill="#4F772D" transform="rotate(10 230 175)"/>
+                <ellipse class="splash-garnish" style="--spin:-35deg;animation-delay:.36s" cx="190" cy="200" rx="7" ry="3" fill="#5A8F32" transform="rotate(-35 190 200)"/>
+                <ellipse class="splash-garnish" style="--spin:15deg;animation-delay:.4s" cx="650" cy="430" rx="9" ry="4" fill="#4F772D" transform="rotate(15 650 430)"/>
+                <circle class="splash-garnish" style="--spin:0deg;animation-delay:.37s" cx="710" cy="470" r="3.5" fill="#BC4749"/>
+                <circle class="splash-garnish" style="--spin:0deg;animation-delay:.39s" cx="560" cy="350" r="2.5" fill="#BC4749"/>
+                <circle class="splash-garnish" style="--spin:0deg;animation-delay:.41s" cx="820" cy="505" r="3" fill="#D64545"/>
+                <circle class="splash-garnish" style="--spin:0deg;animation-delay:.34s" cx="260" cy="150" r="2.5" fill="#BC4749"/>
+                <circle class="splash-garnish" style="--spin:0deg;animation-delay:.42s" cx="400" cy="310" r="2" fill="#BC4749"/>
+                <g id="splash-dynamic"></g>
+            </svg>
+
+            <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none z-[60]">
+                <div class="splash-modal text-center text-white p-6 md:p-8 rounded-2xl pointer-events-auto max-w-sm w-full mx-4">
+                    <p class="text-2xl md:text-3xl font-black text-amber-400 mb-2 drop-shadow-sm">SPLAAAT! 🍜</p>
+                    <p class="font-bold text-lg md:text-xl mb-4 text-white/95 drop-shadow-sm">Oh... you couldn't catch that? Too slow!</p>
+                    <button @click="thrown = false" class="bg-orange-500 hover:bg-orange-600 text-white font-black px-4 py-2.5 rounded-lg text-sm transition shadow-lg">
+                        Wipe Screen & Place Order
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Hero Content -->
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <!-- Badge -->
+            <div class="inline-block bg-orange-100 border-2 border-orange-500 text-orange-700 font-black text-sm px-4 py-1.5 rounded-full uppercase tracking-wider mb-6 transform -rotate-1">
+                ⚠️ Warning: Extreme Flavor Zone
+            </div>
+
+            <!-- Main Headline -->
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-stone-900 mb-6 leading-none uppercase">
+                "Our Noodles Are <span class="text-orange-600 underline decoration-wavy decoration-amber-400">Tastiest.</span><br>You Don't Believe Me?"
+            </h1>
+
+            <p class="text-xl md:text-2xl font-semibold text-stone-600 max-w-2xl mx-auto mb-8">
+                Don't take my word for it. Catch these noodles right through your display!
+            </p>
+
+            <!-- Human Presenter Interactive Card -->
+            <div class="noodle-card relative max-w-md mx-auto bg-white rounded-3xl p-6 shadow-[8px_8px_0px_0px_rgba(28,25,23,1)] mb-10">
+                <div class="relative h-72 bg-amber-200 rounded-2xl mb-4 flex items-center justify-center overflow-hidden border-2 border-stone-900">
+                    <!-- Presenter Avatar / Image Placeholder -->
+                    <img src="assets/chef-marco.jpg" 
+                         alt="Noodle Chef" 
+                         class="w-full h-full object-cover">
+                    
+                    <!-- Floating Speech Bubble -->
+                    <div class="absolute bottom-3 left-3 right-3 bg-white/95 backdrop-blur-sm p-3 rounded-xl text-left border-2 border-stone-900">
+                        <p class="text-xs font-black uppercase text-orange-600">Chef Marco Says:</p>
+                        <p class="text-sm font-extrabold text-stone-800" x-text="thrown ? 'Ha! Missed it. Just order them below!' : 'Ready? Here comes a hot bowl of perfection!'"></p>
+                    </div>
+                </div>
+
+                <!-- Interactive Throw Trigger -->
+                <button @click="thrown = true; $nextTick(() => replaySplash())"
+                        class="w-full bg-red-600 hover:bg-red-700 text-white text-xl font-black py-4 px-6 rounded-2xl border-2 border-stone-900 shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center justify-center gap-3">
+                    <i data-lucide="hand"></i>
+                    TRY AND CATCH THIS! 🍜
+                </button>
+            </div>
+
+            <div class="flex items-center justify-center gap-2 text-stone-500 font-bold text-sm">
+                <i data-lucide="arrow-down" class="animate-bounce"></i>
+                Or scroll down if you are bad at catching things
+            </div>
+        </div>
+    </section>
+
+    <!-- Noodle Vault (Menu Section) -->
+    <section id="menu" class="py-20 bg-white border-t-4 border-stone-900">
+        <div class="max-w-7xl mx-auto px-6">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-4xl md:text-6xl font-black text-stone-900 uppercase tracking-tight mb-4">
+                    The Noodle <span class="text-orange-600">Vault</span>
+                </h2>
+                <p class="text-lg font-bold text-stone-600">
+                    Since you couldn't catch them mid-air, pick your poison below and let our delivery runners bring them directly to your table.
+                </p>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Noodle 1: Spiced Chili Oil -->
+                <div class="noodle-card bg-amber-50 rounded-3xl p-6 shadow-[6px_6px_0px_0px_rgba(28,25,23,1)] flex flex-col justify-between hover:-translate-y-1 transition transform">
+                    <div>
+                        <div class="relative h-48 bg-red-100 rounded-2xl mb-4 overflow-hidden border-2 border-stone-900">
+                            <img src="assets/chili-noodles.jpg" alt="Chili Noodles" class="w-full h-full object-cover">
+                            <span class="absolute top-3 right-3 bg-red-600 text-white font-black text-xs px-3 py-1 rounded-full uppercase">🌶️ Spicy AF</span>
+                        </div>
+                        <h3 class="text-2xl font-black text-stone-900 mb-2">Dragon Breath Chili Oil</h3>
+                        <p class="text-sm font-medium text-stone-600 mb-4">
+                            Hand-pulled thick noodles bathed in searing garlic chili oil, crispy scallions, and toasted sesame seeds.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between border-t-2 border-stone-200 pt-4">
+                        <span class="text-2xl font-black text-stone-900">$14.99</span>
+                        <button class="bg-stone-900 hover:bg-orange-600 text-white font-black px-4 py-2 rounded-xl text-sm transition">
+                            Add To Bowl
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Noodle 2: Rich Tonkotsu Ramen -->
+                <div class="noodle-card bg-amber-50 rounded-3xl p-6 shadow-[6px_6px_0px_0px_rgba(28,25,23,1)] flex flex-col justify-between hover:-translate-y-1 transition transform">
+                    <div>
+                        <div class="relative h-48 bg-amber-100 rounded-2xl mb-4 overflow-hidden border-2 border-stone-900">
+                            <img src="assets/tonkotsu-ramen.jpg" alt="Ramen" class="w-full h-full object-cover">
+                            <span class="absolute top-3 right-3 bg-amber-500 text-white font-black text-xs px-3 py-1 rounded-full uppercase">⭐ Best Seller</span>
+                        </div>
+                        <h3 class="text-2xl font-black text-stone-900 mb-2">Midnight Tonkotsu</h3>
+                        <p class="text-sm font-medium text-stone-600 mb-4">
+                            18-hour simmered ultra-rich broth, tender chashu pork, jammy egg, and silk thin ramen noodles.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between border-t-2 border-stone-200 pt-4">
+                        <span class="text-2xl font-black text-stone-900">$16.50</span>
+                        <button class="bg-stone-900 hover:bg-orange-600 text-white font-black px-4 py-2 rounded-xl text-sm transition">
+                            Add To Bowl
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Noodle 3: Garlic Butter Dan Dan -->
+                <div class="noodle-card bg-amber-50 rounded-3xl p-6 shadow-[6px_6px_0px_0px_rgba(28,25,23,1)] flex flex-col justify-between hover:-translate-y-1 transition transform">
+                    <div>
+                        <div class="relative h-48 bg-green-100 rounded-2xl mb-4 overflow-hidden border-2 border-stone-900">
+                            <img src="assets/dan-dan-noodles.jpg" alt="Dan Dan Noodles" class="w-full h-full object-cover">
+                            <span class="absolute top-3 right-3 bg-green-600 text-white font-black text-xs px-3 py-1 rounded-full uppercase">🌱 Umami Bomb</span>
+                        </div>
+                        <h3 class="text-2xl font-black text-stone-900 mb-2">Garlic Butter Dan Dan</h3>
+                        <p class="text-sm font-medium text-stone-600 mb-4">
+                            Szechuan sesame paste blend with caramelized minced mushrooms, roasted garlic butter, and crushed peanuts.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between border-t-2 border-stone-200 pt-4">
+                        <span class="text-2xl font-black text-stone-900">$15.20</span>
+                        <button class="bg-stone-900 hover:bg-orange-600 text-white font-black px-4 py-2 rounded-xl text-sm transition">
+                            Add To Bowl
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Build Your Bowl — Custom CSS Plate -->
+    <section id="build" class="py-20 bg-amber-100 border-t-4 border-stone-900">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-4xl md:text-6xl font-black text-stone-900 uppercase tracking-tight mb-4">
+                    Build Your <span class="text-orange-600">Bowl</span>
+                </h2>
+                <p class="text-lg font-bold text-stone-600">
+                    Stack broth, noodles, and toppings — watch your custom plate come alive.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+                <!-- Live CSS plate preview -->
+                <div class="noodle-card bg-white rounded-3xl p-6 shadow-[8px_8px_0px_0px_rgba(28,25,23,1)]">
+                    <p class="text-xs font-black uppercase text-orange-600 mb-4 text-center">Live Plate Preview</p>
+                    <div class="plate-stage">
+                        <div class="plate-steam" aria-hidden="true">
+                            <div class="plate-steam-wisp"></div>
+                            <div class="plate-steam-wisp"></div>
+                            <div class="plate-steam-wisp"></div>
+                        </div>
+                        <div class="plate-bowl">
+                            <div class="plate-broth" :style="`--broth-color: ${brothColor}`"></div>
+                            <div class="plate-sheen" x-show="customPlate.broth === 'chili' || hasTopping('chili')" x-cloak></div>
+                            <div class="plate-noodles" :class="customPlate.noodles === 'thick' ? 'plate-noodles--thick' : 'plate-noodles--thin'">
+                                <div class="noodle-strand" style="--i:0"></div>
+                                <div class="noodle-strand" style="--i:1"></div>
+                                <div class="noodle-strand" style="--i:2"></div>
+                                <div class="noodle-strand" style="--i:3"></div>
+                                <div class="noodle-strand" style="--i:4"></div>
+                                <div class="noodle-strand" style="--i:5"></div>
+                                <div class="noodle-strand" style="--i:6"></div>
+                                <div class="noodle-strand" style="--i:7"></div>
+                                <div class="noodle-strand" style="--i:8"></div>
+                                <div class="noodle-strand" style="--i:9"></div>
+                            </div>
+                            <div class="plate-toppings">
+                                <div class="topping-scallion" x-show="hasTopping('scallion')" x-cloak>
+                                    <span></span><span></span><span></span><span></span><span></span>
+                                </div>
+                                <div class="topping-egg" x-show="hasTopping('egg')" x-cloak></div>
+                                <div class="topping-chashu" x-show="hasTopping('chashu')" x-cloak>
+                                    <span></span><span></span>
+                                </div>
+                                <div class="topping-chili" x-show="hasTopping('chili')" x-cloak></div>
+                                <div class="topping-sesame" x-show="hasTopping('sesame')" x-cloak>
+                                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                                </div>
+                                <div class="topping-peanut" x-show="hasTopping('peanut')" x-cloak>
+                                    <span></span><span></span><span></span><span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 text-center border-t-2 border-dashed border-stone-200 pt-4">
+                        <p class="text-lg font-black text-stone-900" x-text="plateLabel"></p>
+                        <p class="text-sm font-bold text-stone-500 mt-1" x-text="plateDescription"></p>
+                    </div>
+                </div>
+
+                <!-- Customization controls -->
+                <div class="space-y-8">
+                    <div>
+                        <p class="text-xs font-black uppercase text-stone-500 mb-3">Broth Base</p>
+                        <div class="flex flex-wrap gap-2">
+                            <template x-for="opt in brothOptions" :key="opt.id">
+                                <button type="button"
+                                        @click="customPlate.broth = opt.id"
+                                        class="build-chip px-4 py-2 rounded-xl text-sm"
+                                        :class="customPlate.broth === opt.id ? 'build-chip--active' : 'bg-white text-stone-900'"
+                                        x-text="opt.label"></button>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="text-xs font-black uppercase text-stone-500 mb-3">Noodle Style</p>
+                        <div class="flex flex-wrap gap-2">
+                            <template x-for="opt in noodleOptions" :key="opt.id">
+                                <button type="button"
+                                        @click="customPlate.noodles = opt.id"
+                                        class="build-chip px-4 py-2 rounded-xl text-sm"
+                                        :class="customPlate.noodles === opt.id ? 'build-chip--active' : 'bg-white text-stone-900'"
+                                        x-text="opt.label"></button>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="text-xs font-black uppercase text-stone-500 mb-3">Toppings <span class="text-stone-400 normal-case">(pick multiple)</span></p>
+                        <div class="flex flex-wrap gap-2">
+                            <template x-for="opt in toppingOptions" :key="opt.id">
+                                <button type="button"
+                                        @click="toggleTopping(opt.id)"
+                                        class="build-chip px-4 py-2 rounded-xl text-sm"
+                                        :class="hasTopping(opt.id) ? 'build-chip--active' : 'bg-white text-stone-900'"
+                                        x-text="opt.label"></button>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="button"
+                                @click="savePlate()"
+                                class="w-full bg-stone-900 hover:bg-orange-600 text-white text-lg font-black py-4 px-6 rounded-2xl border-2 border-stone-900 shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all">
+                            That's My Plate
+                        </button>
+                        <p x-show="plateSaved"
+                           x-cloak
+                           class="plate-toast mt-3 text-center text-sm font-black text-orange-600 uppercase">
+                            Plate locked in. Chef Marco approves.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galactic Noodle Story -->
+    <section id="story" class="relative py-24 bg-stone-950 text-white overflow-hidden border-t-4 border-stone-900 story-stars">
+        <div class="absolute inset-0 bg-gradient-to-b from-indigo-950/80 via-stone-950 to-stone-950 pointer-events-none"></div>
+
+        <div class="story-star absolute top-16 left-[12%] w-1 h-1 bg-white rounded-full"></div>
+        <div class="story-star absolute top-32 right-[18%] w-1.5 h-1.5 bg-amber-200 rounded-full"></div>
+        <div class="story-star absolute bottom-24 left-[22%] w-1 h-1 bg-white rounded-full"></div>
+        <div class="story-star absolute top-1/2 right-[8%] w-1 h-1 bg-white rounded-full"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="text-center lg:text-left">
+                    <span class="inline-block bg-orange-500/20 border-2 border-orange-500 text-orange-300 font-black text-xs px-4 py-1.5 rounded-full uppercase tracking-wider mb-5">
+                        🛸 Intergalactic Report
+                    </span>
+                    <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tight mb-5 leading-none">
+                        Earth Is Too <span class="text-orange-400">Small</span> For The Love Of Noodles
+                    </h2>
+                    <p class="text-lg md:text-xl font-bold text-stone-300 mb-4 leading-relaxed">
+                        Humans slurped every bowl. Cities ran out of broth. Continents ran out of chopsticks.
+                        The noodle love became <span class="text-amber-300">too powerful for one planet.</span>
+                    </p>
+                    <p class="text-base font-semibold text-stone-400 mb-8 leading-relaxed">
+                        Even the aliens heard the slurp echo across the galaxy — and they love it too.
+                        Now they're leaving Earth, spinning off into space with bowls in hand, searching for
+                        the next planet worthy of a proper SLURP!
+                    </p>
+                    <div class="noodle-card inline-block bg-stone-900/80 px-5 py-4 rounded-2xl text-left shadow-[4px_4px_0px_0px_rgba(249,115,22,0.8)]">
+                        <p class="text-sm font-black uppercase text-orange-400 mb-1">Alien transmission intercepted:</p>
+                        <p class="text-stone-200 font-extrabold italic">"Your noodles broke our warp drive. We must go. Send more chili oil."</p>
+                    </div>
+                </div>
+
+                <div class="globe-stage relative mx-auto w-full max-w-md h-[380px] md:h-[420px]">
+                    <svg class="alien-path absolute inset-0 w-full h-full" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                        <path class="alien-trail" d="M 210 145 Q 260 110 330 45" fill="none" stroke="#f97316" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 6" opacity="0.55"/>
+                    </svg>
+
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="globe-orbit relative flex items-center justify-center">
+                            <div class="globe-noodle-ring" aria-hidden="true"></div>
+                            <div class="globe" aria-hidden="true">
+                                <div class="globe-texture-track">
+                                    <img src="assets/earth-map.jpg" alt="">
+                                    <img src="assets/earth-map.jpg" alt="" aria-hidden="true">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alien-rider" aria-hidden="true">
+                            <div class="alien-head">
+                                <div class="alien-eye alien-eye-left"></div>
+                                <div class="alien-eye alien-eye-right"></div>
+                            </div>
+                            <div class="alien-body"></div>
+                            <div class="alien-arm alien-arm-left"></div>
+                            <div class="alien-arm alien-arm-right">
+                                <div class="alien-bowl"></div>
+                            </div>
+                            <div class="alien-thruster"></div>
+                        </div>
+                    </div>
+
+                    <p class="absolute bottom-0 left-0 right-0 text-center text-xs font-bold uppercase tracking-widest text-stone-500">
+                        Globe spinning at unsafe noodle velocity
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof / Fun Section -->
+    <section id="reviews" class="py-16 bg-amber-400 border-t-4 border-stone-900">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-5xl font-black text-stone-900 uppercase mb-8">
+                "People Who Failed To Catch The Noodles Say..."
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="noodle-card bg-white p-6 rounded-2xl text-left shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]">
+                    <p class="font-extrabold text-stone-800 text-lg mb-2">"I tried to catch it and got broth on my iPad."</p>
+                    <p class="text-sm font-bold text-stone-500">- Sarah K., Failed Catcher</p>
+                </div>
+                <div class="noodle-card bg-white p-6 rounded-2xl text-left shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]">
+                    <p class="font-extrabold text-stone-800 text-lg mb-2">"The Dragon Breath Chili Oil changed my life's trajectory."</p>
+                    <p class="text-sm font-bold text-stone-500">- Dave M., Serial Slurper</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Follow Us (visual-only fake socials) -->
+    <section id="social" class="py-16 bg-white border-t-4 border-stone-900">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <span class="inline-block bg-orange-100 border-2 border-orange-500 text-orange-700 font-black text-xs px-4 py-1.5 rounded-full uppercase tracking-wider mb-5 transform -rotate-1">
+                📱 Slurp Reminder Service
+            </span>
+            <h2 class="text-3xl md:text-5xl font-black text-stone-900 uppercase mb-3 leading-tight">
+                Follow Us So You <span class="text-orange-600 underline decoration-wavy decoration-amber-400">Never Forget</span><br class="hidden sm:block"> The Tastiest Noodles
+            </h2>
+            <p class="text-lg font-bold text-stone-600 max-w-2xl mx-auto mb-4">
+                Chili oil drops, midnight broth alerts, and daily proof that Earth still cannot handle our noodles.
+            </p>
+            <p class="text-xl md:text-2xl font-black text-stone-900 max-w-3xl mx-auto mb-3 leading-snug">
+                👀 <span class="text-orange-600">Look.</span> 🤲 <span class="text-orange-600">Feel.</span> 🤤 <span class="text-orange-600">Drool.</span>
+                <span class="block mt-1 text-lg md:text-xl font-extrabold text-stone-700 normal-case">
+                    You can't taste through the screen yet — but our feed is the next best thing.
+                </span>
+            </p>
+            <p class="text-sm font-bold text-stone-500 uppercase tracking-widest mb-10">
+                Scroll our socials · Steam included · Crave guaranteed
+            </p>
+
+            <!-- Fake social feed preview -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto mb-12 text-left">
+                <div class="noodle-card bg-amber-50 rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]">
+                    <div class="noodle-card-inner relative h-40 bg-red-100">
+                        <img src="assets/chili-noodles.jpg" alt="" class="w-full h-full object-cover">
+                        <span class="absolute top-2 left-2 bg-black/70 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full">Reel · 0:14</span>
+                    </div>
+                    <div class="p-3">
+                        <p class="text-xs font-black text-orange-600 uppercase mb-1">@slurp.noodles</p>
+                        <p class="text-sm font-extrabold text-stone-800 leading-snug">POV: chili oil hitting the lens. You felt that heat. 🌶️</p>
+                    </div>
+                </div>
+                <div class="noodle-card bg-amber-50 rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]">
+                    <div class="noodle-card-inner relative h-40 bg-amber-100">
+                        <img src="assets/tonkotsu-ramen.jpg" alt="" class="w-full h-full object-cover">
+                        <span class="absolute top-2 left-2 bg-black/70 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full">Story · Live</span>
+                    </div>
+                    <div class="p-3">
+                        <p class="text-xs font-black text-orange-600 uppercase mb-1">@slurp.noodles</p>
+                        <p class="text-sm font-extrabold text-stone-800 leading-snug">18-hour broth steam check. Close your eyes. Inhale. Slurp. 🍜</p>
+                    </div>
+                </div>
+                <div class="noodle-card bg-amber-50 rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] sm:col-span-1">
+                    <div class="noodle-card-inner relative h-40 bg-green-100">
+                        <img src="assets/dan-dan-noodles.jpg" alt="" class="w-full h-full object-cover">
+                        <span class="absolute top-2 left-2 bg-black/70 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full">TikTok · 0:08</span>
+                    </div>
+                    <div class="p-3">
+                        <p class="text-xs font-black text-orange-600 uppercase mb-1">@slurpchallenge</p>
+                        <p class="text-sm font-extrabold text-stone-800 leading-snug">Slow-mo noodle pull ASMR. Your screen is officially hungry. 🤤</p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-base font-black text-stone-900 uppercase mb-6 tracking-tight">
+                Tap a platform · Get the full sensory overload
+            </p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 max-w-3xl mx-auto">
+                <button type="button" class="noodle-card group bg-amber-50 p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:-translate-y-1 transition transform text-left cursor-default">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCAF45] flex items-center justify-center mb-3 border-2 border-stone-900 shadow-[2px_2px_0px_0px_rgba(28,25,23,1)]">
+                        <svg class="social-brand-icon text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 11-2.881.001 1.44 1.44 0 012.881-.001z"/></svg>
+                    </div>
+                    <p class="font-black text-stone-900 text-sm uppercase">Instagram</p>
+                    <p class="text-xs font-bold text-orange-600 mb-1">@slurp.noodles</p>
+                    <p class="text-xs font-bold text-stone-500">847K slurpers</p>
+                </button>
+
+                <button type="button" class="noodle-card group bg-amber-50 p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:-translate-y-1 transition transform text-left cursor-default">
+                    <div class="w-11 h-11 rounded-xl bg-black flex items-center justify-center mb-3 border-2 border-stone-900 shadow-[2px_2px_0px_0px_rgba(249,115,22,1)]">
+                        <svg class="social-brand-icon text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </div>
+                    <p class="font-black text-stone-900 text-sm uppercase">X</p>
+                    <p class="text-xs font-bold text-orange-600 mb-1">@SLURPNoodles</p>
+                    <p class="text-xs font-bold text-stone-500">312K hot takes</p>
+                </button>
+
+                <button type="button" class="noodle-card group bg-amber-50 p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:-translate-y-1 transition transform text-left cursor-default">
+                    <div class="w-11 h-11 rounded-xl bg-[#FF0000] flex items-center justify-center mb-3 border-2 border-stone-900 shadow-[2px_2px_0px_0px_rgba(28,25,23,1)]">
+                        <svg class="social-brand-icon text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    </div>
+                    <p class="font-black text-stone-900 text-sm uppercase">YouTube</p>
+                    <p class="text-xs font-bold text-orange-600 mb-1">SLURP! Official</p>
+                    <p class="text-xs font-bold text-stone-500">1.2M bowl cams</p>
+                </button>
+
+                <button type="button" class="noodle-card group bg-amber-50 p-5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:-translate-y-1 transition transform text-left cursor-default">
+                    <div class="w-11 h-11 rounded-xl bg-black flex items-center justify-center mb-3 border-2 border-stone-900 shadow-[2px_2px_0px_0px_rgba(28,25,23,1)]">
+                        <svg class="social-brand-icon text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                    </div>
+                    <p class="font-black text-stone-900 text-sm uppercase">TikTok</p>
+                    <p class="text-xs font-bold text-orange-600 mb-1">@slurpchallenge</p>
+                    <p class="text-xs font-bold text-stone-500">4.8M failed catches</p>
+                </button>
+            </div>
+
+            <p class="mt-8 text-sm font-extrabold text-stone-500 italic">
+                "We post at 2 AM when the broth hits different." — Chef Marco's social team
+            </p>
+        </div>
+    </section>
+
+    <!-- Checkout -->
+    <section id="checkout" class="py-20 bg-amber-50 border-t-4 border-stone-900">
+        <div class="max-w-2xl mx-auto px-6">
+            <div class="text-center mb-10">
+                <h2 class="text-4xl md:text-5xl font-black text-stone-900 uppercase tracking-tight mb-3">
+                    The <span class="text-orange-600">Checkout</span> Line
+                </h2>
+                <p class="text-lg font-bold text-stone-600">
+                    You caught the craving — now lock in your bowl before the aliens beam away the chili oil.
+                </p>
+            </div>
+
+            <div class="noodle-card bg-white rounded-3xl p-6 md:p-8 shadow-[8px_8px_0px_0px_rgba(28,25,23,1)]">
+                <p class="text-xs font-black uppercase text-orange-600 mb-4">Your Slurp Summary</p>
+                <ul class="space-y-3 mb-6 font-bold text-stone-700">
+                    <li class="flex justify-between border-b-2 border-dashed border-stone-200 pb-2">
+                        <span>Pick a bowl from the <a href="#menu" class="text-orange-600 underline decoration-wavy hover:text-orange-700">Noodle Vault</a></span>
+                        <span class="text-stone-400">—</span>
+                    </li>
+                </ul>
+
+                <form class="space-y-4" onsubmit="event.preventDefault(); alert('Order received! Your noodles are sprinting to your door. 🍜');">
+                    <div>
+                        <label for="checkout-name" class="block text-sm font-black uppercase text-stone-700 mb-1">Name</label>
+                        <input id="checkout-name" name="name" type="text" required placeholder="Captain Slurper"
+                               class="w-full px-4 py-3 rounded-xl border-2 border-stone-900 font-bold text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    </div>
+                    <div>
+                        <label for="checkout-address" class="block text-sm font-black uppercase text-stone-700 mb-1">Delivery Address</label>
+                        <input id="checkout-address" name="address" type="text" required placeholder="123 Noodle Lane"
+                               class="w-full px-4 py-3 rounded-xl border-2 border-stone-900 font-bold text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    </div>
+                    <button type="submit"
+                            class="w-full bg-orange-600 hover:bg-orange-700 text-white text-xl font-black py-4 px-6 rounded-2xl border-2 border-stone-900 shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all">
+                        PLACE ORDER — SLURP ON! 🍜
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Final CTA -->
+    <footer class="bg-stone-900 text-white py-12 border-t-4 border-stone-900">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <img src="assets/slurp-logo.png" alt="" class="slurp-logo slurp-logo--footer" aria-hidden="true">
+            <h3 class="text-3xl font-black text-amber-400 uppercase mb-4">Stop Staring, Start Slurping</h3>
+            <p class="text-stone-400 font-medium mb-6">Hot, fresh noodles delivered to your doorstep in 30 minutes or less.</p>
+            <a href="#checkout" class="noodle-order-btn noodle-order-btn--footer relative z-[2] text-white text-lg font-black px-8 py-4 rounded-full shadow-lg transition transform hover:scale-105 inline-block">
+                HEAD TO CHECKOUT
+            </a>
+            <p class="text-xs text-stone-600 mt-8">© 2026 SLURP Inc. No screens were permanently damaged in the making of this page.</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        function seedSplashStrands() {
+            const group = document.getElementById('splash-dynamic');
+            if (!group) return;
+            group.replaceChildren();
+            const colors = ['url(#noodle-a)', 'url(#noodle-b)', '#C9956A', '#A67240', '#D4A373'];
+            const clusters = [
+                { cx: 720, cy: 520, spread: 130, count: 14 },
+                { cx: 175, cy: 155, spread: 70, count: 8 },
+            ];
+            clusters.forEach(({ cx, cy, spread, count }) => {
+                for (let i = 0; i < count; i++) {
+                    const x1 = cx + (Math.random() - 0.5) * spread;
+                    const y1 = cy + (Math.random() - 0.5) * spread * 0.65;
+                    const x2 = x1 + (Math.random() - 0.5) * 90;
+                    const y2 = y1 + (Math.random() - 0.5) * 70;
+                    const x3 = x2 + (Math.random() - 0.5) * 110;
+                    const y3 = y2 + (Math.random() - 0.5) * 90;
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', `M${x1.toFixed(1)},${y1.toFixed(1)} Q${x2.toFixed(1)},${y2.toFixed(1)} ${x3.toFixed(1)},${y3.toFixed(1)}`);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('stroke', colors[Math.floor(Math.random() * colors.length)]);
+                    path.setAttribute('stroke-width', (3 + Math.random() * 5).toFixed(1));
+                    path.setAttribute('stroke-linecap', 'round');
+                    path.setAttribute('pathLength', '1');
+                    path.setAttribute('class', 'splash-strand');
+                    path.style.animationDelay = `${0.12 + Math.random() * 0.22}s`;
+                    group.appendChild(path);
+                }
+            });
+        }
+
+        function replaySplash() {
+            const scene = document.querySelector('.splash-scene');
+            if (!scene) return;
+            scene.replaceWith(scene.cloneNode(true));
+            seedSplashStrands();
+        }
+
+        if (new URLSearchParams(window.location.search).has('splash')) {
+            requestAnimationFrame(seedSplashStrands);
+        }
+
+        window.replaySplash = replaySplash;
+
+        function noodleWaveH(y, xStart, xEnd, amp) {
+            const forward = xEnd >= xStart;
+            const stepSign = forward ? 1 : -1;
+            let d = `M ${xStart} ${y}`;
+            let x = xStart;
+            for (let i = 0; forward ? x < xEnd - 0.1 : x > xEnd + 0.1; i++) {
+                const step = Math.min(5, Math.abs(xEnd - x));
+                const mid = x + stepSign * step / 2;
+                const nx = x + stepSign * step;
+                const cy = y + (i % 2 ? amp : -amp);
+                d += ` Q ${mid} ${cy} ${nx} ${y}`;
+                x = nx;
+            }
+            return d;
+        }
+
+        function noodleWaveV(x, yStart, yEnd, amp) {
+            const forward = yEnd >= yStart;
+            const stepSign = forward ? 1 : -1;
+            let d = `M ${x} ${yStart}`;
+            let y = yStart;
+            for (let i = 0; forward ? y < yEnd - 0.1 : y > yEnd + 0.1; i++) {
+                const step = Math.min(5, Math.abs(yEnd - y));
+                const mid = y + stepSign * step / 2;
+                const ny = y + stepSign * step;
+                const cx = x + (i % 2 ? amp : -amp);
+                d += ` Q ${cx} ${mid} ${x} ${ny}`;
+                y = ny;
+            }
+            return d;
+        }
+
+        function appendWaveSegment(path, segment) {
+            return `${path} ${segment.replace(/^M\s+[\d.]+\s+[\d.]+\s*/, '')}`;
+        }
+
+        function capWavyPath(cx, cy, r, amp, bumps, side) {
+            const steps = Math.max(12, bumps * 3);
+            let d = '';
+            for (let i = 0; i <= steps; i++) {
+                const t = i / steps;
+                const angle = side === 'right'
+                    ? -Math.PI / 2 + t * Math.PI
+                    : Math.PI / 2 + t * Math.PI;
+                const wave = amp * Math.sin(t * bumps * Math.PI);
+                const rr = r + wave;
+                const x = cx + rr * Math.cos(angle);
+                const y = cy + rr * Math.sin(angle);
+                d += `${i === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)} `;
+            }
+            return d.trim();
+        }
+
+        function stadiumWavyPath(w, h, inset, amp, bumps) {
+            const radius = h / 2;
+            const capR = Math.max(radius - inset, 1);
+            const top = inset;
+            const bottom = h - inset;
+            const leftCx = radius;
+            const rightCx = w - radius;
+            const cy = h / 2;
+            const flatLen = Math.max(w - h, 0);
+            const flatBumps = Math.max(2, Math.round((flatLen / h) * bumps));
+            const capBumps = Math.max(4, Math.round(bumps * 0.45));
+
+            if (flatLen < 2) {
+                const steps = 96;
+                let d = '';
+                for (let i = 0; i <= steps; i++) {
+                    const t = (i / steps) * Math.PI * 2;
+                    const wave = amp * Math.sin(t * bumps);
+                    const x = w / 2 + (capR + wave) * Math.cos(t);
+                    const y = h / 2 + (capR + wave) * Math.sin(t);
+                    d += `${i === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)} `;
+                }
+                return d + 'Z';
+            }
+
+            let d = noodleWaveH(top, leftCx, rightCx, amp);
+            d = appendWaveSegment(d, capWavyPath(rightCx, cy, capR, amp, capBumps, 'right'));
+            d = appendWaveSegment(d, noodleWaveH(bottom, rightCx, leftCx, amp));
+            d = appendWaveSegment(d, capWavyPath(leftCx, cy, capR, amp, capBumps, 'left'));
+            return d + 'Z';
+        }
+
+        function attachNoodlePillFrame(el, { stroke = 3.5, amp = 1.2, bumps = 14 } = {}) {
+            if (el.querySelector('.noodle-frame-pill')) return;
+
+            const inset = stroke / 2;
+            el.style.setProperty('--noodle-btn-stroke', `${stroke}px`);
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('aria-hidden', 'true');
+            svg.setAttribute('preserveAspectRatio', 'none');
+            svg.classList.add('noodle-frame-pill');
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('fill', 'none');
+            path.setAttribute('stroke', 'url(#noodle-btn-gradient)');
+            path.setAttribute('stroke-width', stroke);
+            path.setAttribute('stroke-linecap', 'round');
+            path.setAttribute('stroke-linejoin', 'round');
+            path.setAttribute('vector-effect', 'non-scaling-stroke');
+            svg.appendChild(path);
+
+            const render = () => {
+                const w = Math.max(el.offsetWidth, 1);
+                const h = Math.max(el.offsetHeight, 1);
+                const bumpCount = Math.max(10, Math.round((w / h) * bumps));
+                const pad = stroke;
+                svg.setAttribute('viewBox', `${-pad} ${-pad} ${w + pad * 2} ${h + pad * 2}`);
+                path.setAttribute('d', stadiumWavyPath(w, h, inset, amp, bumpCount));
+            };
+
+            el.appendChild(svg);
+            render();
+            requestAnimationFrame(render);
+            if (typeof ResizeObserver !== 'undefined') {
+                new ResizeObserver(render).observe(el);
+            }
+        }
+
+        function attachNoodleFrame(el, { stroke = 3, amp = 1.8, inset = 3, strokes = ['#1c1917'] } = {}) {
+            if (el.querySelector('.noodle-frame')) return;
+
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 100 100');
+            svg.setAttribute('preserveAspectRatio', 'none');
+            svg.setAttribute('aria-hidden', 'true');
+            svg.classList.add('noodle-frame');
+
+            const edges = [
+                noodleWaveH(inset, inset, 100 - inset, amp),
+                noodleWaveV(100 - inset, inset, 100 - inset, amp),
+                noodleWaveH(100 - inset, 100 - inset, inset, amp),
+                noodleWaveV(inset, 100 - inset, inset, amp),
+            ];
+
+            edges.forEach((d, i) => {
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', d);
+                path.setAttribute('fill', 'none');
+                path.setAttribute('stroke', strokes[i % strokes.length]);
+                path.setAttribute('stroke-width', stroke);
+                path.setAttribute('stroke-linecap', 'round');
+                path.setAttribute('stroke-linejoin', 'round');
+                path.setAttribute('vector-effect', 'non-scaling-stroke');
+                svg.appendChild(path);
+            });
+
+            el.prepend(svg);
+        }
+
+        document.querySelectorAll('.noodle-card').forEach((el) =>
+            attachNoodleFrame(el, { stroke: 3.2, amp: 2, inset: 3.5 })
+        );
+        document.querySelectorAll('.noodle-order-btn').forEach((el) =>
+            attachNoodlePillFrame(el, { stroke: 5, amp: 1.15, bumps: 16 })
+        );
+    </script>
+</body>
+</html>

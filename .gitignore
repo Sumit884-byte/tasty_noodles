@@ -1,0 +1,14 @@
+.DS_Store
+.vercel
+*.log
+
+# Local dev screenshot folders
+build-check/
+splash-check/
+card-fixed/
+globe-*/
+order-btn-*/
+page-screenshot.png/
+splat-*/
+story-section/
+splash-css*/
