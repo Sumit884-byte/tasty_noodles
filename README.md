@@ -13,12 +13,12 @@ GitHub: **https://github.com/Sumit884-byte/tasty_noodles**
 - Interactive noodle splash hero animation
 - Noodle Vault menu with three signature bowls
 - Build Your Bowl — live CSS plate preview
-- Galactic Slurp story section with spinning globe
+- Galactic Slurp story section with a Three.js 3D spinning globe
 - Social feed preview + checkout flow
 
 ## Stack
 
-- HTML, Tailwind CSS (CDN), Alpine.js, vanilla JavaScript
+- HTML, Tailwind CSS (CDN), Alpine.js, Three.js, vanilla JavaScript
 - All images self-hosted in `/assets` — no external image dependencies
 
 ## Run Locally

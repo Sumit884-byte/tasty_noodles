@@ -11,6 +11,9 @@
     <meta property="og:image" content="https://tastynoodles.vercel.app/assets/slurp-logo.png">
     <meta property="og:url" content="https://tastynoodles.vercel.app">
     <meta name="twitter:card" content="summary_large_image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js for lightweight state management -->
@@ -214,12 +217,28 @@
             margin: 0 auto 1rem;
             transform: rotate(-1deg);
         }
-
-        /* Galactic noodle story — spinning globe + alien departure */
-        @keyframes earth-map-scroll {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
+        .noodle-word {
+            font-family: 'Chewy', cursive;
+            font-weight: 400;
+            font-size: 1.08em;
+            letter-spacing: 0.02em;
+            color: #ea580c;
+            text-shadow: 2px 2px 0 #451a03;
+            text-decoration: none;
         }
+        .noodle-word--on-dark {
+            color: #fb923c;
+            text-shadow: 2px 2px 0 #1c1917;
+        }
+        .noodle-word--wavy {
+            text-decoration: underline;
+            text-decoration-color: #fbbf24;
+            text-decoration-style: wavy;
+            text-underline-offset: 0.12em;
+            text-decoration-thickness: 3px;
+        }
+
+        /* Galactic noodle story — 3D globe + alien departure */
         @keyframes globe-wobble {
             0%, 100% { transform: rotate(-8deg); }
             50% { transform: rotate(8deg); }
@@ -297,29 +316,27 @@
             position: relative;
             background: #0369a1;
             box-shadow:
-                inset -22px -22px 40px rgba(0, 0, 0, 0.45),
-                inset 10px 10px 22px rgba(255, 255, 255, 0.14),
                 0 0 0 4px #1c1917,
                 0 0 55px rgba(56, 189, 248, 0.4),
                 0 0 90px rgba(59, 130, 246, 0.18);
         }
-        .globe-texture-track {
+        .globe canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 50%;
+        }
+        .globe-fallback {
             position: absolute;
             inset: 0;
-            display: flex;
-            width: 200%;
+            width: 100%;
             height: 100%;
-            animation: earth-map-scroll 2.8s linear infinite;
-            animation-delay: -0.7s;
-            will-change: transform;
-        }
-        .globe-texture-track img {
-            width: 50%;
-            height: 100%;
-            flex-shrink: 0;
             object-fit: cover;
-            display: block;
             filter: saturate(1.12) contrast(1.08) brightness(1.04);
+        }
+        .globe-fallback--hidden {
+            opacity: 0;
+            pointer-events: none;
         }
         .globe::before {
             content: '';
@@ -704,7 +721,7 @@
             }
             .splash-scene { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
             .splash-smear, .splash-strand, .splash-garnish, .splash-cluster-main, .splash-cluster-sat, .splash-modal, .splash-backdrop { animation: none !important; opacity: 1 !important; }
-            .globe-texture-track, .globe-orbit, .globe-noodle-ring, .alien-rider, .story-star, .alien-trail, .plate-steam-wisp { animation: none !important; }
+            .globe-orbit, .globe-noodle-ring, .alien-rider, .story-star, .alien-trail, .plate-steam-wisp { animation: none !important; }
         }
     </style>
     <script>
@@ -1019,7 +1036,7 @@
 
             <!-- Main Headline -->
             <h1 class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-stone-900 mb-6 leading-none uppercase">
-                "Our Noodles Are <span class="text-orange-600 underline decoration-wavy decoration-amber-400">Tastiest.</span><br>You Don't Believe Me?"
+                "Our <span class="noodle-word">Noodles</span> Are <span class="noodle-word noodle-word--wavy">Tastiest.</span><br>You Don't Believe Me?"
             </h1>
 
             <p class="text-xl md:text-2xl font-semibold text-stone-600 max-w-2xl mx-auto mb-8">
@@ -1062,7 +1079,7 @@
             
             <div class="text-center max-w-3xl mx-auto mb-16">
                 <h2 class="text-4xl md:text-6xl font-black text-stone-900 uppercase tracking-tight mb-4">
-                    The Noodle <span class="text-orange-600">Vault</span>
+                    The <span class="noodle-word">Noodle</span> <span class="text-orange-600">Vault</span>
                 </h2>
                 <p class="text-lg font-bold text-stone-600">
                     Since you couldn't catch them mid-air, pick your poison below and let our delivery runners bring them directly to your table.
@@ -1274,7 +1291,7 @@
                         🛸 Intergalactic Report
                     </span>
                     <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tight mb-5 leading-none">
-                        Earth Is Too <span class="text-orange-400">Small</span> For The Love Of Noodles
+                        Earth Is Too <span class="text-orange-400">Small</span> For The Love Of <span class="noodle-word noodle-word--on-dark">Noodles</span>
                     </h2>
                     <p class="text-lg md:text-xl font-bold text-stone-300 mb-4 leading-relaxed">
                         Humans slurped every bowl. Cities ran out of broth. Continents ran out of chopsticks.
@@ -1299,11 +1316,8 @@
                     <div class="absolute inset-0 flex items-center justify-center">
                         <div class="globe-orbit relative flex items-center justify-center">
                             <div class="globe-noodle-ring" aria-hidden="true"></div>
-                            <div class="globe" aria-hidden="true">
-                                <div class="globe-texture-track">
-                                    <img src="assets/earth-map.jpg" alt="">
-                                    <img src="assets/earth-map.jpg" alt="" aria-hidden="true">
-                                </div>
+                            <div class="globe" id="globe-3d" role="img" aria-label="Spinning 3D Earth globe at unsafe noodle velocity">
+                                <img class="globe-fallback" src="assets/earth-map.jpg" alt="" aria-hidden="true">
                             </div>
                         </div>
 
@@ -1333,7 +1347,7 @@
     <section id="reviews" class="py-16 bg-amber-400 border-t-4 border-stone-900">
         <div class="max-w-5xl mx-auto px-6 text-center">
             <h2 class="text-3xl md:text-5xl font-black text-stone-900 uppercase mb-8">
-                "People Who Failed To Catch The Noodles Say..."
+                "People Who Failed To Catch The <span class="noodle-word">Noodles</span> Say..."
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="noodle-card bg-white p-6 rounded-2xl text-left shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]">
@@ -1355,7 +1369,7 @@
                 📱 Slurp Reminder Service
             </span>
             <h2 class="text-3xl md:text-5xl font-black text-stone-900 uppercase mb-3 leading-tight">
-                Follow Us So You <span class="text-orange-600 underline decoration-wavy decoration-amber-400">Never Forget</span><br class="hidden sm:block"> The Tastiest Noodles
+                Follow Us So You <span class="text-orange-600 underline decoration-wavy decoration-amber-400">Never Forget</span><br class="hidden sm:block"> The Tastiest <span class="noodle-word">Noodles</span>
             </h2>
             <p class="text-lg font-bold text-stone-600 max-w-2xl mx-auto mb-4">
                 Chili oil drops, midnight broth alerts, and daily proof that Earth still cannot handle our noodles.
@@ -1737,6 +1751,116 @@
         document.querySelectorAll('.noodle-order-btn').forEach((el) =>
             attachNoodlePillFrame(el, { stroke: 5, amp: 1.15, bumps: 16 })
         );
+    </script>
+    <script type="module">
+        import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js';
+
+        function initGlobe3D() {
+            const container = document.getElementById('globe-3d');
+            if (!container) return;
+
+            const fallback = container.querySelector('.globe-fallback');
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const size = 300;
+            const segments = window.innerWidth < 768 ? 32 : 48;
+
+            if (prefersReducedMotion) {
+                if (fallback) fallback.classList.remove('globe-fallback--hidden');
+                return;
+            }
+
+            let renderer;
+            try {
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            } catch {
+                return;
+            }
+
+            renderer.setSize(size, size);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+            if (fallback) fallback.classList.add('globe-fallback--hidden');
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+            camera.position.z = 2.65;
+
+            const textureLoader = new THREE.TextureLoader();
+            const earthTexture = textureLoader.load('assets/earth-map.jpg');
+            earthTexture.colorSpace = THREE.SRGBColorSpace;
+
+            const globe = new THREE.Mesh(
+                new THREE.SphereGeometry(1, segments, segments),
+                new THREE.MeshPhongMaterial({
+                    map: earthTexture,
+                    specular: new THREE.Color(0x222222),
+                    shininess: 18,
+                })
+            );
+            globe.rotation.y = -0.4;
+            scene.add(globe);
+
+            const atmosphere = new THREE.Mesh(
+                new THREE.SphereGeometry(1.035, segments, segments),
+                new THREE.MeshBasicMaterial({
+                    color: 0x38bdf8,
+                    transparent: true,
+                    opacity: 0.14,
+                    side: THREE.BackSide,
+                })
+            );
+            scene.add(atmosphere);
+
+            scene.add(new THREE.AmbientLight(0xffffff, 0.45));
+            const sun = new THREE.DirectionalLight(0xffffff, 1.15);
+            sun.position.set(4, 2, 5);
+            scene.add(sun);
+            const rim = new THREE.DirectionalLight(0x7dd3fc, 0.35);
+            rim.position.set(-4, -1, -3);
+            scene.add(rim);
+
+            let inViewport = true;
+            let tabVisible = true;
+            let frameId = 0;
+            const spinSpeed = 0.007;
+
+            function tick() {
+                frameId = requestAnimationFrame(tick);
+                if (!tabVisible || !inViewport) return;
+                globe.rotation.y += spinSpeed;
+                atmosphere.rotation.y += spinSpeed * 0.15;
+                renderer.render(scene, camera);
+            }
+
+            const visibilityObserver = new IntersectionObserver(
+                ([entry]) => { inViewport = entry.isIntersecting; },
+                { threshold: 0.08 }
+            );
+            visibilityObserver.observe(container);
+
+            document.addEventListener('visibilitychange', () => {
+                tabVisible = !document.hidden;
+            });
+
+            tick();
+
+            window.addEventListener('pagehide', () => {
+                cancelAnimationFrame(frameId);
+                visibilityObserver.disconnect();
+                renderer.dispose();
+                globe.geometry.dispose();
+                globe.material.dispose();
+                atmosphere.geometry.dispose();
+                atmosphere.material.dispose();
+                earthTexture.dispose();
+            }, { once: true });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initGlobe3D);
+        } else {
+            initGlobe3D();
+        }
     </script>
 </body>
 </html>
