@@ -4,7 +4,9 @@ A playful comfort-food landing page for an imaginary noodle shop. Built for the 
 
 ## Live Demo
 
-Deployed on Vercel — see the latest deployment URL in the repository description or Vercel dashboard.
+**https://tastynoodles.vercel.app**
+
+GitHub: **https://github.com/Sumit884-byte/tasty_noodles**
 
 ## Features
 
