@@ -1,0 +1,11 @@
+.git
+.vercel
+.env*
+codepen
+scripts
+splash-check
+build-check
+page-screenshot.png
+blog-post.md
+README.md
+LICENSE

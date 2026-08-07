@@ -23,10 +23,24 @@ PEN_META = {
     "css_external": "https://fonts.googleapis.com/css2?family=Chewy&display=swap",
     "js_external": ";".join([
         "https://cdn.tailwindcss.com",
-        "https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js",
         "https://unpkg.com/lucide@latest",
     ]),
 }
+
+ALPINE_CDN = "https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"
+
+# CodePen injects js_external before pen JS, so Alpine must load AFTER slurpApp registers.
+ALPINE_BOOTSTRAP = f"""
+// CodePen loads external JS before pen JS — defer Alpine until slurpApp is registered.
+(function () {{
+  if (document.querySelector('script[data-slurp-alpine]')) return;
+  var s = document.createElement('script');
+  s.src = '{ALPINE_CDN}';
+  s.defer = true;
+  s.dataset.slurpAlpine = '1';
+  document.head.appendChild(s);
+}})();
+"""
 
 
 def rewrite_assets(text: str) -> str:
@@ -44,6 +58,31 @@ def extract_block(html: str, start_pat: str, end_pat: str) -> str:
     return html[start.end() : start.end() + end.start()]
 
 
+def extract_body_inner(html: str) -> str:
+    """Body inner HTML — opening tag may contain ``>`` inside quoted attributes."""
+    start = re.search(r"<body\b", html, re.IGNORECASE)
+    if not start:
+        raise ValueError("Missing <body>")
+    i = start.end()
+    in_quote: str | None = None
+    while i < len(html):
+        ch = html[i]
+        if in_quote:
+            if ch == in_quote:
+                in_quote = None
+        elif ch in "\"'":
+            in_quote = ch
+        elif ch == ">":
+            i += 1
+            break
+        i += 1
+    rest = html[i:]
+    end = re.search(r"\s*<script>\s*\n\s*lucide\.createIcons\(\)", rest, re.DOTALL)
+    if not end:
+        raise ValueError("Missing lucide.createIcons() script after body")
+    return rest[: end.start()].strip()
+
+
 def main() -> dict:
     html = INDEX.read_text(encoding="utf-8")
 
@@ -51,8 +90,7 @@ def main() -> dict:
     alpine_js = extract_block(html, r"<script>\s*\n\s*document\.addEventListener\('alpine:init'", r"</script>\s*</head>")
     alpine_js = "document.addEventListener('alpine:init'" + alpine_js
 
-    body_html = extract_block(html, r"<body[^>]*>\s*", r"\s*<script>\s*\n\s*lucide\.createIcons")
-    body_html = body_html.strip()
+    body_html = extract_body_inner(html)
 
     footer_js = extract_block(html, r"lucide\.createIcons\(\);\s*", r"</script>\s*<script type=\"module\">")
     footer_js = "lucide.createIcons();\n" + footer_js
@@ -73,7 +111,7 @@ def main() -> dict:
 {globe_js}
 </script>"""
 
-    pen_js = f"{alpine_js}\n\n{footer_js}"
+    pen_js = f"{alpine_js}\n\n{footer_js}\n{ALPINE_BOOTSTRAP}"
 
     payload = {
         **PEN_META,
@@ -81,6 +119,12 @@ def main() -> dict:
         "css": css,
         "js": pen_js,
     }
+
+    if re.search(r"\n0 && !orderPlaced", pen_html):
+        raise ValueError("Body extraction looks corrupt — check extract_body_inner()")
+    if len(css) < 1000 or len(pen_js) < 1000 or len(body_html) < 1000:
+        raise ValueError("CodePen export looks truncated")
+
     return payload
 
 

@@ -1,0 +1,64 @@
+{
+  "voice": "en-IN-PrabhatNeural",
+  "locale": "en",
+  "stepTotal": 7,
+  "broth": {
+    "tonkotsu": "broth-tonkotsu.mp3",
+    "chili": "broth-chili.mp3",
+    "sesame": "broth-sesame.mp3"
+  },
+  "steps": {
+    "hand-pulled": [
+      "hand-pulled-0.mp3",
+      "hand-pulled-1.mp3",
+      "hand-pulled-2.mp3",
+      "hand-pulled-3.mp3",
+      "hand-pulled-4-{broth}.mp3"
+    ],
+    "ramen": [
+      "ramen-0.mp3",
+      "ramen-1.mp3",
+      "ramen-2.mp3",
+      "ramen-3.mp3",
+      "ramen-4-{broth}.mp3"
+    ],
+    "udon": [
+      "udon-0.mp3",
+      "udon-1.mp3",
+      "udon-2.mp3",
+      "udon-3.mp3",
+      "udon-4.mp3"
+    ]
+  },
+  "stepBoilBroth": {
+    "hand-pulled": {
+      "tonkotsu": "hand-pulled-4-tonkotsu.mp3",
+      "chili": "hand-pulled-4-chili.mp3",
+      "sesame": "hand-pulled-4-sesame.mp3"
+    },
+    "ramen": {
+      "tonkotsu": "ramen-4-tonkotsu.mp3",
+      "chili": "ramen-4-chili.mp3",
+      "sesame": "ramen-4-sesame.mp3"
+    }
+  },
+  "assemblyLadle": {
+    "thick-tonkotsu": "assembly-ladle-thick-tonkotsu.mp3",
+    "thick-chili": "assembly-ladle-thick-chili.mp3",
+    "thick-sesame": "assembly-ladle-thick-sesame.mp3",
+    "thin-tonkotsu": "assembly-ladle-thin-tonkotsu.mp3",
+    "thin-chili": "assembly-ladle-thin-chili.mp3",
+    "thin-sesame": "assembly-ladle-thin-sesame.mp3"
+  },
+  "topping": {
+    "scallion": "topping-scallion.mp3",
+    "egg": "topping-egg.mp3",
+    "chashu": "topping-chashu.mp3",
+    "chili": "topping-chili.mp3",
+    "sesame": "topping-sesame.mp3",
+    "peanut": "topping-peanut.mp3",
+    "none": "topping-none.mp3"
+  },
+  "assemblyTip": "assembly-tip.mp3",
+  "allDone": "all-done.mp3"
+}
