@@ -3,6 +3,7 @@
 *.log
 
 # Local dev screenshot folders
+assets/screenshots/
 build-check/
 splash-check/
 card-fixed/
