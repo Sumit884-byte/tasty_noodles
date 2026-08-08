@@ -61,6 +61,7 @@
         body[data-section="spread"] { --chopstick-accent: #fb923c; }
         body[data-section="social"] { --chopstick-accent: #f472b6; }
         body[data-section="gift"] { --chopstick-accent: #dc2626; }
+        body[data-section="support"] { --chopstick-accent: #0ea5e9; }
         body[data-section="checkout"],
         body[data-section="greeting"] { --chopstick-accent: #1c1917; }
         @media (pointer: fine) {
@@ -3849,6 +3850,7 @@
                 'nav.spread': 'Spread the Slurp',
                 'nav.social': 'Social Slurp',
                 'nav.gift': 'Gift a Bowl',
+                'nav.support': 'Slurp Support',
                 'nav.checkout': 'Checkout',
                 'showMore.more': 'Show more',
                 'showMore.moreCount': 'Show {count} more',
@@ -4049,6 +4051,36 @@
                 'social.reactionOpen': 'Open slurp reactions',
                 'social.reactionClose': 'Close slurp reactions',
                 'social.reactionThrown': '{emoji} slurped!',
+                'support.kicker': 'Need help? · Slurp support',
+                'support.title': 'We\'ve Got Your <span class="text-orange-600">Back</span> (And Your Bowl)',
+                'support.prose': 'Wrong topping? Gift stuck in transit? Chef Marco\'s crew answers faster than you can say slurp — playful help, zero runaround.',
+                'support.channelsTitle': 'Reach the broth crew',
+                'support.faqTitle': 'Slurp FAQ',
+                'support.link.stores': 'Find a store',
+                'support.link.gift': 'Gift delivery help',
+                'support.link.order': 'Check my order',
+                'support.channel.phone.title': 'Call us',
+                'support.channel.phone.desc': '1800-SLURP-NOW · 7 AM – midnight IST',
+                'support.channel.whatsapp.title': 'WhatsApp',
+                'support.channel.whatsapp.desc': 'Text the kitchen — photos of sad bowls welcome',
+                'support.channel.email.title': 'Email',
+                'support.channel.email.desc': 'help@slurp.noodles · replies within 2 hours',
+                'support.channel.order.title': 'Order help',
+                'support.channel.order.desc': 'Track, tweak, or rescue a stuck delivery',
+                'support.faq.delivery.q': 'How long does delivery take?',
+                'support.faq.delivery.a': 'Most bowls land in 35–45 minutes inside city limits. Peak slurp hours (7–9 PM) may add ten minutes — we text you if Chef Marco is juggling too many ladles.',
+                'support.faq.changeOrder.q': 'Can I change my order after checkout?',
+                'support.faq.changeOrder.a': 'If your runner hasn\'t left the kitchen yet, yes — WhatsApp us immediately. Once the bag is sealed, we can only add extra chili oil, not swap noodles.',
+                'support.faq.gift.q': 'How do gift deliveries work?',
+                'support.faq.gift.a': 'Pick a bowl, write your note, and we deliver with a SLURP! gift card. We call the recipient if the gate code is missing — add a phone number in the gift form.',
+                'support.faq.cold.q': 'What if my bowl arrives cold?',
+                'support.faq.cold.a': 'Unacceptable. Snap a photo, message us within 15 minutes, and we\'ll re-fire the bowl or refund the broth — your call, no interrogation.',
+                'support.faq.outsideIndia.q': 'Do you deliver outside India?',
+                'support.faq.outsideIndia.a': 'Delivery is India-only for now. Aliens keep asking for intergalactic shipping — we\'re working on it. Walk-in stores are your best bet abroad.',
+                'support.faq.store.q': 'How do I find my nearest store?',
+                'support.faq.store.a': 'Jump to Find Stores, search your city, or tap Closest Store Near Me. Every kitchen slings the same vault menu — no FOMO.',
+                'support.faq.refund.q': 'What\'s your refund policy?',
+                'support.faq.refund.a': 'Wrong order, missing toppings, or a cold bowl — full refund or free re-fire. Change-of-mind after delivery? We\'ll meet you halfway with a credit for next slurp.',
             },
             hi: {
                 'nav.dare': 'चुनौती',
@@ -4255,6 +4287,7 @@
                     slurpCode: false,
                     story: false,
                     checkout: false,
+                    support: false,
                 },
                 showMoreLimits: {
                     menu: 3,
@@ -4263,7 +4296,9 @@
                     spread: 4,
                     slurpCode: 3,
                     checkout: 3,
+                    support: 4,
                 },
+                openSupportFaq: null,
                 shareSections: [
                     {
                         id: 'hero',
@@ -4394,6 +4429,7 @@
                     { href: '#spread', key: 'nav.spread', section: 'spread' },
                     { href: '#social', key: 'nav.social', section: 'social' },
                     { href: '#gift', key: 'nav.gift', section: 'gift' },
+                    { href: '#support', key: 'nav.support', section: 'support' },
                 ],
                 mobileBottomNavDefs: [
                     { href: '#hero', key: 'nav.dare', shortKey: 'nav.short.dare', section: 'hero', icon: 'dare' },
@@ -4952,6 +4988,21 @@
                     { quote: 'Midnight Tonkotsu at 2 AM in Hyderabad. Sleep is overrated anyway.', author: 'Ananya R.', role: 'Night Slurper', initials: 'AR', color: 'bg-rose-200 text-rose-900', rating: 5 },
                     { quote: 'Told my friends I\'d share. That was a lie. No regrets.', author: 'Vikram P.', role: 'Selfish Slurper', initials: 'VP', color: 'bg-lime-200 text-lime-900', rating: 4 },
                 ],
+                supportChannels: [
+                    { id: 'phone', emoji: '📞', titleKey: 'support.channel.phone.title', descKey: 'support.channel.phone.desc', href: 'tel:+911800758787' },
+                    { id: 'whatsapp', emoji: '💬', titleKey: 'support.channel.whatsapp.title', descKey: 'support.channel.whatsapp.desc', href: 'https://wa.me/919876543210', external: true },
+                    { id: 'email', emoji: '✉️', titleKey: 'support.channel.email.title', descKey: 'support.channel.email.desc', href: 'mailto:help@slurp.noodles' },
+                    { id: 'order', emoji: '🍜', titleKey: 'support.channel.order.title', descKey: 'support.channel.order.desc', section: 'checkout' },
+                ],
+                supportFaqs: [
+                    { id: 'delivery', qKey: 'support.faq.delivery.q', aKey: 'support.faq.delivery.a' },
+                    { id: 'change-order', qKey: 'support.faq.changeOrder.q', aKey: 'support.faq.changeOrder.a' },
+                    { id: 'gift', qKey: 'support.faq.gift.q', aKey: 'support.faq.gift.a' },
+                    { id: 'cold', qKey: 'support.faq.cold.q', aKey: 'support.faq.cold.a' },
+                    { id: 'outside-india', qKey: 'support.faq.outsideIndia.q', aKey: 'support.faq.outsideIndia.a' },
+                    { id: 'store', qKey: 'support.faq.store.q', aKey: 'support.faq.store.a' },
+                    { id: 'refund', qKey: 'support.faq.refund.q', aKey: 'support.faq.refund.a' },
+                ],
                 customPlate: {
                     broth: 'tonkotsu',
                     noodles: 'thick',
@@ -5310,7 +5361,7 @@
                     this.navScrolled = scrollTop > 8;
                 },
                 setupScrollSpy() {
-                    const sectionIds = ['hero', 'menu', 'build', 'learn', 'story', 'slurp-code', 'stores', 'reviews', 'spread', 'social', 'gift', 'checkout', 'greeting'];
+                    const sectionIds = ['hero', 'menu', 'build', 'learn', 'story', 'slurp-code', 'stores', 'reviews', 'spread', 'social', 'gift', 'support', 'checkout', 'greeting'];
                     const observer = new IntersectionObserver((entries) => {
                         entries.forEach((entry) => {
                             if (entry.isIntersecting) this.activeSection = entry.target.id;
@@ -5794,6 +5845,9 @@
                 },
                 toggleSectionExpanded(section) {
                     this.sectionExpanded[section] = !this.sectionExpanded[section];
+                },
+                toggleSupportFaq(id) {
+                    this.openSupportFaq = this.openSupportFaq === id ? null : id;
                 },
                 showMoreLabel(section, items) {
                     const count = this.sectionRemainingCount(items, section);
@@ -7340,7 +7394,7 @@
                             <label id="gift-location-label" x-text="t('gift.location')"></label>
                             <div class="collect-picker"
                                  :class="giftLocationMenuOpen ? 'collect-picker--open' : ''"
-                                 @click.outside="closeGiftPickers()">
+                                 @click.outside="giftLocationMenuOpen = false; giftLocationSearch = ''">
                                 <button type="button"
                                         id="gift-location"
                                         class="collect-picker__toggle"
@@ -7422,7 +7476,7 @@
                             <label id="gift-preset-label" x-text="t('gift.presetsLabel')"></label>
                             <div class="collect-picker mb-3"
                                  :class="giftPresetMenuOpen ? 'collect-picker--open' : ''"
-                                 @click.outside="closeGiftPickers()">
+                                 @click.outside="giftPresetMenuOpen = false; giftPresetSearch = ''">
                                 <button type="button"
                                         id="gift-preset"
                                         class="collect-picker__toggle"
@@ -7548,6 +7602,96 @@
                         </footer>
                     </article>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slurp Support -->
+    <section id="support" class="py-20 bg-white border-t-4 border-stone-900">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-12 section-scroll-target">
+                <span class="editorial-section-label"><img class="chopstick-kicker-icon" src="assets/chopsticks/icons/serving.svg" alt="" decoding="async"><span x-text="t('support.kicker')"></span></span>
+                <h2 class="editorial-title font-black text-stone-900 uppercase tracking-tight mb-4" x-html="t('support.title')"></h2>
+                <p class="editorial-prose" x-text="t('support.prose')"></p>
+            </div>
+
+            <div class="mb-14">
+                <h3 class="text-center text-sm font-black uppercase tracking-widest text-stone-500 mb-6" x-text="t('support.channelsTitle')"></h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <template x-for="channel in supportChannels" :key="channel.id">
+                        <article class="noodle-card bg-amber-50 p-5 rounded-2xl text-left shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] flex flex-col h-full">
+                            <span class="text-3xl mb-3" x-text="channel.emoji" aria-hidden="true"></span>
+                            <h4 class="text-lg font-black text-stone-900 mb-1" x-text="t(channel.titleKey)"></h4>
+                            <p class="text-sm font-bold text-stone-600 mb-4 flex-1" x-text="t(channel.descKey)"></p>
+                            <a x-show="channel.href"
+                               x-cloak
+                               :href="channel.href"
+                               class="inline-flex items-center justify-center w-full bg-stone-900 hover:bg-orange-600 text-white font-black py-2.5 px-4 rounded-xl border-2 border-stone-900 shadow-[3px_3px_0px_0px_rgba(249,115,22,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all text-xs uppercase tracking-wide"
+                               :target="channel.external ? '_blank' : null"
+                               :rel="channel.external ? 'noopener noreferrer' : null"
+                               x-text="t(channel.titleKey)"></a>
+                            <button type="button"
+                                    x-show="channel.section"
+                                    x-cloak
+                                    class="inline-flex items-center justify-center w-full bg-stone-900 hover:bg-orange-600 text-white font-black py-2.5 px-4 rounded-xl border-2 border-stone-900 shadow-[3px_3px_0px_0px_rgba(249,115,22,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all text-xs uppercase tracking-wide"
+                                    @click="goToSection(channel.section, $event)"
+                                    x-text="t(channel.titleKey)"></button>
+                        </article>
+                    </template>
+                </div>
+            </div>
+
+            <div class="max-w-3xl mx-auto">
+                <h3 class="text-center text-sm font-black uppercase tracking-widest text-stone-500 mb-6" x-text="t('support.faqTitle')"></h3>
+                <div class="space-y-3" role="list">
+                    <template x-for="faq in visibleSlice(supportFaqs, 'support')" :key="faq.id">
+                        <article class="noodle-card bg-white rounded-2xl shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] overflow-hidden"
+                                 role="listitem">
+                            <h4>
+                                <button type="button"
+                                        class="w-full flex items-center justify-between gap-4 text-left px-5 py-4 font-black text-stone-900 hover:bg-orange-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
+                                        @click="toggleSupportFaq(faq.id)"
+                                        :aria-expanded="(openSupportFaq === faq.id).toString()"
+                                        :aria-controls="`support-faq-${faq.id}`">
+                                    <span x-text="t(faq.qKey)"></span>
+                                    <span class="shrink-0 text-orange-600 text-xl leading-none transition-transform duration-200"
+                                          :class="openSupportFaq === faq.id ? 'rotate-45' : ''"
+                                          aria-hidden="true">+</span>
+                                </button>
+                            </h4>
+                            <div :id="`support-faq-${faq.id}`"
+                                 x-show="openSupportFaq === faq.id"
+                                 x-cloak
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 -translate-y-1"
+                                 x-transition:enter-end="opacity-100 translate-y-0"
+                                 x-transition:leave="transition ease-in duration-150"
+                                 x-transition:leave-start="opacity-100 translate-y-0"
+                                 x-transition:leave-end="opacity-0 -translate-y-1"
+                                 role="region">
+                                <p class="px-5 pb-5 text-sm font-bold text-stone-600 leading-relaxed border-t-2 border-dashed border-stone-200 pt-4"
+                                   x-text="t(faq.aKey)"></p>
+                            </div>
+                        </article>
+                    </template>
+                </div>
+                <div x-show="sectionHasMore(supportFaqs, 'support')"
+                     x-cloak
+                     class="section-show-more-wrap">
+                    <button type="button"
+                            class="section-show-more-btn"
+                            @click="toggleSectionExpanded('support')"
+                            :aria-expanded="sectionExpanded.support.toString()">
+                        <span class="section-show-more-btn__icon-wrap" aria-hidden="true"><img src="assets/show-more-peacock.png" alt="" class="section-show-more-btn__icon" height="68" decoding="async"></span>
+                        <span x-text="sectionExpanded.support ? showLessLabel() : showMoreLabel('support', supportFaqs)"></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-3 mt-12">
+                <a href="#stores" class="editorial-btn editorial-btn--ghost" x-text="t('support.link.stores')"></a>
+                <a href="#gift" class="editorial-btn editorial-btn--ghost" x-text="t('support.link.gift')"></a>
+                <a href="#checkout" class="editorial-btn editorial-btn--ghost" x-text="t('support.link.order')"></a>
             </div>
         </div>
     </section>

@@ -86,7 +86,8 @@ This was a challenge submission, not a production restaurant platform — but th
 - Extract the splash animation into a reusable Web Component
 - Add sound effects (with mute toggle)
 - Wire up real social links if SLURP! ever becomes a real brand
-- Globe tour of store cities with lat/lon markers
+- **India wireframe map with store pins** — a sketch-style outline of the country with clickable markers for each kitchen, tied into the existing store finder
+- **Peacock feather expansion on show-more** — the peacock buttons already reveal extra cards; next up is a feather-fan unfold animation on click, so expanding a section feels like the bird opening its tail
 
 For now, I'm happy with what I shipped: a page that makes people smile, teaches a few frontend tricks, and proves that comfort food deserves better than a stock photo and an "Order Now" button.
 
