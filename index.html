@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +23,149 @@
     <style>
         [x-cloak] { display: none !important; }
         html {
-            scroll-padding-top: 5.5rem;
+            scroll-padding-top: var(--site-header-offset, 4rem);
+            scroll-padding-bottom: var(--site-bottom-offset, 0px);
+            scroll-behavior: auto;
+        }
+        :root {
+            --site-header-offset: 3.5rem;
+            --site-bottom-offset: 4.875rem;
+        }
+        @media (min-width: 1024px) {
+            :root {
+                --site-header-offset: 5rem;
+                --site-bottom-offset: 0px;
+            }
+        }
+        .section-scroll-target {
+            scroll-margin-top: var(--site-header-offset);
+        }
+        /* Chopstick theme system */
+        :root {
+            --cursor-default: url('assets/chopsticks/cursors/noodles-emoji.png') 16 16, auto;
+            --cursor-pointer: url('assets/chopsticks/cursors/noodles-emoji.png') 16 16, pointer;
+            --cursor-grab: url('assets/chopsticks/cursors/grab.svg') 8 8, grab;
+            --cursor-grabbing: url('assets/chopsticks/cursors/grabbing.svg') 8 8, grabbing;
+            --cursor-not-allowed: url('assets/chopsticks/cursors/not-allowed.svg') 8 8, not-allowed;
+            --cursor-wait: url('assets/chopsticks/cursors/wait.svg') 6 4, wait;
+            --chopstick-accent: #f97316;
+            --chopstick-ornament: url('assets/chopsticks/ornaments/corner.svg');
+        }
+        body[data-section="menu"] { --chopstick-accent: #fbbf24; }
+        body[data-section="build"] { --chopstick-accent: #22c55e; }
+        body[data-section="learn"] { --chopstick-accent: #14b8a6; }
+        body[data-section="story"] { --chopstick-accent: #8b5cf6; }
+        body[data-section="slurp-code"] { --chopstick-accent: #fbbf24; }
+        body[data-section="stores"] { --chopstick-accent: #f97316; }
+        body[data-section="reviews"] { --chopstick-accent: #eab308; }
+        body[data-section="spread"] { --chopstick-accent: #fb923c; }
+        body[data-section="social"] { --chopstick-accent: #f472b6; }
+        body[data-section="gift"] { --chopstick-accent: #dc2626; }
+        body[data-section="checkout"],
+        body[data-section="greeting"] { --chopstick-accent: #1c1917; }
+        @media (pointer: fine) {
+            body.chopstick-theme {
+                cursor: var(--cursor-default);
+            }
+            body.chopstick-theme a,
+            body.chopstick-theme button,
+            body.chopstick-theme [role="button"],
+            body.chopstick-theme .collect-btn,
+            body.chopstick-theme .section-show-more-btn,
+            body.chopstick-theme .menu-cat-pill,
+            body.chopstick-theme .build-chip,
+            body.chopstick-theme .learn-step-btn,
+            body.chopstick-theme label[for] {
+                cursor: var(--cursor-pointer);
+            }
+            body.chopstick-theme button:disabled,
+            body.chopstick-theme .collect-btn:disabled,
+            body.chopstick-theme [aria-disabled="true"] {
+                cursor: var(--cursor-not-allowed);
+            }
+            body.chopstick-theme .stores-near-me-btn:disabled,
+            body.chopstick-theme .stores-near-me-btn[aria-busy="true"] {
+                cursor: var(--cursor-wait);
+            }
+            body.chopstick-theme input,
+            body.chopstick-theme textarea,
+            body.chopstick-theme select,
+            body.chopstick-theme [contenteditable="true"] {
+                cursor: text;
+            }
+            body[data-section="build"].chopstick-theme .build-chip,
+            body[data-section="build"].chopstick-theme .plate-bowl-wrap {
+                cursor: var(--cursor-grab);
+            }
+        }
+        .chopstick-kicker-icon {
+            display: inline-block;
+            width: 1.25rem;
+            height: 1.25rem;
+            vertical-align: -0.2em;
+            margin-right: 0.35rem;
+        }
+        @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+            .noodle-card::after {
+                content: '';
+                position: absolute;
+                top: 0.35rem;
+                right: 0.35rem;
+                width: 1.25rem;
+                height: 1.25rem;
+                background: var(--chopstick-ornament) center / contain no-repeat;
+                opacity: 0;
+                transform: scale(0.85) rotate(-8deg);
+                transition: opacity 0.2s ease, transform 0.2s ease;
+                pointer-events: none;
+                z-index: 2;
+            }
+            .noodle-card:hover::after {
+                opacity: 0.85;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+        .section-show-more-btn::after {
+            content: '';
+            position: absolute;
+            right: 0.65rem;
+            bottom: -0.35rem;
+            width: 0.875rem;
+            height: 0.875rem;
+            background: var(--chopstick-ornament) center / contain no-repeat;
+            opacity: 0.35;
+            pointer-events: none;
+        }
+        .nav-link--active::before {
+            content: '';
+            display: inline-block;
+            width: 0.875rem;
+            height: 0.875rem;
+            margin-right: 0.25rem;
+            vertical-align: -0.1em;
+            background: url('assets/chopsticks/icons/crossed.svg') center / contain no-repeat;
+        }
+        @media (max-width: 1023px) {
+            .mobile-bottom-nav__item--active::after {
+                content: '';
+                position: absolute;
+                top: 0.2rem;
+                left: 50%;
+                width: 1rem;
+                height: 0.5rem;
+                transform: translateX(-50%);
+                background: url('assets/chopsticks/icons/crossed.svg') center / contain no-repeat;
+                opacity: 0.9;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            body.chopstick-theme {
+                cursor: url('assets/chopsticks/cursors/noodles-emoji.png') 16 16, auto;
+            }
+            .noodle-card::after,
+            .section-show-more-btn::after {
+                display: none;
+            }
         }
         @keyframes splash-screen-in {
             from { opacity: 0; }
@@ -346,19 +488,21 @@
                 padding: 0 1.125rem;
             }
         }
-        @media (max-width: 767px) {
+        @media (max-width: 1023px) {
             .checkout-float {
-                bottom: 0;
-                left: 0;
-                right: 0;
-                transform: none;
-                width: 100%;
-                max-width: none;
+                bottom: calc(4.875rem + env(safe-area-inset-bottom, 0px));
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+                width: calc(100% - 1.5rem);
+                max-width: 24rem;
             }
             .checkout-float__shell {
-                border-radius: 1.25rem 1.25rem 0 0;
-                padding: 0.5rem 0.5rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
-                box-shadow: 0 -8px 32px rgba(28, 25, 23, 0.12);
+                border-radius: 1.25rem;
+                padding: 0.375rem;
+                box-shadow:
+                    0 12px 40px rgba(28, 25, 23, 0.16),
+                    0 2px 8px rgba(28, 25, 23, 0.06);
             }
             .collect-btn--cart:active,
             .collect-btn--cart:hover {
@@ -368,8 +512,11 @@
                 width: 100%;
                 max-width: 20rem;
             }
+            body {
+                padding-bottom: calc(4.875rem + env(safe-area-inset-bottom, 0px));
+            }
             body.has-cart-bar {
-                padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+                padding-bottom: calc(9.875rem + env(safe-area-inset-bottom, 0px));
             }
         }
         .social-brand-icon {
@@ -498,8 +645,18 @@
             font-weight: 700;
             color: #1c1917;
         }
+        .editorial-prose.text-stone-300 strong,
+        .editorial-prose.text-stone-300 .story-emphasis {
+            color: #fbbf24;
+            font-weight: 800;
+            text-shadow: 0 0 18px rgba(251, 191, 36, 0.45), 0 1px 0 rgba(28, 25, 23, 0.6);
+        }
         .editorial-section-label {
-            display: block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.25rem;
             font-size: 0.6875rem;
             font-weight: 700;
             letter-spacing: 0.12em;
@@ -553,6 +710,66 @@
         }
         .editorial-btn--ghost:hover {
             background: #fff7ed;
+        }
+        .section-show-more-wrap {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+            overflow: visible;
+            padding: 1rem 2rem 0;
+        }
+        .section-show-more-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            padding: 0.6rem 1.35rem 0.6rem 2.35rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #1c1917;
+            background: #fff;
+            border: 2px solid #1c1917;
+            border-radius: 9999px;
+            box-shadow: 3px 3px 0 rgba(28, 25, 23, 1);
+            cursor: pointer;
+            overflow: visible;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .section-show-more-btn:hover {
+            background: #fff7ed;
+            transform: translate(1px, 1px);
+            box-shadow: 2px 2px 0 rgba(28, 25, 23, 1);
+        }
+        .section-show-more-btn:focus-visible {
+            outline: 2px solid #f97316;
+            outline-offset: 2px;
+        }
+        .section-show-more-btn__icon-wrap {
+            position: absolute;
+            left: -2.85rem;
+            top: 50%;
+            width: auto;
+            height: 4.25rem;
+            transform: translateY(-50%);
+            pointer-events: none;
+            z-index: 2;
+            transition: transform 0.25s ease;
+        }
+        .section-show-more-btn[aria-expanded="true"] .section-show-more-btn__icon-wrap {
+            transform: translateY(-50%) rotate(180deg);
+        }
+        .section-show-more-btn__icon {
+            width: auto;
+            height: 100%;
+            max-width: none;
+            display: block;
+            object-fit: contain;
+            object-position: left center;
+            filter: drop-shadow(1px 2px 0 rgba(28, 25, 23, 0.12));
         }
         .editorial-scroll {
             display: inline-flex;
@@ -1117,8 +1334,26 @@
             justify-content: center;
             min-height: 320px;
             padding: 1.5rem;
-            background: radial-gradient(circle at 50% 60%, #fff7ed 0%, #fef3c7 55%, transparent 70%);
+            background: transparent;
             border-radius: 1.25rem;
+        }
+        .build-orbit-shell .plate-stage::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 58%;
+            width: 17rem;
+            height: 13rem;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(ellipse at center, rgba(255, 247, 237, 0.35) 0%, transparent 72%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .build-orbit-shell .plate-steam,
+        .build-orbit-shell .plate-bowl-wrap,
+        .build-orbit-shell .plate-bowl {
+            position: relative;
+            z-index: 1;
         }
         .plate-steam {
             position: absolute;
@@ -1139,15 +1374,48 @@
         }
         .plate-steam-wisp:nth-child(2) { animation-delay: 0.6s; height: 40px; }
         .plate-steam-wisp:nth-child(3) { animation-delay: 1.2s; width: 6px; }
-        .plate-bowl {
+        @keyframes bowl-outline-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .plate-bowl-wrap {
             position: relative;
             width: 260px;
             height: 200px;
+            flex-shrink: 0;
+        }
+        .plate-bowl-wrap::before,
+        .plate-bowl-wrap::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 6;
+        }
+        /* Rotating dashed ring on the bowl rim */
+        .plate-bowl-wrap::before {
+            inset: -3px;
+            border: 2.5px dashed #ea580c;
+            opacity: 0.9;
+            animation: bowl-outline-spin 12s linear infinite;
+        }
+        /* Counter-rotating accent ring */
+        .plate-bowl-wrap::after {
+            inset: -10px;
+            border: 1.5px dashed #fbbf24;
+            opacity: 0.45;
+            animation: bowl-outline-spin 20s linear infinite reverse;
+        }
+        .plate-bowl {
+            position: relative;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             background: linear-gradient(145deg, #fafaf9 0%, #e7e5e4 55%, #d6d3d1 100%);
             border: 4px solid #1c1917;
             box-shadow: 8px 8px 0 0 #1c1917;
             overflow: hidden;
+            z-index: 1;
         }
         .plate-bowl::before {
             content: '';
@@ -1344,6 +1612,11 @@
             transform: scaleY(1.35);
         }
         .learn-step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .learn-step-strip {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
@@ -1750,6 +2023,77 @@
             color: #78716c;
         }
 
+        /* Learn section — responsive layout */
+        @media (max-width: 1023px) {
+            .learn-layout {
+                gap: 1.5rem;
+            }
+            .learn-step-strip {
+                flex-direction: row;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x mandatory;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                padding-bottom: 0.25rem;
+            }
+            .learn-step-strip::-webkit-scrollbar {
+                display: none;
+            }
+            .learn-step-btn {
+                flex: 0 0 auto;
+                width: auto;
+                min-width: 10.5rem;
+                scroll-snap-align: start;
+                scroll-margin: 0.5rem;
+                padding: 0.75rem 0.85rem;
+            }
+            .learn-audio__row {
+                flex-direction: column;
+            }
+            .learn-audio__btn {
+                flex: 1 1 auto;
+                min-width: 0;
+                width: 100%;
+            }
+            .learn-nav-row {
+                flex-direction: column;
+            }
+            .learn-nav-row .editorial-btn {
+                flex: none;
+                min-width: 0;
+                width: 100%;
+            }
+            .learn-plate-card {
+                margin-bottom: 1.25rem;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            .learn-gate {
+                padding: 1.5rem 1rem;
+            }
+        }
+        @media (max-width: 479px) {
+            .learn-stage {
+                min-height: 12rem;
+            }
+            .learn-step-btn__title {
+                font-size: 0.8125rem;
+            }
+            .learn-tip,
+            .learn-complete {
+                padding: 0.75rem 0.85rem;
+            }
+        }
+        @media (min-width: 1024px) {
+            .learn-step-list {
+                position: sticky;
+                top: 5.5rem;
+                max-height: calc(100vh - 7rem);
+                overflow-y: auto;
+            }
+        }
+
         .plate-toast {
             animation: plate-toast-in 0.3s ease;
         }
@@ -1757,6 +2101,42 @@
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Stack Your Bowl — orbiting garnish ring (Arka-generated SVG) */
+        @keyframes build-orbit-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .build-orbit-shell {
+            position: relative;
+            isolation: isolate;
+        }
+        .build-orbit {
+            position: absolute;
+            inset: -48px -24px -32px;
+            pointer-events: none;
+            z-index: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .build-orbit__svg {
+            width: 100%;
+            max-width: 420px;
+            height: auto;
+            animation: build-orbit-spin 32s linear infinite;
+            opacity: 0.88;
+        }
+        .build-orbit-shell .plate-stage {
+            position: relative;
+            z-index: 1;
+            background: transparent;
+        }
+        @media (max-width: 1023px) {
+            .build-orbit { inset: -32px -8px -24px; }
+            .build-orbit__svg { max-width: 340px; }
+        }
+
         .skip-link {
             position: absolute;
             top: -100%;
@@ -1805,6 +2185,64 @@
         .food-card-add-btn:active {
             transform: scale(0.95);
         }
+        .menu-card-reaction-bar {
+            padding: 0.35rem 0.5rem;
+            gap: 0.15rem;
+        }
+        .menu-card-reaction-bar .slurp-reaction-emoji {
+            width: 2rem;
+            height: 2rem;
+            font-size: 1.15rem;
+        }
+        .menu-slurp-reaction-card {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        .menu-slurp-reaction-card .slurp-reaction-stage {
+            position: absolute;
+            inset: -1.5rem;
+            overflow: visible;
+            z-index: 5;
+            pointer-events: none;
+        }
+        .slurp-reaction-tally {
+            position: absolute;
+            left: 50%;
+            bottom: 2.75rem;
+            transform: translateX(-50%);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.35rem;
+            z-index: 15;
+            pointer-events: none;
+            max-width: calc(100% - 1.5rem);
+        }
+        .slurp-reaction-tally__pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+            padding: 0.15rem 0.45rem;
+            background: rgba(255, 255, 255, 0.94);
+            border: 2px solid #1c1917;
+            border-radius: 9999px;
+            font-size: 0.95rem;
+            line-height: 1;
+            font-weight: 900;
+            box-shadow: 2px 2px 0 rgba(28, 25, 23, 1);
+            animation: slurp-tally-pop 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .slurp-reaction-tally__count {
+            font-size: 0.65rem;
+            font-weight: 900;
+            color: #78716c;
+            letter-spacing: -0.02em;
+        }
+        @keyframes slurp-tally-pop {
+            0% { transform: scale(0.65); opacity: 0; }
+            70% { transform: scale(1.08); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
         .review-avatar {
             width: 2.75rem;
             height: 2.75rem;
@@ -1820,6 +2258,92 @@
         .review-stars {
             letter-spacing: 0.05em;
             color: #f59e0b;
+        }
+        .reviews-video-sketch-wrap {
+            max-width: 22rem;
+            margin: 0 auto 2rem;
+        }
+        .reviews-video-sketch {
+            background: #fff;
+            border: 3px solid #1c1917;
+            border-radius: 1rem;
+            box-shadow: 6px 6px 0 rgba(28, 25, 23, 1);
+            overflow: hidden;
+            transform: rotate(-1deg);
+        }
+        .reviews-video-sketch__head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding: 0.45rem 0.75rem;
+            border-bottom: 2px solid #1c1917;
+            background: #fffbeb;
+            font-size: 0.5625rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #57534e;
+        }
+        .reviews-video-sketch__live {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .reviews-video-sketch__rec {
+            width: 0.45rem;
+            height: 0.45rem;
+            border-radius: 9999px;
+            background: #ef4444;
+            animation: reviews-rec-blink 1.1s ease-in-out infinite;
+        }
+        @keyframes reviews-rec-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.35; }
+        }
+        .reviews-video-sketch__art {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4 / 3;
+            pointer-events: none;
+            background: #fffbeb;
+            object-fit: cover;
+        }
+        .reviews-video-sketch__progress {
+            height: 0.4rem;
+            background: #fde68a;
+            border-top: 2px solid #1c1917;
+            position: relative;
+            overflow: hidden;
+        }
+        .reviews-video-sketch__progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 38%;
+            background: linear-gradient(90deg, #f97316, #fbbf24);
+            animation: reviews-sketch-scrub 3.2s linear infinite;
+        }
+        @keyframes reviews-sketch-scrub {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(320%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .reviews-video-sketch__rec,
+            .reviews-video-sketch__progress::after {
+                animation: none;
+            }
+            .reviews-video-sketch__progress::after {
+                width: 55%;
+                transform: none;
+            }
+        }
+        @keyframes stores-flower-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
         .stores-section {
             position: relative;
@@ -1842,6 +2366,8 @@
             width: min(50vw, 22rem);
             height: auto;
             opacity: 0.42;
+            transform-origin: center center;
+            animation: stores-flower-spin 52s linear infinite;
         }
         .stores-deco--green {
             right: -4rem;
@@ -1849,6 +2375,8 @@
             width: min(46vw, 20rem);
             height: auto;
             opacity: 0.4;
+            transform-origin: center center;
+            animation: stores-flower-spin 38s linear infinite reverse;
         }
         .stores-deco--arch-left {
             left: -0.5rem;
@@ -1875,6 +2403,59 @@
             transition: width 0.12s ease-out;
             z-index: 1;
         }
+        .site-nav {
+            background: rgba(255, 251, 235, 0.38);
+            backdrop-filter: blur(18px) saturate(1.5);
+            -webkit-backdrop-filter: blur(18px) saturate(1.5);
+            border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.42),
+                0 4px 24px rgba(28, 25, 23, 0.05);
+            transition:
+                transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.28s ease,
+                background 0.25s ease,
+                border-color 0.25s ease;
+            will-change: transform;
+        }
+        .site-nav--scrolled {
+            background: rgba(255, 251, 235, 0.56);
+            border-bottom-color: rgba(251, 191, 36, 0.3);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                0 8px 32px rgba(28, 25, 23, 0.08);
+        }
+        @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+            .site-nav {
+                background: rgba(255, 251, 235, 0.92);
+            }
+            .site-nav--scrolled {
+                background: rgba(255, 251, 235, 0.96);
+            }
+        }
+        .site-nav--hidden {
+            transform: translateY(-100%);
+            box-shadow: none;
+        }
+        .site-nav__drawer {
+            background: rgba(255, 251, 235, 0.52);
+            backdrop-filter: blur(18px) saturate(1.45);
+            -webkit-backdrop-filter: blur(18px) saturate(1.45);
+            border-top: 1px solid rgba(251, 191, 36, 0.22);
+        }
+        @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+            .site-nav__drawer {
+                background: rgba(255, 251, 235, 0.95);
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .site-nav {
+                transition: none !important;
+            }
+            .site-nav--hidden {
+                transform: none !important;
+            }
+        }
         .nav-link--active {
             color: #ea580c !important;
             text-decoration: underline;
@@ -1893,6 +2474,94 @@
             white-space: nowrap;
             flex-shrink: 0;
             font-size: clamp(0.6875rem, 0.95vw, 0.875rem);
+            text-shadow: 0 0 10px rgba(255, 251, 235, 0.7);
+        }
+        /* Mobile bottom tab bar */
+        .mobile-bottom-nav-shell {
+            display: none;
+        }
+        @media (max-width: 1023px) {
+            .mobile-bottom-nav-shell {
+                display: block;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 34;
+            }
+            .mobile-bottom-nav__wave {
+                display: block;
+                width: 100%;
+                height: 14px;
+                pointer-events: none;
+            }
+            .mobile-bottom-nav {
+                display: flex;
+                align-items: stretch;
+                justify-content: space-around;
+                gap: 0.125rem;
+                padding: 0.35rem 0.5rem calc(0.35rem + env(safe-area-inset-bottom, 0px));
+                background: rgba(255, 251, 235, 0.94);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+            }
+            .mobile-bottom-nav__item {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 0.15rem;
+                min-width: 0;
+                padding: 0.35rem 0.2rem;
+                border: none;
+                border-radius: 0.75rem;
+                background: transparent;
+                font-size: 0.5625rem;
+                font-weight: 800;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+                color: #78716c;
+                text-decoration: none;
+                position: relative;
+                transition: color 0.15s ease, background 0.15s ease;
+                -webkit-tap-highlight-color: transparent;
+                cursor: pointer;
+            }
+            .mobile-bottom-nav__item:hover,
+            .mobile-bottom-nav__item--active {
+                color: #ea580c;
+                background: #ffedd5;
+            }
+            .mobile-bottom-nav__icon {
+                width: 1.35rem;
+                height: 1.35rem;
+                flex-shrink: 0;
+            }
+            .mobile-bottom-nav__label {
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .mobile-bottom-nav__badge {
+                position: absolute;
+                top: 0.05rem;
+                right: calc(50% - 1.35rem);
+                min-width: 1rem;
+                height: 1rem;
+                padding: 0 0.2rem;
+                border-radius: 9999px;
+                background: #f97316;
+                color: #fff;
+                font-size: 0.5625rem;
+                font-weight: 900;
+                line-height: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1.5px solid #1c1917;
+            }
         }
         @keyframes cart-count-bump {
             0%, 100% { transform: scale(1); }
@@ -1936,6 +2605,164 @@
                         opacity 0.55s ease,
                         transform 0.55s ease;
             transform: translate(-50%, -50%);
+        }
+        /* Slurp reaction picker — motion UI inspired floating reactions */
+        .slurp-reaction-zone {
+            position: relative;
+            isolation: isolate;
+        }
+        .slurp-reaction-stage {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: visible;
+            z-index: 25;
+        }
+        .slurp-reaction-picker {
+            position: relative;
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .slurp-reaction-card {
+            position: relative;
+        }
+        .slurp-reaction-card .slurp-reaction-stage {
+            position: absolute;
+            inset: 0;
+            z-index: 20;
+        }
+        .slurp-reaction-card-picker {
+            position: absolute;
+            left: 0.5rem;
+            bottom: 0.5rem;
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .slurp-reaction-bar--card {
+            margin-bottom: 0.35rem;
+            padding: 0.3rem 0.45rem;
+            gap: 0.15rem;
+        }
+        .slurp-reaction-bar--card .slurp-reaction-emoji {
+            width: 2rem;
+            height: 2rem;
+            font-size: 1.15rem;
+        }
+        .slurp-reaction-toggle--card {
+            width: 2.35rem;
+            height: 2.35rem;
+            font-size: 1.05rem;
+            box-shadow: 2px 2px 0 #1c1917;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(6px);
+        }
+        .slurp-reaction-toggle--card:hover {
+            box-shadow: 3px 3px 0 #1c1917;
+        }
+        .slurp-reaction-toggle__plus {
+            position: absolute;
+            top: -0.15rem;
+            right: -0.15rem;
+            width: 0.85rem;
+            height: 0.85rem;
+            border-radius: 9999px;
+            background: #f97316;
+            color: #fff;
+            border: 1.5px solid #1c1917;
+            font-size: 0.55rem;
+            font-weight: 900;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+        .slurp-reaction-bar {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.4rem 0.55rem;
+            margin-bottom: 0.6rem;
+            background: rgba(28, 25, 23, 0.94);
+            border: 2px solid #1c1917;
+            border-radius: 9999px;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+        }
+        .slurp-reaction-emoji {
+            width: 2.5rem;
+            height: 2.5rem;
+            border: none;
+            background: transparent;
+            border-radius: 9999px;
+            font-size: 1.45rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+        .slurp-reaction-emoji:hover {
+            transform: scale(1.18);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .slurp-reaction-emoji:active {
+            transform: scale(0.95);
+        }
+        .slurp-reaction-toggle {
+            position: relative;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 9999px;
+            border: 2px solid #1c1917;
+            background: #fff;
+            box-shadow: 3px 3px 0 #1c1917;
+            font-size: 1.35rem;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+        }
+        .slurp-reaction-toggle:hover {
+            transform: translateY(-1px);
+            box-shadow: 4px 4px 0 #1c1917;
+            background: #fffbeb;
+        }
+        .slurp-reaction-toggle:active {
+            transform: translateY(1px);
+            box-shadow: 1px 1px 0 #1c1917;
+        }
+        .slurp-reaction-toggle[aria-expanded="true"] {
+            background: #fef3c7;
+        }
+        .slurp-reaction-hint {
+            margin-top: 0.65rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #78716c;
+            max-width: 16rem;
+            line-height: 1.4;
+        }
+        .slurp-reaction-particle {
+            position: absolute;
+            font-size: clamp(1.35rem, 3.5vw, 2rem);
+            line-height: 1;
+            transform: translate(-50%, -50%);
+            opacity: 1;
+            pointer-events: none;
+            will-change: transform, opacity;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.18));
+            transition: none;
+        }
+        .slurp-reaction-particle--fly {
+            transition:
+                transform var(--duration, 2s) cubic-bezier(0.22, 0.61, 0.36, 1),
+                opacity var(--duration, 2s) ease-out;
+            transform: translate(calc(-50% + var(--drift, 0px)), calc(-50% - var(--lift, 320px))) scale(0.35);
+            opacity: 0;
         }
         /* Cart quantity stepper */
         .cart-qty {
@@ -2202,6 +3029,12 @@
             font-weight: 700;
             text-align: center;
         }
+        @media (prefers-reduced-motion: reduce) {
+            .stores-deco--orange,
+            .stores-deco--green {
+                animation: none;
+            }
+        }
         @media (max-width: 767px) {
             .stores-deco--green,
             .stores-deco--arch-left,
@@ -2283,6 +3116,141 @@
             text-transform: uppercase;
             color: #ea580c;
         }
+        /* CollectUI-style dropdown */
+        .collect-picker {
+            position: relative;
+        }
+        .collect-picker__toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 0.65rem 0.85rem;
+            border: 2px solid #1c1917;
+            border-radius: 0.75rem;
+            background: #fff;
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: #1c1917;
+            cursor: pointer;
+            box-shadow: 3px 3px 0 rgba(28, 25, 23, 1);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+            text-align: left;
+        }
+        .collect-picker__toggle:hover {
+            background: #fff7ed;
+        }
+        .collect-picker__toggle:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.35), 3px 3px 0 rgba(28, 25, 23, 1);
+        }
+        .collect-picker--open .collect-picker__toggle,
+        .collect-picker__toggle:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 rgba(28, 25, 23, 1);
+        }
+        .collect-picker__chevron {
+            flex-shrink: 0;
+            transition: transform 0.15s ease;
+        }
+        .collect-picker--open .collect-picker__chevron {
+            transform: rotate(180deg);
+        }
+        .collect-picker__menu {
+            position: absolute;
+            top: calc(100% + 0.4rem);
+            left: 0;
+            right: 0;
+            max-height: 14rem;
+            overflow-y: auto;
+            padding: 0.35rem;
+            background: #fff;
+            border: 2px solid #1c1917;
+            border-radius: 0.85rem;
+            box-shadow: 4px 4px 0 rgba(28, 25, 23, 1);
+            z-index: 20;
+        }
+        .collect-picker__option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 0.55rem 0.65rem;
+            border: none;
+            border-radius: 0.55rem;
+            background: transparent;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: #1c1917;
+            cursor: pointer;
+            text-align: left;
+        }
+        .collect-picker__option:hover,
+        .collect-picker__option[aria-selected="true"] {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+        .collect-picker__option-meta {
+            font-size: 0.6875rem;
+            font-weight: 800;
+            color: #ea580c;
+            white-space: nowrap;
+        }
+        .collect-picker__option--stacked {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+        .collect-picker__option-text {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            line-height: 1.35;
+            white-space: normal;
+            text-align: left;
+            color: #1c1917;
+        }
+        .collect-picker__menu--locations {
+            max-height: 16rem;
+        }
+        .collect-picker__search-wrap {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            padding: 0.25rem 0.25rem 0.35rem;
+            background: #fff;
+            border-bottom: 1px solid #e7e5e4;
+            margin-bottom: 0.15rem;
+        }
+        .collect-picker__search {
+            width: 100%;
+            padding: 0.5rem 0.65rem;
+            border: 2px solid #e7e5e4;
+            border-radius: 0.55rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #1c1917;
+            background: #fafaf9;
+        }
+        .collect-picker__search::placeholder {
+            color: #a8a29e;
+            font-weight: 600;
+        }
+        .collect-picker__search:focus {
+            outline: none;
+            border-color: #f97316;
+            background: #fff;
+            box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
+        }
+        .collect-picker__empty {
+            padding: 0.65rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #a8a29e;
+            text-align: center;
+            list-style: none;
+        }
         .locale-suggest {
             position: fixed;
             top: 4.5rem;
@@ -2325,7 +3293,7 @@
         @media (min-width: 768px) {
             .locale-suggest { top: 4.85rem; }
         }
-        /* Gift a noodle */
+        /* Gift a noodle — CollectUI-inspired */
         .gift-section {
             background:
                 radial-gradient(ellipse 50% 40% at 100% 0%, rgba(251, 146, 60, 0.12), transparent 70%),
@@ -2339,50 +3307,176 @@
         }
         @media (min-width: 1024px) {
             .gift-layout {
-                grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+                grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
             }
-        }
-        .gift-form-card,
-        .gift-preview-wrap {
-            background: #fff;
-            border: 2px solid #1c1917;
-            border-radius: 1.5rem;
-            box-shadow: 6px 6px 0 rgba(28, 25, 23, 1);
+            .gift-preview-wrap {
+                position: sticky;
+                top: 6rem;
+            }
         }
         .gift-form-card {
             padding: 1.5rem;
+            background: #fffbeb;
+            border: 2px solid #1c1917;
+            border-radius: 1.5rem;
+            box-shadow: 8px 8px 0 rgba(28, 25, 23, 1);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
-        .gift-bowl-pill {
+        .gift-form-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 10px 11px 0 rgba(28, 25, 23, 1);
+        }
+        @media (min-width: 640px) {
+            .gift-form-card {
+                padding: 1.75rem;
+            }
+        }
+        .gift-form-card__head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px dashed #d6d3d1;
+        }
+        .gift-form-card__title {
+            font-size: 1.125rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: #1c1917;
+            line-height: 1.2;
+        }
+        .gift-form-card__badge {
+            flex-shrink: 0;
+            font-size: 0.5625rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.35rem 0.65rem;
+            border-radius: 9999px;
+            border: 2px solid #1c1917;
+            background: #f97316;
+            color: #fff;
+            box-shadow: 2px 2px 0 rgba(28, 25, 23, 1);
+        }
+        .gift-step {
+            margin-bottom: 1.35rem;
+        }
+        .gift-step:last-of-type {
+            margin-bottom: 0;
+        }
+        .gift-step__label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
             font-size: 0.6875rem;
             font-weight: 800;
-            padding: 0.45rem 0.75rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #57534e;
+        }
+        .gift-step__num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 9999px;
+            border: 2px solid #1c1917;
+            background: #fff;
+            font-size: 0.5625rem;
+            font-weight: 900;
+            color: #ea580c;
+            box-shadow: 2px 2px 0 rgba(28, 25, 23, 1);
+        }
+        .collect-picker__toggle--product {
+            padding: 0.5rem 0.65rem 0.5rem 0.5rem;
+        }
+        .collect-picker__product {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            min-width: 0;
+            flex: 1;
+        }
+        .collect-picker__product img {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.65rem;
+            object-fit: cover;
+            border: 2px solid #1c1917;
+            flex-shrink: 0;
+        }
+        .collect-picker__product-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+            min-width: 0;
+        }
+        .collect-picker__product-name {
+            font-size: 0.8125rem;
+            font-weight: 800;
+            color: #1c1917;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .collect-picker__product-meta {
+            font-size: 0.6875rem;
+            font-weight: 800;
+            color: #ea580c;
+        }
+        .collect-picker__option--product {
+            gap: 0.65rem;
+            justify-content: flex-start;
+        }
+        .collect-picker__option-thumb {
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 0.5rem;
+            object-fit: cover;
+            border: 2px solid #1c1917;
+            flex-shrink: 0;
+        }
+        .collect-picker__option-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 0.05rem;
+            min-width: 0;
+            flex: 1;
+        }
+        .collect-picker__option-name {
+            font-size: 0.8125rem;
+            font-weight: 800;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .gift-chip {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            padding: 0.4rem 0.7rem;
             border: 2px solid #1c1917;
             border-radius: 9999px;
             background: #fff;
-            cursor: pointer;
-            transition: background 0.15s, color 0.15s;
-            text-align: left;
-            line-height: 1.2;
-        }
-        .gift-bowl-pill--active,
-        .gift-bowl-pill:hover {
-            background: #f97316;
-            color: #fff;
-        }
-        .gift-preset {
-            font-size: 0.6875rem;
-            font-weight: 700;
-            padding: 0.35rem 0.65rem;
-            border: 2px solid #d6d3d1;
-            border-radius: 9999px;
-            background: #fafaf9;
             color: #57534e;
             cursor: pointer;
-            transition: border-color 0.15s, background 0.15s;
+            box-shadow: 2px 2px 0 rgba(28, 25, 23, 1);
+            transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease, color 0.12s ease;
+            text-align: left;
+            line-height: 1.3;
         }
-        .gift-preset:hover {
-            border-color: #f97316;
+        .gift-chip:hover {
             background: #fff7ed;
+            color: #c2410c;
+            border-color: #1c1917;
+        }
+        .gift-chip:active {
+            transform: translate(2px, 2px);
+            box-shadow: none;
         }
         .gift-field label {
             display: block;
@@ -2403,6 +3497,8 @@
             font-size: 0.875rem;
             color: #1c1917;
             background: #fff;
+            box-shadow: 3px 3px 0 rgba(28, 25, 23, 1);
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
         }
         .gift-field textarea {
             min-height: 5.5rem;
@@ -2414,45 +3510,199 @@
         .gift-field input:focus,
         .gift-field textarea:focus {
             outline: none;
-            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.35);
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.35), 3px 3px 0 rgba(28, 25, 23, 1);
+        }
+        .gift-message-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-top: 0.35rem;
+        }
+        .gift-field-hint {
+            margin-top: 0;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: #a8a29e;
+        }
+        .gift-char-count {
+            font-size: 0.625rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #a8a29e;
+        }
+        .gift-char-count--warn {
+            color: #ea580c;
+        }
+        .gift-form-footer {
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 2px dashed #d6d3d1;
         }
         .gift-preview-wrap {
-            padding: 1.25rem;
+            padding: 0.5rem 0 1rem;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
+            background: transparent;
+            border: none;
+            box-shadow: none;
         }
-        .gift-preview-ribbon {
+        .gift-preview-wrap:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        .gift-preview-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding: 0 0.25rem;
+        }
+        .gift-preview-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.5625rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.3rem 0.6rem;
+            border-radius: 9999px;
+            border: 2px solid #1c1917;
+            background: #fff;
+            color: #57534e;
+            box-shadow: 2px 2px 0 rgba(28, 25, 23, 1);
+        }
+        .gift-preview-live__dot {
+            width: 0.4rem;
+            height: 0.4rem;
+            border-radius: 9999px;
+            background: #22c55e;
+            animation: gift-live-pulse 1.4s ease-in-out infinite;
+        }
+        @keyframes gift-live-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.55; transform: scale(0.85); }
+        }
+        .gift-card {
+            position: relative;
+            max-width: 21rem;
+            margin: 0 auto;
+            border: 3px solid #1c1917;
+            border-radius: 1.125rem;
+            overflow: hidden;
+            background:
+                linear-gradient(145deg, #fff 0%, #fff7ed 38%, #ffedd5 100%);
+            box-shadow:
+                0 18px 40px rgba(28, 25, 23, 0.14),
+                8px 8px 0 rgba(28, 25, 23, 1);
+            transform: rotate(-1.25deg);
+        }
+        .gift-card__ribbon {
             position: absolute;
-            top: 1rem;
-            right: -2.25rem;
-            z-index: 2;
+            top: 0.85rem;
+            right: -2.35rem;
+            z-index: 3;
             background: #dc2626;
             color: #fff;
             font-size: 0.5625rem;
             font-weight: 900;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            padding: 0.35rem 2.75rem;
+            transform: rotate(35deg);
+            box-shadow: 2px 2px 0 rgba(28, 25, 23, 1);
+        }
+        .gift-card__header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.85rem 1rem 0.65rem;
+            border-bottom: 2px dashed #d6d3d1;
+            background:
+                linear-gradient(90deg, rgba(251, 191, 36, 0.22), rgba(249, 115, 22, 0.12) 45%, rgba(255, 255, 255, 0.4));
+        }
+        .gift-card__brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.9375rem;
+            font-weight: 900;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #1c1917;
+        }
+        .gift-card__brand img {
+            width: 1.125rem;
+            height: 1.125rem;
+        }
+        .gift-card__type {
+            font-size: 0.5625rem;
+            font-weight: 900;
             letter-spacing: 0.12em;
             text-transform: uppercase;
-            padding: 0.35rem 2.5rem;
-            transform: rotate(35deg);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            padding: 0.28rem 0.55rem;
+            border-radius: 9999px;
+            border: 2px solid #1c1917;
+            background: #fff;
+            color: #78716c;
+            box-shadow: 2px 2px 0 rgba(28, 25, 23, 1);
         }
-        .gift-card {
-            border: 2px dashed #d6d3d1;
-            border-radius: 1rem;
-            padding: 1rem;
-            background: linear-gradient(165deg, #fffbeb 0%, #fff 45%);
+        .gift-card__value {
+            padding: 0.55rem 1rem 0;
+            font-size: 1.75rem;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            color: #ea580c;
+            line-height: 1;
+        }
+        .gift-card__value-label {
+            display: block;
+            margin-bottom: 0.15rem;
+            font-size: 0.5625rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #78716c;
         }
         .gift-card-media {
+            position: relative;
             aspect-ratio: 16 / 10;
+            margin: 0.75rem 1rem 0;
             border-radius: 0.75rem;
             overflow: hidden;
             border: 2px solid #1c1917;
-            margin-bottom: 1rem;
+            box-shadow: 3px 3px 0 rgba(28, 25, 23, 1);
         }
         .gift-card-media img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+        .gift-card-media__badge {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            font-size: 0.5625rem;
+            font-weight: 900;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            border: 2px solid #1c1917;
+            background: rgba(255, 255, 255, 0.92);
+            color: #1c1917;
+            box-shadow: 2px 2px 0 rgba(28, 25, 23, 1);
+        }
+        .gift-card-media__price {
+            display: none;
+        }
+        .gift-card__body {
+            padding: 0.85rem 1rem 0.75rem;
+            background: rgba(255, 255, 255, 0.72);
         }
         .gift-card-to {
             font-size: 0.6875rem;
@@ -2464,11 +3714,15 @@
         }
         .gift-card-message {
             font-family: 'Source Serif 4', Georgia, serif;
-            font-size: 1.0625rem;
+            font-size: 1rem;
             line-height: 1.55;
             color: #1c1917;
-            min-height: 3.5rem;
-            margin-bottom: 0.75rem;
+            min-height: 3.25rem;
+            margin-bottom: 0.65rem;
+        }
+        .gift-card-message--empty {
+            color: #a8a29e;
+            font-style: italic;
         }
         .gift-card-from {
             font-size: 0.75rem;
@@ -2477,9 +3731,10 @@
             text-align: right;
         }
         .gift-card-delivery {
-            margin-top: 0.75rem;
-            padding-top: 0.65rem;
-            border-top: 1px dashed #d6d3d1;
+            margin: 0;
+            padding: 0.65rem 1rem;
+            border-top: 2px dashed #d6d3d1;
+            background: #fffbeb;
             font-size: 0.6875rem;
             font-weight: 700;
             color: #78716c;
@@ -2488,25 +3743,64 @@
         .gift-card-delivery span {
             display: block;
         }
-        .gift-field-hint {
-            margin-top: 0.25rem;
-            font-size: 0.6875rem;
-            font-weight: 600;
-            color: #a8a29e;
+        .gift-card__footer {
+            border-top: 2px solid #1c1917;
+            background: #1c1917;
+            color: #fff;
         }
         .gift-card-stamp {
-            margin-top: 1rem;
-            padding-top: 0.75rem;
-            border-top: 2px dotted #d6d3d1;
+            margin: 0;
+            padding: 0.55rem 1rem;
+            border: none;
+            border-radius: 0;
+            background: transparent;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 0.5rem;
-            font-size: 0.625rem;
+            font-size: 0.5625rem;
             font-weight: 800;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
+            color: #d6d3d1;
+            box-shadow: none;
+        }
+        .gift-card-stamp__bowl {
+            color: #fbbf24;
+            font-weight: 900;
+        }
+        .gift-card__code {
+            padding: 0 1rem 0.55rem;
+            font-family: ui-monospace, 'SF Mono', monospace;
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
             color: #a8a29e;
+        }
+        .gift-card__shimmer {
+            height: 0.45rem;
+            background: linear-gradient(
+                90deg,
+                #78716c 0%,
+                #d6d3d1 18%,
+                #fbbf24 35%,
+                #fff 50%,
+                #fbbf24 65%,
+                #d6d3d1 82%,
+                #78716c 100%
+            );
+            background-size: 200% 100%;
+            animation: gift-card-shimmer 4s linear infinite;
+        }
+        @keyframes gift-card-shimmer {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .gift-card__shimmer {
+                animation: none;
+                background: linear-gradient(90deg, #78716c, #d6d3d1, #78716c);
+            }
         }
         .cart-gift-tag {
             display: inline-block;
@@ -2531,8 +3825,8 @@
             }
             .splash-scene { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
             .splash-smear, .splash-strand, .splash-garnish, .splash-cluster-main, .splash-cluster-sat, .splash-modal, .splash-backdrop { animation: none !important; opacity: 1 !important; }
-            .globe-orbit, .globe-noodle-ring, .alien-rider, .story-star, .alien-trail, .plate-steam-wisp { animation: none !important; }
-            .cart-fly-noodle, .catch-hint, .cart-toast--in, .order-celebrate { animation: none !important; }
+            .globe-orbit, .globe-noodle-ring, .alien-rider, .story-star, .alien-trail, .plate-steam-wisp, .build-orbit__svg, .plate-bowl-wrap::before, .plate-bowl-wrap::after { animation: none !important; }
+            .cart-fly-noodle, .catch-hint, .cart-toast--in, .order-celebrate, .slurp-reaction-particle, .slurp-reaction-tally__pill { animation: none !important; transition: none !important; }
             .scroll-progress { transition: none !important; }
         }
     </style>
@@ -2559,6 +3853,15 @@
                 'nav.social': 'Social Slurp',
                 'nav.gift': 'Gift a Bowl',
                 'nav.checkout': 'Checkout',
+                'showMore.more': 'Show more',
+                'showMore.moreCount': 'Show {count} more',
+                'showMore.less': 'Show less',
+                'showMore.story': 'Read the full legend',
+                'nav.short.dare': 'Dare',
+                'nav.short.menu': 'Vault',
+                'nav.short.build': 'Build',
+                'nav.short.gift': 'Gift',
+                'nav.short.checkout': 'Cart',
                 'hero.kicker': 'A love letter to comfort food · India · Asia',
                 'hero.warning': '⚠️ Warning: Extreme Flavor Zone',
                 'hero.headlineHtml': '"Our <span class="noodle-word">Noodles</span> Are <span class="noodle-word noodle-word--wavy">Tastiest.</span><br>You Don\'t Believe Me?"',
@@ -2623,6 +3926,7 @@
                 'learn.topping.sesame.prep': 'Scatter toasted sesame seeds for crunch — separate from your sesame dan dan broth base.',
                 'learn.topping.peanut.prep': 'Crush roasted peanuts and sprinkle generously.',
                 'build.lockPlate': 'Lock In My Plate',
+                'build.toppingsAll': 'All',
                 'build.choosePath': 'Plate locked. Buy it or learn to make it at home.',
                 'build.buyPlate': 'Buy This Bowl',
                 'build.learnPlate': 'Learn To Make It',
@@ -2713,6 +4017,17 @@
                 'gift.message': 'Your message',
                 'gift.messagePlaceholder': 'Write something they will slurp-read twice…',
                 'gift.presetsLabel': 'Need inspiration?',
+                'gift.presetPick': 'Pick a message',
+                'gift.presetSearchPlaceholder': 'Search messages by keyword…',
+                'gift.presetNoResults': 'No messages match — write your own below',
+                'gift.locationPick': 'Pick delivery location',
+                'gift.locationSearchPlaceholder': 'Search city, area, or pincode…',
+                'gift.locationNoResults': 'No locations match — try custom address below',
+                'gift.locationCustom': 'Custom address',
+                'gift.locationCustomHint': 'Enter your own address',
+                'gift.formTitle': 'Build the gift',
+                'gift.formBadge': 'Compose',
+                'gift.stepDetails': 'Who & where',
                 'gift.previewLabel': 'Live preview',
                 'gift.addBtn': 'Add gift to cart 🎁',
                 'gift.errorMissing': 'Add their name, delivery address, phone number, and a message to send this gift.',
@@ -2733,6 +4048,10 @@
                 'spread.copied': 'Copied — go lift a mood!',
                 'spread.shared': 'Shared — broth therapy deployed!',
                 'spread.wholeSite': 'Share whole site',
+                'social.reactionHint': 'Tap 🍜 on a post, pick a reaction, throw it up the feed.',
+                'social.reactionOpen': 'Open slurp reactions',
+                'social.reactionClose': 'Close slurp reactions',
+                'social.reactionThrown': '{emoji} slurped!',
             },
             hi: {
                 'nav.dare': 'चुनौती',
@@ -2931,6 +4250,23 @@
                 cart: [],
                 cartToast: { show: false, message: '' },
                 shareToast: { show: false, message: '' },
+                sectionExpanded: {
+                    menu: false,
+                    stores: false,
+                    reviews: false,
+                    spread: false,
+                    slurpCode: false,
+                    story: false,
+                    checkout: false,
+                },
+                showMoreLimits: {
+                    menu: 3,
+                    stores: 4,
+                    reviews: 4,
+                    spread: 4,
+                    slurpCode: 3,
+                    checkout: 3,
+                },
                 shareSections: [
                     {
                         id: 'hero',
@@ -2998,8 +4334,49 @@
                     },
                 ],
                 cartBump: false,
+                slurpReactionOpenCard: null,
+                slurpReactionCounts: {},
+                socialFeedPosts: [
+                    {
+                        id: 'reel-chili',
+                        platform: 'Reel · 0:14',
+                        handle: '@slurp.noodles',
+                        caption: 'POV: chili oil hitting the lens. You felt that heat. 🌶️',
+                        image: 'assets/chili-noodles.jpg',
+                        alt: 'Social post preview of Dragon Breath chili oil noodles',
+                        mediaBg: 'bg-red-100',
+                    },
+                    {
+                        id: 'story-tonkotsu',
+                        platform: 'Story · Live',
+                        handle: '@slurp.noodles',
+                        caption: '18-hour broth steam check. Close your eyes. Inhale. Slurp. 🍜',
+                        image: 'assets/tonkotsu-ramen.jpg',
+                        alt: 'Social post preview of steaming tonkotsu ramen',
+                        mediaBg: 'bg-amber-100',
+                    },
+                    {
+                        id: 'tiktok-pull',
+                        platform: 'TikTok · 0:08',
+                        handle: '@slurpchallenge',
+                        caption: 'Slow-mo noodle pull ASMR. Your screen is officially hungry. 🤤',
+                        image: 'assets/dan-dan-noodles.jpg',
+                        alt: 'Social post preview of slow-mo noodle pull',
+                        mediaBg: 'bg-green-100',
+                    },
+                ],
+                slurpReactions: [
+                    { emoji: '🍜', label: 'Slurp' },
+                    { emoji: '🌶️', label: 'Spicy' },
+                    { emoji: '🥢', label: 'Chopsticks' },
+                    { emoji: '💨', label: 'Steam' },
+                    { emoji: '🔥', label: 'Fire' },
+                ],
                 scrollProgress: 0,
                 activeSection: 'hero',
+                navHidden: false,
+                navScrolled: false,
+                _lastScrollY: 0,
                 _toastTimer: null,
                 _shareToastTimer: null,
                 locale: localStorage.getItem('slurp-locale') || 'en',
@@ -3023,7 +4400,22 @@
                     { href: '#social', key: 'nav.social', section: 'social' },
                     { href: '#gift', key: 'nav.gift', section: 'gift' },
                 ],
+                mobileBottomNavDefs: [
+                    { href: '#hero', key: 'nav.dare', shortKey: 'nav.short.dare', section: 'hero', icon: 'dare' },
+                    { href: '#menu', key: 'nav.menu', shortKey: 'nav.short.menu', section: 'menu', icon: 'menu' },
+                    { href: '#build', key: 'nav.build', shortKey: 'nav.short.build', section: 'build', icon: 'build' },
+                    { href: '#gift', key: 'nav.gift', shortKey: 'nav.short.gift', section: 'gift', icon: 'gift' },
+                    { href: '#checkout', key: 'nav.checkout', shortKey: 'nav.short.checkout', section: 'checkout', icon: 'cart', isCheckout: true },
+                ],
                 giftBowlKey: 'midnight-tonkotsu',
+                giftBowlMenuOpen: false,
+                giftLocationKey: '',
+                giftLocationMenuOpen: false,
+                giftLocationSearch: '',
+                giftLocationCustom: false,
+                giftPresetIndex: null,
+                giftPresetMenuOpen: false,
+                giftPresetSearch: '',
                 giftTo: '',
                 giftFrom: '',
                 giftLocation: '',
@@ -3066,6 +4458,90 @@
                 },
                 get giftBowlItem() {
                     return this.menuItems.find((item) => item.key === this.giftBowlKey) || this.menuItems[0];
+                },
+                get giftLocationOptions() {
+                    const stores = this.storeLocations.map((store) => ({
+                        key: store.id,
+                        label: store.name,
+                        meta: `${store.city} · ${store.pincode}`,
+                        address: `${store.address}, ${store.city}, ${store.state} ${store.pincode}`,
+                    }));
+                    return [
+                        ...stores,
+                        {
+                            key: 'custom',
+                            label: this.t('gift.locationCustom'),
+                            meta: this.t('gift.locationCustomHint'),
+                            address: '',
+                        },
+                    ];
+                },
+                get filteredGiftLocationOptions() {
+                    const q = this.giftLocationSearch.trim().toLowerCase();
+                    const all = this.giftLocationOptions;
+                    const custom = all.find((opt) => opt.key === 'custom');
+                    const stores = all.filter((opt) => opt.key !== 'custom');
+                    if (!q) return all;
+                    const filtered = stores.filter((opt) =>
+                        opt.label.toLowerCase().includes(q)
+                        || opt.meta.toLowerCase().includes(q)
+                        || (opt.address && opt.address.toLowerCase().includes(q))
+                    );
+                    const showCustom = custom && (
+                        custom.label.toLowerCase().includes(q)
+                        || custom.meta.toLowerCase().includes(q)
+                        || filtered.length === 0
+                    );
+                    return showCustom ? [...filtered, custom] : filtered;
+                },
+                get giftLocationItem() {
+                    if (this.giftLocationCustom) {
+                        return {
+                            label: this.t('gift.locationCustom'),
+                            meta: this.giftLocation.trim() || this.t('gift.locationCustomHint'),
+                        };
+                    }
+                    const picked = this.giftLocationOptions.find((opt) => opt.key === this.giftLocationKey);
+                    if (picked && picked.key !== 'custom') return picked;
+                    if (this.giftLocation.trim()) {
+                        const short = this.giftLocation.length > 48
+                            ? `${this.giftLocation.slice(0, 48)}…`
+                            : this.giftLocation;
+                        return { label: this.t('gift.location'), meta: short };
+                    }
+                    return {
+                        label: this.t('gift.locationPick'),
+                        meta: this.t('gift.locationPlaceholder'),
+                    };
+                },
+                get giftPresetOptions() {
+                    return this.giftPresets.map((text, index) => ({ index, text }));
+                },
+                get filteredGiftPresetOptions() {
+                    const q = this.giftPresetSearch.trim().toLowerCase();
+                    const all = this.giftPresetOptions;
+                    if (!q) return all;
+                    return all.filter((opt) => opt.text.toLowerCase().includes(q));
+                },
+                get giftPresetItem() {
+                    if (this.giftPresetIndex !== null && this.giftPresets[this.giftPresetIndex]) {
+                        const text = this.giftPresets[this.giftPresetIndex];
+                        return {
+                            label: this.t('gift.presetsLabel'),
+                            meta: text.length > 52 ? `${text.slice(0, 52)}…` : text,
+                        };
+                    }
+                    if (this.giftMessage.trim()) {
+                        const text = this.giftMessage.trim();
+                        return {
+                            label: this.t('gift.message'),
+                            meta: text.length > 52 ? `${text.slice(0, 52)}…` : text,
+                        };
+                    }
+                    return {
+                        label: this.t('gift.presetPick'),
+                        meta: this.t('gift.messagePlaceholder'),
+                    };
                 },
                 get giftPreviewMessage() {
                     const msg = this.giftMessage.trim();
@@ -3305,16 +4781,7 @@
                     this.learnStyle = this.learnStyleFromPlate();
                     this.learnStep = 0;
                     this.loadLearnRecipes();
-                    this.closeMobileMenu();
-                    const learn = document.getElementById('learn');
-                    if (learn) {
-                        const root = document.documentElement;
-                        const prev = root.style.scrollBehavior;
-                        root.style.scrollBehavior = 'auto';
-                        learn.scrollIntoView({ block: 'start' });
-                        root.style.scrollBehavior = prev;
-                    }
-                    history.pushState(null, '', '#learn');
+                    this.goToSection('learn');
                 },
                 goLearnStep(index) {
                     this.stopLearnAudio();
@@ -3473,6 +4940,13 @@
                         ? { ...this.learnDone, [key]: current.filter((i) => i !== idx) }
                         : { ...this.learnDone, [key]: [...current, idx].sort((a, b) => a - b) };
                 },
+                slurpRules: [
+                    { cite: '"Slurp loud, mean it."', title: 'Húp mì', body: 'The sound is not rude — it is proof the broth is hot and you are paying attention. Whisper-slurpers get side-eyed.' },
+                    { cite: '"Your bowl, your order."', title: 'Broth or noodle first', body: 'Some go broth, some go noodle, some go chili oil straight. There is no wrong sequence. There is only finishing.' },
+                    { cite: '"Serve someone else the egg."', title: 'Gắp cho người khác', body: 'The jammy yolk in the middle goes to a guest, an elder, or whoever looked hungriest when they sat down.' },
+                    { cite: '"Chili oil is communal."', title: 'Share the fire', body: 'Pass the crisp. Don\'t hoard the crunch. The table that shares heat stays friends longer.' },
+                    { cite: '"Finish the bowl."', title: 'Ăn hết mì', body: 'Leave noodles behind and someone will tell you about the hands that pulled them. Nobody writes this rule down. Everybody enforces it.', wide: true },
+                ],
                 testimonials: [
                     { quote: 'I tried to catch it and got broth on my iPad.', author: 'Sarah K.', role: 'Failed Catcher', initials: 'SK', color: 'bg-orange-200 text-orange-900', rating: 5 },
                     { quote: 'The Dragon Breath Chili Oil changed my life\'s trajectory.', author: 'Dave M.', role: 'Serial Slurper', initials: 'DM', color: 'bg-red-200 text-red-900', rating: 5 },
@@ -3603,6 +5077,13 @@
                         label: this.t(link.key),
                     }));
                 },
+                get mobileBottomNavLinks() {
+                    return this.mobileBottomNavDefs.map((link) => ({
+                        ...link,
+                        label: this.t(link.shortKey),
+                        ariaLabel: this.t(link.key),
+                    }));
+                },
                 get currentLocaleMeta() {
                     return this.localeCatalog.find((l) => l.code === this.locale) || this.localeCatalog[0];
                 },
@@ -3705,13 +5186,67 @@
                 },
                 init() {
                     this.detectLocale();
+                    this.setupSectionNavigation();
                     this.$nextTick(() => {
                         this.setupScrollSpy();
                         this.setupMenuSpotlightKeys();
                         this.startMenuSpotlightAutoplay();
                         window.addEventListener('scroll', () => this.updateScrollProgress(), { passive: true });
                         this.updateScrollProgress();
+                        const hashId = window.location.hash.slice(1);
+                        if (hashId && document.getElementById(hashId)) {
+                            requestAnimationFrame(() => this.goToSection(hashId, null, { updateHash: false }));
+                        }
                     });
+                },
+                setupSectionNavigation() {
+                    if (this._sectionNavBound) return;
+                    this._sectionNavBound = true;
+                    document.addEventListener('click', (e) => {
+                        const link = e.target.closest('a[href^="#"]');
+                        if (!link) return;
+                        const href = link.getAttribute('href');
+                        if (!href || href === '#') return;
+                        const id = href.slice(1);
+                        if (!document.getElementById(id)) return;
+                        e.preventDefault();
+                        this.goToSection(id);
+                    });
+                    window.addEventListener('hashchange', () => {
+                        if (this._scrollNavigating) return;
+                        const id = window.location.hash.slice(1);
+                        if (id && document.getElementById(id)) {
+                            this.goToSection(id, null, { updateHash: false });
+                        }
+                    });
+                },
+                getScrollHeaderOffset() {
+                    const nav = document.querySelector('.site-nav');
+                    if (!nav) return 0;
+                    return Math.ceil(nav.getBoundingClientRect().height);
+                },
+                goToSection(id, event, options = {}) {
+                    const { updateHash = true } = options;
+                    if (event?.preventDefault) event.preventDefault();
+                    this.closeMobileMenu();
+                    this.localeMenuOpen = false;
+                    this.navHidden = false;
+
+                    if (id === 'hero') {
+                        window.scrollTo({ top: 0, behavior: 'auto' });
+                    } else {
+                        const section = document.getElementById(id);
+                        if (!section) return;
+                        const target = section.querySelector('.section-scroll-target') || section;
+                        const top = target.getBoundingClientRect().top + window.scrollY - this.getScrollHeaderOffset();
+                        window.scrollTo({ top: Math.max(0, top), behavior: 'auto' });
+                    }
+
+                    if (updateHash && window.location.hash !== `#${id}`) {
+                        this._scrollNavigating = true;
+                        history.pushState(null, '', `#${id}`);
+                        requestAnimationFrame(() => { this._scrollNavigating = false; });
+                    }
                 },
                 startMenuSpotlightAutoplay() {
                     this.stopMenuSpotlightAutoplay();
@@ -3779,6 +5314,31 @@
                     const scrollTop = doc.scrollTop || document.body.scrollTop;
                     const scrollHeight = doc.scrollHeight - doc.clientHeight;
                     this.scrollProgress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+                    this.navScrolled = scrollTop > 8;
+                    this.updateNavVisibility(scrollTop);
+                },
+                updateNavVisibility(scrollTop) {
+                    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                        this.navHidden = false;
+                        this._lastScrollY = scrollTop;
+                        return;
+                    }
+                    if (this.mobileMenuOpen || this.localeMenuOpen) {
+                        this.navHidden = false;
+                        this._lastScrollY = scrollTop;
+                        return;
+                    }
+                    const delta = scrollTop - this._lastScrollY;
+                    const revealThreshold = 6;
+                    const hideThreshold = 12;
+                    if (scrollTop <= 64) {
+                        this.navHidden = false;
+                    } else if (delta < -revealThreshold) {
+                        this.navHidden = false;
+                    } else if (delta > hideThreshold) {
+                        this.navHidden = true;
+                    }
+                    this._lastScrollY = scrollTop;
                 },
                 setupScrollSpy() {
                     const sectionIds = ['hero', 'menu', 'build', 'learn', 'story', 'slurp-code', 'stores', 'reviews', 'spread', 'social', 'gift', 'checkout', 'greeting'];
@@ -3806,17 +5366,7 @@
                     return this.t('hero.chefReady');
                 },
                 goToCheckout(event) {
-                    if (event) event.preventDefault();
-                    this.closeMobileMenu();
-                    const checkout = document.getElementById('checkout');
-                    if (checkout) {
-                        const root = document.documentElement;
-                        const prev = root.style.scrollBehavior;
-                        root.style.scrollBehavior = 'auto';
-                        checkout.scrollIntoView({ block: 'start' });
-                        root.style.scrollBehavior = prev;
-                    }
-                    history.pushState(null, '', '#checkout');
+                    this.goToSection('checkout', event);
                 },
                 handleEscape() {
                     if (this.learnAudioPlaying) { this.stopLearnAudio(); return; }
@@ -3946,6 +5496,58 @@
                     });
                     setTimeout(() => el.remove(), 650);
                 },
+                toggleSlurpReactionCard(cardId) {
+                    this.slurpReactionOpenCard = this.slurpReactionOpenCard === cardId ? null : cardId;
+                },
+                slurpReactionTally(cardId) {
+                    const counts = this.slurpReactionCounts[cardId];
+                    if (!counts) return [];
+                    return Object.entries(counts)
+                        .filter(([, total]) => total > 0)
+                        .map(([emoji, count]) => ({ emoji, count }));
+                },
+                bumpSlurpReaction(cardId, emoji) {
+                    if (!cardId) return 1;
+                    if (!this.slurpReactionCounts[cardId]) this.slurpReactionCounts[cardId] = {};
+                    const next = (this.slurpReactionCounts[cardId][emoji] || 0) + 1;
+                    this.slurpReactionCounts[cardId][emoji] = next;
+                    return next;
+                },
+                spawnSlurpParticle(stage, emoji, originX, originY, index = 0) {
+                    const drift = (Math.random() - 0.5) * 90;
+                    const duration = 1500 + Math.random() * 900 + index * 120;
+                    const el = document.createElement('div');
+                    el.className = 'slurp-reaction-particle';
+                    el.textContent = emoji;
+                    el.style.left = `${originX + (Math.random() - 0.5) * 18}px`;
+                    el.style.top = `${originY + (Math.random() - 0.5) * 12}px`;
+                    el.style.setProperty('--drift', `${drift}px`);
+                    el.style.setProperty('--lift', `${Math.max(stage.clientHeight * 0.95, 220)}px`);
+                    el.style.setProperty('--duration', `${duration}ms`);
+                    el.setAttribute('aria-hidden', 'true');
+                    stage.appendChild(el);
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => el.classList.add('slurp-reaction-particle--fly'));
+                    });
+                    setTimeout(() => el.remove(), duration + 150);
+                },
+                throwSlurpReaction(emoji, event) {
+                    const card = event.currentTarget.closest('.slurp-reaction-card');
+                    const cardId = card?.dataset?.reactionId || null;
+                    const count = this.bumpSlurpReaction(cardId, emoji);
+                    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                        this.showShareToast(this.t('social.reactionThrown', { emoji }) + (count > 1 ? ` ×${count}` : ''));
+                        return;
+                    }
+                    const stage = card?.querySelector('.slurp-reaction-stage');
+                    if (!stage) return;
+                    const stageRect = stage.getBoundingClientRect();
+                    const btn = event.currentTarget;
+                    const btnRect = btn.getBoundingClientRect();
+                    const startX = btnRect.left + btnRect.width / 2 - stageRect.left;
+                    const startY = btnRect.top + btnRect.height / 2 - stageRect.top;
+                    this.spawnSlurpParticle(stage, emoji, startX, startY);
+                },
                 triggerCartFeedback(event, name) {
                     this.showCartToast(`${name} added 🍜`);
                     this.cartBump = true;
@@ -3975,7 +5577,66 @@
                 },
                 setGiftPreset(message) {
                     this.giftMessage = message;
+                    this.giftPresetIndex = this.giftPresets.indexOf(message);
                     this.giftError = '';
+                },
+                selectGiftPreset(index) {
+                    this.giftPresetIndex = index;
+                    this.giftMessage = this.giftPresets[index] || '';
+                    this.giftPresetMenuOpen = false;
+                    this.giftPresetSearch = '';
+                    this.giftError = '';
+                },
+                toggleGiftPresetMenu() {
+                    if (this.giftPresetMenuOpen) {
+                        this.giftPresetMenuOpen = false;
+                        this.giftPresetSearch = '';
+                        return;
+                    }
+                    this.closeGiftPickers('preset');
+                    this.giftPresetMenuOpen = true;
+                    this.$nextTick(() => document.getElementById('gift-preset-search')?.focus());
+                },
+                selectGiftLocation(key) {
+                    this.giftLocationKey = key;
+                    this.giftLocationMenuOpen = false;
+                    this.giftLocationSearch = '';
+                    this.giftError = '';
+                    if (key === 'custom') {
+                        this.giftLocationCustom = true;
+                        this.giftLocation = '';
+                        this.$nextTick(() => document.getElementById('gift-location-custom')?.focus());
+                        return;
+                    }
+                    this.giftLocationCustom = false;
+                    const picked = this.giftLocationOptions.find((opt) => opt.key === key);
+                    this.giftLocation = picked?.address || '';
+                },
+                toggleGiftLocationMenu() {
+                    if (this.giftLocationMenuOpen) {
+                        this.giftLocationMenuOpen = false;
+                        this.giftLocationSearch = '';
+                        return;
+                    }
+                    this.closeGiftPickers('location');
+                    this.giftLocationMenuOpen = true;
+                    this.$nextTick(() => document.getElementById('gift-location-search')?.focus());
+                },
+                closeGiftPickers(except = '') {
+                    if (except !== 'bowl') this.giftBowlMenuOpen = false;
+                    if (except !== 'location') {
+                        this.giftLocationMenuOpen = false;
+                        this.giftLocationSearch = '';
+                    }
+                    if (except !== 'preset') {
+                        this.giftPresetMenuOpen = false;
+                        this.giftPresetSearch = '';
+                    }
+                },
+                selectGiftBowl(key) {
+                    this.giftBowlKey = key;
+                    this.giftError = '';
+                    this.giftBowlMenuOpen = false;
                 },
                 addGiftToCart(event) {
                     this.giftError = '';
@@ -4044,8 +5705,20 @@
                     else this.customPlate.toppings.push(id);
                     this.unlockPlate();
                 },
+                toggleAllToppings() {
+                    if (this.allToppingsSelected) {
+                        this.customPlate.toppings = [];
+                    } else {
+                        this.customPlate.toppings = this.toppingOptions.map((o) => o.id);
+                    }
+                    this.unlockPlate();
+                },
                 hasTopping(id) {
                     return this.customPlate.toppings.includes(id);
+                },
+                get allToppingsSelected() {
+                    return this.toppingOptions.length > 0
+                        && this.toppingOptions.every((o) => this.customPlate.toppings.includes(o.id));
                 },
                 get brothColor() {
                     const map = { tonkotsu: '#f5e6c8', chili: '#e85d04', sesame: '#c4956a' };
@@ -4119,14 +5792,7 @@
                     this.startEtaCountdown();
                     if (typeof launchConfetti === 'function') launchConfetti();
                     this.cart = [];
-                    const checkoutEl = document.getElementById('checkout');
-                    if (checkoutEl) {
-                        const root = document.documentElement;
-                        const prev = root.style.scrollBehavior;
-                        root.style.scrollBehavior = 'auto';
-                        checkoutEl.scrollIntoView({ block: 'start' });
-                        root.style.scrollBehavior = prev;
-                    }
+                    this.goToSection('checkout', null, { updateHash: true });
                 },
                 get storeCities() {
                     return [...new Set(this.storeLocations.map((s) => s.city))].sort();
@@ -4139,6 +5805,35 @@
                 selectStoreCity(city) {
                     this.clearNearMe();
                     this.selectedStoreCity = city;
+                    this.sectionExpanded.stores = false;
+                },
+                visibleSlice(items, section) {
+                    const list = items || [];
+                    const limit = this.showMoreLimits[section] ?? list.length;
+                    if (this.sectionExpanded[section] || list.length <= limit) return list;
+                    return list.slice(0, limit);
+                },
+                sectionHasMore(items, section) {
+                    const list = items || [];
+                    const limit = this.showMoreLimits[section] ?? list.length;
+                    return list.length > limit;
+                },
+                sectionRemainingCount(items, section) {
+                    const list = items || [];
+                    const limit = this.showMoreLimits[section] ?? list.length;
+                    return Math.max(0, list.length - limit);
+                },
+                toggleSectionExpanded(section) {
+                    this.sectionExpanded[section] = !this.sectionExpanded[section];
+                },
+                showMoreLabel(section, items) {
+                    const count = this.sectionRemainingCount(items, section);
+                    return count > 0
+                        ? this.t('showMore.moreCount', { count })
+                        : this.t('showMore.more');
+                },
+                showLessLabel() {
+                    return this.t('showMore.less');
                 },
                 haversineKm(lat1, lng1, lat2, lng2) {
                     const R = 6371;
@@ -4180,7 +5875,7 @@
                         );
                     }
                     this.$nextTick(() => {
-                        document.getElementById(`store-${nearest.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        this.goToSection(`store-${nearest.id}`, null, { updateHash: false });
                     });
                 },
                 findStoreNearMe() {
@@ -4239,10 +5934,11 @@
         });
     </script>
 </head>
-<body class="bg-amber-50 text-stone-900 font-sans antialiased overflow-x-hidden bg-grid"
+<body class="bg-amber-50 text-stone-900 font-sans antialiased overflow-x-hidden bg-grid chopstick-theme"
       x-data="slurpApp()"
       x-init="init()"
       @keydown.escape.window="handleEscape()"
+      :data-section="activeSection"
       :class="cartCount > 0 && !orderPlaced ? 'has-cart-bar' : ''">
 
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -4283,10 +5979,12 @@
 
     <!-- Navigation -->
     <header>
-        <nav class="fixed top-0 w-full z-40 bg-amber-50/80 backdrop-blur-md border-b border-amber-200 relative" aria-label="Main navigation">
+        <nav class="site-nav fixed top-0 w-full z-40 relative"
+             :class="{ 'site-nav--hidden': navHidden, 'site-nav--scrolled': navScrolled }"
+             aria-label="Main navigation">
             <div class="scroll-progress" :style="`width: ${scrollProgress}%`" aria-hidden="true"></div>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center gap-2 sm:gap-3">
-                <a href="#hero" class="inline-block shrink-0" @click="closeMobileMenu()">
+                <a href="#hero" class="inline-block shrink-0">
                     <img src="assets/slurp-logo.png" alt="SLURP! — Tastiest Noodles on the Planet" class="slurp-logo" width="400" height="267">
                 </a>
                 <div class="site-nav-links hidden lg:flex font-bold text-stone-700">
@@ -4331,9 +6029,8 @@
                         </ul>
                     </div>
                     <a href="#checkout"
-                       @click.prevent="goToCheckout($event)"
                        :aria-label="cartCount > 0 ? `${t('nav.checkout')}, ${cartCount} items in cart` : t('nav.checkout')"
-                       class="collect-btn collect-btn--nav"
+                       class="collect-btn collect-btn--nav hidden lg:inline-flex"
                        :class="cartBump ? 'collect-btn--bump' : ''">
                         <svg class="collect-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <path d="M6 13h12l-1.5 6H7.5L6 13z"/><path d="M6 13l-1.5-5h15L18 13"/><circle cx="9" cy="20" r="1"/><circle cx="15" cy="20" r="1"/>
@@ -4359,7 +6056,7 @@
                  x-show="mobileMenuOpen"
                  x-cloak
                  x-transition
-                 class="lg:hidden border-t border-amber-200 bg-amber-50/95 backdrop-blur-md px-6 py-4 space-y-3 font-bold text-stone-700">
+                 class="site-nav__drawer lg:hidden px-6 py-4 space-y-3 font-bold text-stone-700">
                 <div class="flex flex-wrap gap-2 pb-3 mb-1 border-b border-amber-200">
                     <template x-for="opt in localeOptions" :key="opt.code">
                         <button type="button"
@@ -4373,7 +6070,6 @@
                     <a :href="link.href"
                        class="block py-2 hover:text-orange-600 transition whitespace-nowrap"
                        :class="activeSection === link.section ? 'nav-link--active' : ''"
-                       @click="closeMobileMenu()"
                        x-text="link.label"></a>
                 </template>
             </div>
@@ -4556,8 +6252,8 @@
     <section id="menu" class="py-20 bg-white border-t-4 border-stone-900">
         <div class="max-w-7xl mx-auto px-6">
             
-            <div class="text-center max-w-3xl mx-auto mb-10">
-                <span class="editorial-section-label">Kho mì · <span>The vault</span></span>
+            <div class="text-center max-w-3xl mx-auto mb-10 section-scroll-target">
+                <span class="editorial-section-label"><img class="chopstick-kicker-icon" src="assets/chopsticks/icons/picking.svg" alt="" decoding="async">Kho mì · <span>The vault</span></span>
                 <h2 class="editorial-title font-black text-stone-900 uppercase tracking-tight mb-4">
                     Tonight's <span class="noodle-word">Six</span> Bowls
                 </h2>
@@ -4640,7 +6336,7 @@
                 <template x-for="cat in menuCategories" :key="cat.id">
                     <button type="button"
                             role="tab"
-                            @click="selectedMenuCategory = cat.id"
+                            @click="selectedMenuCategory = cat.id; sectionExpanded.menu = false"
                             :aria-selected="selectedMenuCategory === cat.id"
                             :class="selectedMenuCategory === cat.id ? 'menu-cat-pill--active bg-orange-500 text-white shadow-[3px_3px_0px_0px_rgba(28,25,23,1)]' : 'bg-white text-stone-700 hover:bg-orange-50 shadow-[2px_2px_0px_0px_rgba(28,25,23,1)]'"
                             class="menu-cat-pill shrink-0 text-xs font-black uppercase tracking-wide px-4 py-2.5 rounded-full border-2 border-stone-900 transition-all"
@@ -4650,20 +6346,63 @@
 
             <!-- CollectUI-style food card grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <template x-for="(item, index) in filteredMenuItems" :key="item.key">
+                <template x-for="(item, index) in visibleSlice(filteredMenuItems, 'menu')" :key="item.key">
                     <article class="food-card-collect noodle-card bg-amber-50 rounded-3xl p-5 shadow-[6px_6px_0px_0px_rgba(28,25,23,1)] flex flex-col">
                         <p class="editorial-dish-index mb-2"
                            x-text="`Bowl ${String(menuItems.indexOf(item) + 1).padStart(2, '0')} / ${String(menuItems.length).padStart(2, '0')} · ${item.editorialTag}`"></p>
-                        <div class="relative h-52 rounded-2xl mb-4 overflow-hidden border-2 border-stone-900" :class="item.imageBg">
+                        <div class="menu-slurp-reaction-card slurp-reaction-card"
+                             :data-reaction-id="'menu-' + item.key"
+                             @click.outside="if (slurpReactionOpenCard === 'menu-' + item.key) slurpReactionOpenCard = null">
+                            <div class="slurp-reaction-stage" aria-hidden="true"></div>
+                            <div class="relative h-52 rounded-2xl overflow-hidden border-2 border-stone-900" :class="item.imageBg">
                             <img :src="item.image" :alt="item.alt" class="w-full h-full object-cover" loading="lazy" width="600" height="400">
                             <span class="absolute top-3 left-3 text-white font-black text-[10px] px-2.5 py-1 rounded-full uppercase border border-white/30 backdrop-blur-sm" :class="item.badgeColor" x-text="item.badge"></span>
                             <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-stone-800 font-black text-[10px] px-2 py-1 rounded-full border border-stone-900/20" x-text="item.prep"></span>
+                            <div x-show="slurpReactionTally('menu-' + item.key).length"
+                                 x-cloak
+                                 class="slurp-reaction-tally"
+                                 aria-live="polite">
+                                <template x-for="row in slurpReactionTally('menu-' + item.key)" :key="`${item.key}-${row.emoji}`">
+                                    <span class="slurp-reaction-tally__pill">
+                                        <span x-text="row.emoji" aria-hidden="true"></span>
+                                        <span class="slurp-reaction-tally__count" x-show="row.count > 1" x-text="`×${row.count}`"></span>
+                                    </span>
+                                </template>
+                            </div>
+                            <div x-show="slurpReactionOpenCard === 'menu-' + item.key"
+                                 x-cloak
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                 x-transition:leave="transition ease-in duration-150"
+                                 x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                                 x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                                 class="slurp-reaction-bar menu-card-reaction-bar absolute bottom-11 left-2 z-20"
+                                 role="toolbar"
+                                 :aria-label="t('social.reactionOpen')">
+                                <template x-for="reaction in slurpReactions" :key="`${item.key}-${reaction.emoji}`">
+                                    <button type="button"
+                                            class="slurp-reaction-emoji"
+                                            :aria-label="reaction.label"
+                                            @click="throwSlurpReaction(reaction.emoji, $event)"
+                                            x-text="reaction.emoji"></button>
+                                </template>
+                            </div>
+                            <button type="button"
+                                    class="food-card-add-btn absolute -bottom-3 -left-3 w-12 h-12 rounded-full bg-stone-900 hover:bg-orange-600 text-white font-black text-2xl leading-none border-2 border-stone-900 flex items-center justify-center z-10"
+                                    :aria-expanded="slurpReactionOpenCard === 'menu-' + item.key"
+                                    @click.stop="toggleSlurpReactionCard('menu-' + item.key)">
+                                <span x-show="slurpReactionOpenCard !== 'menu-' + item.key" aria-hidden="true">🍜</span>
+                                <span x-show="slurpReactionOpenCard === 'menu-' + item.key" x-cloak aria-hidden="true">✕</span>
+                                <span class="sr-only" x-text="slurpReactionOpenCard === 'menu-' + item.key ? t('social.reactionClose') : t('social.reactionOpen')"></span>
+                            </button>
                             <button type="button"
                                     @click="addToCart(item.key, $event)"
                                     :aria-label="`Add ${item.name} to bowl`"
                                     class="food-card-add-btn absolute -bottom-3 -right-3 w-12 h-12 rounded-full bg-stone-900 hover:bg-orange-600 text-white font-black text-2xl leading-none border-2 border-stone-900 flex items-center justify-center z-10">
                                 +
                             </button>
+                            </div>
                         </div>
                         <div class="flex items-center justify-between gap-2 mb-2">
                             <div class="flex items-center gap-1.5">
@@ -4678,6 +6417,18 @@
                 </template>
             </div>
 
+            <div x-show="sectionHasMore(filteredMenuItems, 'menu')"
+                 x-cloak
+                 class="section-show-more-wrap">
+                <button type="button"
+                        class="section-show-more-btn"
+                        @click="toggleSectionExpanded('menu')"
+                        :aria-expanded="sectionExpanded.menu.toString()">
+                    <span class="section-show-more-btn__icon-wrap" aria-hidden="true"><img src="assets/show-more-peacock.png" alt="" class="section-show-more-btn__icon" height="68" decoding="async"></span>
+                    <span x-text="sectionExpanded.menu ? showLessLabel() : showMoreLabel('menu', filteredMenuItems)"></span>
+                </button>
+            </div>
+
             <p x-show="filteredMenuItems.length === 0"
                x-cloak
                class="text-center font-black text-stone-600 py-12">
@@ -4689,8 +6440,8 @@
     <!-- Build Your Bowl — Custom CSS Plate -->
     <section id="build" class="pt-16 pb-20 bg-amber-50">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="editorial-section-label">Tự chọn · <span>Build your bowl</span></span>
+            <div class="text-center max-w-3xl mx-auto mb-12 section-scroll-target">
+                <span class="editorial-section-label"><img class="chopstick-kicker-icon" src="assets/chopsticks/icons/parallel.svg" alt="" decoding="async">Tự chọn · <span>Build your bowl</span></span>
                 <h2 class="editorial-title font-black text-stone-900 uppercase tracking-tight mb-4">
                     Stack Your <span class="text-orange-600">Bowl</span>
                 </h2>
@@ -4703,12 +6454,17 @@
                 <!-- Live CSS plate preview -->
                 <div class="noodle-card bg-white rounded-3xl p-6 shadow-[8px_8px_0px_0px_rgba(28,25,23,1)]">
                     <p class="text-xs font-black uppercase text-orange-600 mb-4 text-center">Live Plate Preview</p>
+                    <div class="build-orbit-shell">
+                        <div class="build-orbit" aria-hidden="true">
+                            <img src="assets/build-orbit-ring.svg" alt="" class="build-orbit__svg" width="512" height="512" decoding="async">
+                        </div>
                     <div class="plate-stage">
                         <div class="plate-steam" aria-hidden="true">
                             <div class="plate-steam-wisp"></div>
                             <div class="plate-steam-wisp"></div>
                             <div class="plate-steam-wisp"></div>
                         </div>
+                        <div class="plate-bowl-wrap">
                         <div class="plate-bowl">
                             <div class="plate-broth" :style="`--broth-color: ${brothColor}`"></div>
                             <div class="plate-sheen" x-show="customPlate.broth === 'chili' || hasTopping('chili')" x-cloak></div>
@@ -4744,6 +6500,8 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
+                    </div>
                     </div>
                     <div class="mt-6 text-center border-t-2 border-dashed border-stone-200 pt-4">
                         <p class="text-lg font-black text-stone-900" x-text="plateLabel"></p>
@@ -4784,6 +6542,12 @@
                     <div>
                         <p class="text-xs font-black uppercase text-stone-500 mb-3">Toppings <span class="text-stone-400 normal-case">(pick multiple)</span></p>
                         <div class="flex flex-wrap gap-2">
+                            <button type="button"
+                                    @click="toggleAllToppings()"
+                                    class="build-chip px-4 py-2 rounded-xl text-sm"
+                                    :class="allToppingsSelected ? 'build-chip--active' : 'bg-white text-stone-900'"
+                                    :aria-pressed="allToppingsSelected.toString()"
+                                    x-text="t('build.toppingsAll')"></button>
                             <template x-for="opt in toppingOptions" :key="opt.id">
                                 <button type="button"
                                         @click="toggleTopping(opt.id)"
@@ -4836,10 +6600,10 @@
     </section>
 
     <!-- Learn to make noodles at home -->
-    <section id="learn" class="py-20 bg-white border-t-4 border-stone-900">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="editorial-section-label" x-text="t('learn.kicker')"></span>
+    <section id="learn" class="py-12 md:py-20 bg-white border-t-4 border-stone-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="text-center max-w-3xl mx-auto mb-8 md:mb-12 section-scroll-target">
+                <span class="editorial-section-label"><img class="chopstick-kicker-icon" src="assets/chopsticks/icons/serving.svg" alt="" decoding="async"><span x-text="t('learn.kicker')"></span></span>
                 <h2 class="editorial-title font-black text-stone-900 uppercase tracking-tight mb-4" x-html="t('learn.title')"></h2>
                 <p class="editorial-prose" x-text="t('learn.prose')"></p>
             </div>
@@ -4860,8 +6624,8 @@
                            x-text="t(`learn.style.${learnStyle}`)"></p>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-                        <div class="learn-step-list">
+                    <div class="learn-layout grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+                        <div class="learn-step-list order-2 lg:order-1">
                             <div class="learn-progress" aria-hidden="true">
                                 <template x-for="step in learnSteps" :key="step.index">
                                     <div class="learn-progress__seg"
@@ -4872,6 +6636,7 @@
                                 </template>
                             </div>
 
+                            <div class="learn-step-strip">
                             <template x-for="step in learnSteps" :key="step.index">
                                 <button type="button"
                                         class="learn-step-btn"
@@ -4888,9 +6653,10 @@
                                     </span>
                                 </button>
                             </template>
+                            </div>
                         </div>
 
-                        <div class="noodle-card bg-amber-50 rounded-3xl p-6 shadow-[8px_8px_0px_0px_rgba(28,25,23,1)]">
+                        <div class="noodle-card bg-amber-50 rounded-3xl p-4 sm:p-6 shadow-[8px_8px_0px_0px_rgba(28,25,23,1)] order-1 lg:order-2">
                             <div class="learn-audio" aria-live="polite">
                                 <div class="learn-audio__head">
                                     <span class="learn-audio__icon" aria-hidden="true">🎧</span>
@@ -4948,7 +6714,7 @@
                                      :class="{ 'learn-pot--show': ['broth', 'boil'].includes(learnStageClass) }"></div>
                             </div>
 
-                            <h3 class="mt-5 text-xl font-black text-stone-900" x-text="currentLearnStep.title"></h3>
+                            <h3 class="mt-5 text-lg sm:text-xl font-black text-stone-900" x-text="currentLearnStep.title"></h3>
                             <p class="mt-2 editorial-prose text-stone-700" x-text="currentLearnStep.body"></p>
 
                             <div class="learn-tip">
@@ -5006,26 +6772,37 @@
 
         <div class="max-w-7xl mx-auto px-6 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="text-center lg:text-left">
-                    <span class="editorial-section-label text-orange-300/80">Truyền thuyết · <span class="text-orange-400">Origins</span></span>
+                <div class="text-center lg:text-left section-scroll-target">
+                    <span class="editorial-section-label text-orange-300/80"><img class="chopstick-kicker-icon" src="assets/chopsticks/icons/crossed.svg" alt="" decoding="async">Truyền thuyết · <span class="text-orange-400">Origins</span></span>
                     <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tight mb-5 leading-none">
                         Earth Is Too <span class="text-orange-400">Small</span> For The Love Of <span class="noodle-word noodle-word--on-dark">Noodles</span>
                     </h2>
                     <p class="editorial-prose text-stone-300 mb-4">
                         Humans slurped every bowl. Cities ran out of broth. Continents ran out of chopsticks.
-                        The noodle love became <strong class="text-amber-200 font-semibold not-italic">too powerful for one planet.</strong>
+                        The noodle love became <strong class="story-emphasis">too powerful for one planet.</strong>
                     </p>
-                    <blockquote class="editorial-quote border-orange-500 text-stone-300">
-                        Three thousand years from the first hand-pulled strand — the broth is still steaming, still in the middle, still worth crossing a galaxy for.
-                    </blockquote>
-                    <p class="text-base font-semibold text-stone-400 mb-8 leading-relaxed">
-                        Even the aliens heard the slurp echo across the galaxy — and they love it too.
-                        Now they're leaving Earth, spinning off into space with bowls in hand, searching for
-                        the next planet worthy of a proper SLURP!
-                    </p>
-                    <div class="noodle-card inline-block bg-stone-900/80 px-5 py-4 rounded-2xl text-left shadow-[4px_4px_0px_0px_rgba(249,115,22,0.8)]">
-                        <p class="text-sm font-black uppercase text-orange-400 mb-1">Alien transmission intercepted:</p>
-                        <p class="text-stone-200 font-extrabold italic">"Your noodles broke our warp drive. We must go. Send more chili oil."</p>
+                    <div x-show="sectionExpanded.story" x-cloak>
+                        <blockquote class="editorial-quote border-orange-500 text-stone-300">
+                            Three thousand years from the first hand-pulled strand — the broth is still steaming, still in the middle, still worth crossing a galaxy for.
+                        </blockquote>
+                        <p class="text-base font-semibold text-stone-400 mb-8 leading-relaxed">
+                            Even the aliens heard the slurp echo across the galaxy — and they love it too.
+                            Now they're leaving Earth, spinning off into space with bowls in hand, searching for
+                            the next planet worthy of a proper SLURP!
+                        </p>
+                        <div class="noodle-card inline-block bg-stone-900/80 px-5 py-4 rounded-2xl text-left shadow-[4px_4px_0px_0px_rgba(249,115,22,0.8)] mb-6">
+                            <p class="text-sm font-black uppercase text-orange-400 mb-1">Alien transmission intercepted:</p>
+                            <p class="text-stone-200 font-extrabold italic">"Your noodles broke our warp drive. We must go. Send more chili oil."</p>
+                        </div>
+                    </div>
+                    <div class="section-show-more-wrap !mt-0 !mb-6 lg:!justify-start">
+                        <button type="button"
+                                class="section-show-more-btn"
+                                @click="toggleSectionExpanded('story')"
+                                :aria-expanded="sectionExpanded.story.toString()">
+                            <span class="section-show-more-btn__icon-wrap" aria-hidden="true"><img src="assets/show-more-peacock.png" alt="" class="section-show-more-btn__icon" height="68" decoding="async"></span>
+                            <span x-text="sectionExpanded.story ? showLessLabel() : t('showMore.story')"></span>
+                        </button>
                     </div>
                 </div>
 
@@ -5067,8 +6844,8 @@
     <!-- The Slurp Code — house rules -->
     <section id="slurp-code" class="py-20 bg-amber-50 border-t-4 border-stone-900">
         <div class="max-w-6xl mx-auto px-6">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="editorial-section-label">Nếp nhà · <span>The slurp code</span></span>
+            <div class="text-center max-w-3xl mx-auto mb-12 section-scroll-target">
+                <span class="editorial-section-label"><img class="chopstick-kicker-icon" src="assets/chopsticks/icons/slurping.svg" alt="" decoding="async">Nếp nhà · <span>The slurp code</span></span>
                 <h2 class="editorial-title font-black text-stone-900 uppercase tracking-tight mb-4">
                     Five Rules Of The Bowl
                 </h2>
@@ -5077,31 +6854,25 @@
                 </p>
             </div>
             <div class="editorial-rules">
-                <article class="editorial-rule">
-                    <cite>"Slurp loud, mean it."</cite>
-                    <h3>Húp mì</h3>
-                    <p>The sound is not rude — it is proof the broth is hot and you are paying attention. Whisper-slurpers get side-eyed.</p>
-                </article>
-                <article class="editorial-rule">
-                    <cite>"Your bowl, your order."</cite>
-                    <h3>Broth or noodle first</h3>
-                    <p>Some go broth, some go noodle, some go chili oil straight. There is no wrong sequence. There is only finishing.</p>
-                </article>
-                <article class="editorial-rule">
-                    <cite>"Serve someone else the egg."</cite>
-                    <h3>Gắp cho người khác</h3>
-                    <p>The jammy yolk in the middle goes to a guest, an elder, or whoever looked hungriest when they sat down.</p>
-                </article>
-                <article class="editorial-rule">
-                    <cite>"Chili oil is communal."</cite>
-                    <h3>Share the fire</h3>
-                    <p>Pass the crisp. Don't hoard the crunch. The table that shares heat stays friends longer.</p>
-                </article>
-                <article class="editorial-rule md:col-span-2 lg:col-span-1">
-                    <cite>"Finish the bowl."</cite>
-                    <h3>Ăn hết mì</h3>
-                    <p>Leave noodles behind and someone will tell you about the hands that pulled them. Nobody writes this rule down. Everybody enforces it.</p>
-                </article>
+                <template x-for="(rule, index) in visibleSlice(slurpRules, 'slurpCode')" :key="index">
+                    <article class="editorial-rule"
+                             :class="rule.wide ? 'md:col-span-2 lg:col-span-1' : ''">
+                        <cite x-text="rule.cite"></cite>
+                        <h3 x-text="rule.title"></h3>
+                        <p x-text="rule.body"></p>
+                    </article>
+                </template>
+            </div>
+            <div x-show="sectionHasMore(slurpRules, 'slurpCode')"
+                 x-cloak
+                 class="section-show-more-wrap">
+                <button type="button"
+                        class="section-show-more-btn"
+                        @click="toggleSectionExpanded('slurpCode')"
+                        :aria-expanded="sectionExpanded.slurpCode.toString()">
+                    <span class="section-show-more-btn__icon-wrap" aria-hidden="true"><img src="assets/show-more-peacock.png" alt="" class="section-show-more-btn__icon" height="68" decoding="async"></span>
+                    <span x-text="sectionExpanded.slurpCode ? showLessLabel() : showMoreLabel('slurpCode', slurpRules)"></span>
+                </button>
             </div>
         </div>
     </section>
@@ -5115,9 +6886,9 @@
 
         <div class="stores-layout">
             <div class="stores-main">
-            <div class="text-center mb-10 stores-heading-wrap">
+            <div class="text-center mb-10 stores-heading-wrap section-scroll-target">
                 <span class="inline-block bg-orange-100 border-2 border-orange-500 text-orange-700 font-black text-xs px-4 py-1.5 rounded-full uppercase tracking-wider mb-5">
-                    📍 Pan India · Walk In &amp; Slurp
+                    <img class="chopstick-kicker-icon" src="assets/chopsticks/icons/parallel.svg" alt="" decoding="async">📍 Pan India · Walk In &amp; Slurp
                 </span>
                 <h2 class="text-3xl md:text-5xl font-black text-stone-900 uppercase mb-4 leading-tight">
                     Find A <span class="text-orange-600">Physical Store</span><br class="hidden md:inline"> Near You
@@ -5134,7 +6905,7 @@
                     <input id="store-search"
                            type="search"
                            x-model="storeSearch"
-                           @input="clearNearMe()"
+                           @input="clearNearMe(); sectionExpanded.stores = false"
                            placeholder="Search by city, area, or pincode…"
                            class="flex-1 px-4 py-3 rounded-xl border-2 border-stone-900 font-bold text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white shadow-[3px_3px_0px_0px_rgba(28,25,23,1)]">
                     <button type="button"
@@ -5189,7 +6960,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5" x-show="filteredStores.length > 0">
-                <template x-for="store in filteredStores" :key="store.id">
+                <template x-for="store in visibleSlice(filteredStores, 'stores')" :key="store.id">
                     <article :id="`store-${store.id}`"
                              class="noodle-card bg-white p-5 rounded-2xl text-left shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] flex flex-col"
                              :class="nearestStoreId === store.id ? 'store-card--nearest' : ''">
@@ -5231,6 +7002,18 @@
                 </template>
             </div>
 
+            <div x-show="sectionHasMore(filteredStores, 'stores') && filteredStores.length > 0"
+                 x-cloak
+                 class="section-show-more-wrap">
+                <button type="button"
+                        class="section-show-more-btn"
+                        @click="toggleSectionExpanded('stores')"
+                        :aria-expanded="sectionExpanded.stores.toString()">
+                    <span class="section-show-more-btn__icon-wrap" aria-hidden="true"><img src="assets/show-more-peacock.png" alt="" class="section-show-more-btn__icon" height="68" decoding="async"></span>
+                    <span x-text="sectionExpanded.stores ? showLessLabel() : showMoreLabel('stores', filteredStores)"></span>
+                </button>
+            </div>
+
             <div x-show="filteredStores.length === 0"
                  x-cloak
                  class="noodle-card bg-white p-10 rounded-2xl text-center shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]">
@@ -5253,11 +7036,31 @@
     <!-- Social Proof / Fun Section -->
     <section id="reviews" class="py-16 bg-amber-400 border-t-4 border-stone-900">
         <div class="max-w-5xl mx-auto px-6 text-center">
-            <h2 class="text-3xl md:text-5xl font-black text-stone-900 uppercase mb-8">
-                "People Who Failed To Catch The <span class="noodle-word">Noodles</span> Say..."
+            <h2 class="text-3xl md:text-5xl font-black text-stone-900 uppercase mb-6 section-scroll-target">
+                <img class="chopstick-kicker-icon inline-block" src="assets/chopsticks/icons/crossed.svg" alt="" decoding="async">"People Who Failed To Catch The <span class="noodle-word">Noodles</span> Say..."
             </h2>
+            <figure class="reviews-video-sketch-wrap section-scroll-target">
+                <div class="reviews-video-sketch">
+                    <div class="reviews-video-sketch__head">
+                        <span class="reviews-video-sketch__live">
+                            <span class="reviews-video-sketch__rec" aria-hidden="true"></span>
+                            Sketch replay
+                        </span>
+                        <span>Someone finally slurping</span>
+                    </div>
+                    <video class="reviews-video-sketch__art"
+                           src="assets/reviews-slurp-sketch.mp4"
+                           autoplay
+                           loop
+                           muted
+                           playsinline
+                           preload="auto"
+                           aria-label="Animated pencil sketch of someone happily slurping noodles from a bowl with chopsticks"></video>
+                    <div class="reviews-video-sketch__progress" aria-hidden="true"></div>
+                </div>
+            </figure>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
-                <template x-for="(t, i) in testimonials" :key="i">
+                <template x-for="(t, i) in visibleSlice(testimonials, 'reviews')" :key="i">
                     <article class="noodle-card bg-white p-6 rounded-2xl text-left shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]">
                         <div class="flex items-start gap-4 mb-4">
                             <div class="review-avatar" :class="t.color" x-text="t.initials" :aria-label="t.author"></div>
@@ -5275,14 +7078,25 @@
                     </article>
                 </template>
             </div>
+            <div x-show="sectionHasMore(testimonials, 'reviews')"
+                 x-cloak
+                 class="section-show-more-wrap">
+                <button type="button"
+                        class="section-show-more-btn"
+                        @click="toggleSectionExpanded('reviews')"
+                        :aria-expanded="sectionExpanded.reviews.toString()">
+                    <span class="section-show-more-btn__icon-wrap" aria-hidden="true"><img src="assets/show-more-peacock.png" alt="" class="section-show-more-btn__icon" height="68" decoding="async"></span>
+                    <span x-text="sectionExpanded.reviews ? showLessLabel() : showMoreLabel('reviews', testimonials)"></span>
+                </button>
+            </div>
         </div>
     </section>
 
     <!-- Spread the Slurp — share sections, lift moods -->
     <section id="spread" class="py-20 bg-amber-50 border-t-4 border-stone-900">
         <div class="max-w-6xl mx-auto px-6">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="editorial-section-label" x-text="t('spread.kicker')"></span>
+            <div class="text-center max-w-3xl mx-auto mb-12 section-scroll-target">
+                <span class="editorial-section-label"><img class="chopstick-kicker-icon" src="assets/chopsticks/icons/parallel.svg" alt="" decoding="async"><span x-text="t('spread.kicker')"></span></span>
                 <h2 class="editorial-title font-black text-stone-900 uppercase tracking-tight mb-4" x-html="t('spread.title')"></h2>
                 <p class="editorial-prose" x-text="t('spread.prose')"></p>
                 <button type="button"
@@ -5292,7 +7106,7 @@
             </div>
 
             <div class="share-grid">
-                <template x-for="section in shareSections" :key="section.id">
+                <template x-for="section in visibleSlice(shareSections, 'spread')" :key="section.id">
                     <article class="share-card">
                         <span class="share-card__emoji" x-text="section.emoji" aria-hidden="true"></span>
                         <h3 class="share-card__title" x-text="section.title"></h3>
@@ -5314,14 +7128,25 @@
                     </article>
                 </template>
             </div>
+            <div x-show="sectionHasMore(shareSections, 'spread')"
+                 x-cloak
+                 class="section-show-more-wrap">
+                <button type="button"
+                        class="section-show-more-btn"
+                        @click="toggleSectionExpanded('spread')"
+                        :aria-expanded="sectionExpanded.spread.toString()">
+                    <span class="section-show-more-btn__icon-wrap" aria-hidden="true"><img src="assets/show-more-peacock.png" alt="" class="section-show-more-btn__icon" height="68" decoding="async"></span>
+                    <span x-text="sectionExpanded.spread ? showLessLabel() : showMoreLabel('spread', shareSections)"></span>
+                </button>
+            </div>
         </div>
     </section>
 
     <!-- Follow Us (visual-only fake socials) -->
     <section id="social" class="py-16 bg-white border-t-4 border-stone-900">
-        <div class="max-w-5xl mx-auto px-6 text-center">
+        <div class="max-w-5xl mx-auto px-6 text-center section-scroll-target">
             <span class="inline-block bg-orange-100 border-2 border-orange-500 text-orange-700 font-black text-xs px-4 py-1.5 rounded-full uppercase tracking-wider mb-5 transform -rotate-1">
-                📱 Slurp Reminder Service
+                <img class="chopstick-kicker-icon" src="assets/chopsticks/icons/serving.svg" alt="" decoding="async">📱 Slurp Reminder Service
             </span>
             <h2 class="text-3xl md:text-5xl font-black text-stone-900 uppercase mb-3 leading-tight">
                 Follow Us So You <span class="text-orange-600 underline decoration-wavy decoration-amber-400">Never Forget</span><br class="hidden sm:block"> The Tastiest <span class="noodle-word">Noodles</span>
@@ -5339,38 +7164,73 @@
                 Scroll our socials · Steam included · Crave guaranteed
             </p>
 
-            <!-- Fake social feed preview -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto mb-12 text-left">
-                <div class="noodle-card bg-amber-50 rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]">
-                    <div class="noodle-card-inner relative h-40 bg-red-100">
-                        <img src="assets/chili-noodles.jpg" alt="Social post preview of Dragon Breath chili oil noodles" class="w-full h-full object-cover" loading="lazy" width="600" height="400">
-                        <span class="absolute top-2 left-2 bg-black/70 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full">Reel · 0:14</span>
-                    </div>
-                    <div class="p-3">
-                        <p class="text-xs font-black text-orange-600 uppercase mb-1">@slurp.noodles</p>
-                        <p class="text-sm font-extrabold text-stone-800 leading-snug">POV: chili oil hitting the lens. You felt that heat. 🌶️</p>
-                    </div>
+            <!-- Fake social feed preview + per-card slurp reactions -->
+            <div class="slurp-reaction-zone max-w-4xl mx-auto mb-12 text-left">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <template x-for="post in socialFeedPosts" :key="post.id">
+                        <div class="slurp-reaction-card"
+                             :data-reaction-id="post.id"
+                             @click.outside="if (slurpReactionOpenCard === post.id) slurpReactionOpenCard = null">
+                            <div class="slurp-reaction-stage" aria-hidden="true"></div>
+                            <div class="noodle-card bg-amber-50 rounded-2xl shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]">
+                                <div class="noodle-card-inner relative h-40 rounded-t-2xl" :class="post.mediaBg">
+                                    <div class="absolute inset-0 overflow-hidden rounded-t-2xl">
+                                        <img :src="post.image" :alt="post.alt" class="w-full h-full object-cover" loading="lazy" width="600" height="400">
+                                    </div>
+                                    <span class="absolute top-2 left-2 z-10 bg-black/70 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full" x-text="post.platform"></span>
+                                    <div x-show="slurpReactionTally(post.id).length"
+                                         x-cloak
+                                         class="slurp-reaction-tally"
+                                         style="bottom: 2.25rem;"
+                                         aria-live="polite">
+                                        <template x-for="row in slurpReactionTally(post.id)" :key="`${post.id}-${row.emoji}`">
+                                            <span class="slurp-reaction-tally__pill">
+                                                <span x-text="row.emoji" aria-hidden="true"></span>
+                                                <span class="slurp-reaction-tally__count" x-show="row.count > 1" x-text="`×${row.count}`"></span>
+                                            </span>
+                                        </template>
+                                    </div>
+                                    <div class="slurp-reaction-card-picker">
+                                        <div x-show="slurpReactionOpenCard === post.id"
+                                             x-cloak
+                                             x-transition:enter="transition ease-out duration-200"
+                                             x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                                             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                             x-transition:leave="transition ease-in duration-150"
+                                             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                                             x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                                             class="slurp-reaction-bar slurp-reaction-bar--card"
+                                             role="toolbar"
+                                             :aria-label="t('social.reactionOpen')">
+                                            <template x-for="reaction in slurpReactions" :key="`${post.id}-${reaction.emoji}`">
+                                                <button type="button"
+                                                        class="slurp-reaction-emoji"
+                                                        :aria-label="reaction.label"
+                                                        @click="throwSlurpReaction(reaction.emoji, $event)"
+                                                        x-text="reaction.emoji"></button>
+                                            </template>
+                                        </div>
+                                        <button type="button"
+                                                class="slurp-reaction-toggle slurp-reaction-toggle--card"
+                                                :aria-expanded="slurpReactionOpenCard === post.id"
+                                                :aria-controls="`slurp-reaction-bar-${post.id}`"
+                                                @click.stop="toggleSlurpReactionCard(post.id)">
+                                            <span x-show="slurpReactionOpenCard !== post.id" aria-hidden="true">🍜</span>
+                                            <span x-show="slurpReactionOpenCard !== post.id" class="slurp-reaction-toggle__plus" aria-hidden="true">+</span>
+                                            <span x-show="slurpReactionOpenCard === post.id" x-cloak aria-hidden="true">✕</span>
+                                            <span class="sr-only" x-text="slurpReactionOpenCard === post.id ? t('social.reactionClose') : t('social.reactionOpen')"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <p class="text-xs font-black text-orange-600 uppercase mb-1" x-text="post.handle"></p>
+                                    <p class="text-sm font-extrabold text-stone-800 leading-snug" x-text="post.caption"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
-                <div class="noodle-card bg-amber-50 rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(28,25,23,1)]">
-                    <div class="noodle-card-inner relative h-40 bg-amber-100">
-                        <img src="assets/tonkotsu-ramen.jpg" alt="Social post preview of steaming tonkotsu ramen" class="w-full h-full object-cover" loading="lazy" width="600" height="400">
-                        <span class="absolute top-2 left-2 bg-black/70 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full">Story · Live</span>
-                    </div>
-                    <div class="p-3">
-                        <p class="text-xs font-black text-orange-600 uppercase mb-1">@slurp.noodles</p>
-                        <p class="text-sm font-extrabold text-stone-800 leading-snug">18-hour broth steam check. Close your eyes. Inhale. Slurp. 🍜</p>
-                    </div>
-                </div>
-                <div class="noodle-card bg-amber-50 rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] sm:col-span-1">
-                    <div class="noodle-card-inner relative h-40 bg-green-100">
-                        <img src="assets/dan-dan-noodles.jpg" alt="Social post preview of slow-mo noodle pull" class="w-full h-full object-cover" loading="lazy" width="600" height="400">
-                        <span class="absolute top-2 left-2 bg-black/70 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full">TikTok · 0:08</span>
-                    </div>
-                    <div class="p-3">
-                        <p class="text-xs font-black text-orange-600 uppercase mb-1">@slurpchallenge</p>
-                        <p class="text-sm font-extrabold text-stone-800 leading-snug">Slow-mo noodle pull ASMR. Your screen is officially hungry. 🤤</p>
-                    </div>
-                </div>
+                <p class="slurp-reaction-hint mx-auto text-center mt-6" x-text="t('social.reactionHint')"></p>
             </div>
 
             <p class="text-base font-black text-stone-900 uppercase mb-6 tracking-tight">
@@ -5424,92 +7284,300 @@
     <!-- Gift a Noodle -->
     <section id="gift" class="gift-section py-20 border-t-4 border-stone-900">
         <div class="max-w-6xl mx-auto px-6">
-            <div class="text-center max-w-3xl mx-auto mb-10">
-                <span class="editorial-section-label" x-text="t('gift.kicker')"></span>
+            <div class="text-center max-w-3xl mx-auto mb-10 section-scroll-target">
+                <span class="editorial-section-label"><img class="chopstick-kicker-icon" src="assets/chopsticks/icons/gift-wrap.svg" alt="" decoding="async"><span x-text="t('gift.kicker')"></span></span>
                 <h2 class="editorial-title font-black text-stone-900 uppercase tracking-tight mb-4" x-text="t('gift.title')"></h2>
                 <p class="editorial-prose" x-text="t('gift.prose')"></p>
             </div>
 
             <div class="gift-layout">
                 <div class="gift-form-card">
-                    <p class="text-xs font-black uppercase text-orange-600 mb-3" x-text="t('gift.pickBowl')"></p>
-                    <div class="flex flex-wrap gap-2 mb-5">
-                        <template x-for="item in menuItems" :key="item.key">
-                            <button type="button"
-                                    class="gift-bowl-pill"
-                                    :class="giftBowlKey === item.key ? 'gift-bowl-pill--active' : ''"
-                                    @click="giftBowlKey = item.key; giftError = ''"
-                                    x-text="item.name"></button>
-                        </template>
+                    <div class="gift-form-card__head">
+                        <h3 class="gift-form-card__title" x-text="t('gift.formTitle')"></h3>
+                        <span class="gift-form-card__badge" x-text="t('gift.formBadge')"></span>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                        <div class="gift-field">
-                            <label for="gift-to" x-text="t('gift.to')"></label>
-                            <input id="gift-to" type="text" x-model="giftTo" :placeholder="t('gift.toPlaceholder')" maxlength="60" autocomplete="off">
+                    <div class="gift-step">
+                        <div class="gift-step__label">
+                            <span class="gift-step__num">01</span>
+                            <span x-text="t('gift.pickBowl')"></span>
                         </div>
                         <div class="gift-field">
-                            <label for="gift-from" x-text="t('gift.from')"></label>
-                            <input id="gift-from" type="text" x-model="giftFrom" :placeholder="t('gift.fromPlaceholder')" maxlength="60" autocomplete="off">
+                            <label id="gift-bowl-label" class="sr-only" x-text="t('gift.pickBowl')"></label>
+                            <div class="collect-picker"
+                                 :class="giftBowlMenuOpen ? 'collect-picker--open' : ''"
+                                 @click.outside="giftBowlMenuOpen = false">
+                                <button type="button"
+                                        id="gift-bowl"
+                                        class="collect-picker__toggle collect-picker__toggle--product"
+                                        @click="closeGiftPickers('bowl'); giftBowlMenuOpen = !giftBowlMenuOpen"
+                                        :aria-expanded="giftBowlMenuOpen.toString()"
+                                        aria-haspopup="listbox"
+                                        aria-labelledby="gift-bowl-label">
+                                    <span class="collect-picker__product">
+                                        <img :src="giftBowlItem.image" :alt="giftBowlItem.alt" width="48" height="48" loading="lazy">
+                                        <span class="collect-picker__product-copy">
+                                            <span class="collect-picker__product-name" x-text="giftBowlItem.name"></span>
+                                            <span class="collect-picker__product-meta" x-text="`${formatPrice(giftBowlItem.price)} · ${giftBowlItem.prep}`"></span>
+                                        </span>
+                                    </span>
+                                    <svg class="collect-picker__chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                                        <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                                <ul x-show="giftBowlMenuOpen"
+                                    x-cloak
+                                    x-transition
+                                    class="collect-picker__menu"
+                                    role="listbox"
+                                    aria-labelledby="gift-bowl-label">
+                                    <template x-for="item in menuItems" :key="item.key">
+                                        <li role="none">
+                                            <button type="button"
+                                                    role="option"
+                                                    class="collect-picker__option collect-picker__option--product"
+                                                    :aria-selected="(giftBowlKey === item.key).toString()"
+                                                    @click="selectGiftBowl(item.key)">
+                                                <img class="collect-picker__option-thumb" :src="item.image" :alt="item.alt" width="36" height="36" loading="lazy">
+                                                <span class="collect-picker__option-copy">
+                                                    <span class="collect-picker__option-name" x-text="item.name"></span>
+                                                    <span class="collect-picker__option-meta" x-text="formatPrice(item.price)"></span>
+                                                </span>
+                                            </button>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="gift-field mb-4">
-                        <label for="gift-location" x-text="t('gift.location')"></label>
-                        <input id="gift-location" type="text" x-model="giftLocation" :placeholder="t('gift.locationPlaceholder')" maxlength="200" autocomplete="street-address">
+                    <div class="gift-step">
+                        <div class="gift-step__label">
+                            <span class="gift-step__num">02</span>
+                            <span x-text="t('gift.stepDetails')"></span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <div class="gift-field">
+                                <label for="gift-to" x-text="t('gift.to')"></label>
+                                <input id="gift-to" type="text" x-model="giftTo" :placeholder="t('gift.toPlaceholder')" maxlength="60" autocomplete="off">
+                            </div>
+                            <div class="gift-field">
+                                <label for="gift-from" x-text="t('gift.from')"></label>
+                                <input id="gift-from" type="text" x-model="giftFrom" :placeholder="t('gift.fromPlaceholder')" maxlength="60" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="gift-field mb-4">
+                            <label id="gift-location-label" x-text="t('gift.location')"></label>
+                            <div class="collect-picker"
+                                 :class="giftLocationMenuOpen ? 'collect-picker--open' : ''"
+                                 @click.outside="closeGiftPickers()">
+                                <button type="button"
+                                        id="gift-location"
+                                        class="collect-picker__toggle"
+                                        @click="toggleGiftLocationMenu()"
+                                        :aria-expanded="giftLocationMenuOpen.toString()"
+                                        aria-haspopup="listbox"
+                                        aria-labelledby="gift-location-label">
+                                    <span class="collect-picker__product-copy min-w-0">
+                                        <span class="collect-picker__product-name" x-text="giftLocationItem.label"></span>
+                                        <span class="collect-picker__product-meta" x-text="giftLocationItem.meta"></span>
+                                    </span>
+                                    <svg class="collect-picker__chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                                        <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                                <ul x-show="giftLocationMenuOpen"
+                                    x-cloak
+                                    x-transition
+                                    class="collect-picker__menu collect-picker__menu--locations"
+                                    role="listbox"
+                                    aria-labelledby="gift-location-label">
+                                    <li role="none" class="collect-picker__search-wrap">
+                                        <label for="gift-location-search" class="sr-only" x-text="t('gift.location')"></label>
+                                        <input id="gift-location-search"
+                                               type="search"
+                                               class="collect-picker__search"
+                                               x-model="giftLocationSearch"
+                                               :placeholder="t('gift.locationSearchPlaceholder')"
+                                               autocomplete="off"
+                                               @click.stop
+                                               @keydown.escape.prevent="closeGiftPickers()">
+                                    </li>
+                                    <li x-show="giftLocationSearch.trim() && !filteredGiftLocationOptions.some((o) => o.key !== 'custom')"
+                                        x-cloak
+                                        role="none"
+                                        class="collect-picker__empty"
+                                        x-text="t('gift.locationNoResults')"></li>
+                                    <template x-for="opt in filteredGiftLocationOptions" :key="opt.key">
+                                        <li role="none">
+                                            <button type="button"
+                                                    role="option"
+                                                    class="collect-picker__option"
+                                                    :class="opt.key === 'custom' ? 'collect-picker__option--stacked' : ''"
+                                                    :aria-selected="(giftLocationKey === opt.key).toString()"
+                                                    @click="selectGiftLocation(opt.key)">
+                                                <span class="collect-picker__option-copy">
+                                                    <span class="collect-picker__option-name" x-text="opt.label"></span>
+                                                    <span class="collect-picker__option-meta" x-text="opt.meta"></span>
+                                                </span>
+                                            </button>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                            <div x-show="giftLocationCustom" x-cloak class="mt-3">
+                                <label for="gift-location-custom" class="sr-only" x-text="t('gift.locationCustom')"></label>
+                                <input id="gift-location-custom"
+                                       type="text"
+                                       x-model="giftLocation"
+                                       :placeholder="t('gift.locationPlaceholder')"
+                                       maxlength="200"
+                                       autocomplete="street-address">
+                            </div>
+                        </div>
+
+                        <div class="gift-field">
+                            <label for="gift-phone" x-text="t('gift.phone')"></label>
+                            <input id="gift-phone" type="tel" x-model="giftPhone" :placeholder="t('gift.phonePlaceholder')" maxlength="20" autocomplete="tel">
+                            <p class="gift-field-hint mt-1" x-text="t('gift.phoneHint')"></p>
+                        </div>
                     </div>
 
-                    <div class="gift-field mb-4">
-                        <label for="gift-phone" x-text="t('gift.phone')"></label>
-                        <input id="gift-phone" type="tel" x-model="giftPhone" :placeholder="t('gift.phonePlaceholder')" maxlength="20" autocomplete="tel">
-                        <p class="gift-field-hint" x-text="t('gift.phoneHint')"></p>
+                    <div class="gift-step">
+                        <div class="gift-step__label">
+                            <span class="gift-step__num">03</span>
+                            <span x-text="t('gift.message')"></span>
+                        </div>
+                        <div class="gift-field mb-3">
+                            <label id="gift-preset-label" x-text="t('gift.presetsLabel')"></label>
+                            <div class="collect-picker mb-3"
+                                 :class="giftPresetMenuOpen ? 'collect-picker--open' : ''"
+                                 @click.outside="closeGiftPickers()">
+                                <button type="button"
+                                        id="gift-preset"
+                                        class="collect-picker__toggle"
+                                        @click="toggleGiftPresetMenu()"
+                                        :aria-expanded="giftPresetMenuOpen.toString()"
+                                        aria-haspopup="listbox"
+                                        aria-labelledby="gift-preset-label">
+                                    <span class="collect-picker__product-copy min-w-0">
+                                        <span class="collect-picker__product-name" x-text="giftPresetItem.label"></span>
+                                        <span class="collect-picker__product-meta" x-text="giftPresetItem.meta"></span>
+                                    </span>
+                                    <svg class="collect-picker__chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                                        <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                                <ul x-show="giftPresetMenuOpen"
+                                    x-cloak
+                                    x-transition
+                                    class="collect-picker__menu collect-picker__menu--locations"
+                                    role="listbox"
+                                    aria-labelledby="gift-preset-label">
+                                    <li role="none" class="collect-picker__search-wrap">
+                                        <label for="gift-preset-search" class="sr-only" x-text="t('gift.presetsLabel')"></label>
+                                        <input id="gift-preset-search"
+                                               type="search"
+                                               class="collect-picker__search"
+                                               x-model="giftPresetSearch"
+                                               :placeholder="t('gift.presetSearchPlaceholder')"
+                                               autocomplete="off"
+                                               @click.stop
+                                               @keydown.escape.prevent="closeGiftPickers()">
+                                    </li>
+                                    <li x-show="giftPresetSearch.trim() && filteredGiftPresetOptions.length === 0"
+                                        x-cloak
+                                        role="none"
+                                        class="collect-picker__empty"
+                                        x-text="t('gift.presetNoResults')"></li>
+                                    <template x-for="opt in filteredGiftPresetOptions" :key="opt.text">
+                                        <li role="none">
+                                            <button type="button"
+                                                    role="option"
+                                                    class="collect-picker__option collect-picker__option--stacked"
+                                                    :aria-selected="(giftPresetIndex === opt.index).toString()"
+                                                    @click="selectGiftPreset(opt.index)">
+                                                <span class="collect-picker__option-text" x-text="opt.text"></span>
+                                            </button>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                            <label for="gift-message" class="sr-only" x-text="t('gift.message')"></label>
+                            <textarea id="gift-message"
+                                      x-model="giftMessage"
+                                      @input="giftPresetIndex = null"
+                                      :placeholder="t('gift.messagePlaceholder')"
+                                      maxlength="280"
+                                      rows="4"></textarea>
+                            <div class="gift-message-foot">
+                                <p class="text-[0.625rem] font-black uppercase tracking-wider text-stone-400" x-text="t('gift.message')"></p>
+                                <span class="gift-char-count"
+                                      :class="giftMessage.length > 240 ? 'gift-char-count--warn' : ''"
+                                      x-text="`${giftMessage.length}/280`"></span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="gift-field mb-3">
-                        <label for="gift-message" x-text="t('gift.message')"></label>
-                        <textarea id="gift-message"
-                                  x-model="giftMessage"
-                                  :placeholder="t('gift.messagePlaceholder')"
-                                  maxlength="280"
-                                  rows="4"></textarea>
+                    <div class="gift-form-footer">
+                        <p x-show="giftError" x-cloak class="mb-3 text-sm font-black text-red-600" role="alert" x-text="giftError"></p>
+
+                        <button type="button"
+                                @click="addGiftToCart($event)"
+                                class="w-full collect-btn collect-btn--accent collect-btn--submit">
+                            <span x-text="t('gift.addBtn')"></span>
+                            <span class="font-black" x-text="formatPrice(giftBowlItem.price)"></span>
+                        </button>
                     </div>
-
-                    <p class="text-[0.625rem] font-black uppercase tracking-wider text-stone-400 mb-2" x-text="t('gift.presetsLabel')"></p>
-                    <div class="flex flex-wrap gap-2 mb-5">
-                        <template x-for="preset in giftPresets" :key="preset">
-                            <button type="button" class="gift-preset" @click="setGiftPreset(preset)" x-text="preset"></button>
-                        </template>
-                    </div>
-
-                    <p x-show="giftError" x-cloak class="mb-3 text-sm font-black text-red-600" role="alert" x-text="giftError"></p>
-
-                    <button type="button"
-                            @click="addGiftToCart($event)"
-                            class="w-full collect-btn collect-btn--accent collect-btn--submit">
-                        <span x-text="t('gift.addBtn')"></span>
-                        <span class="font-black" x-text="formatPrice(giftBowlItem.price)"></span>
-                    </button>
                 </div>
 
                 <div class="gift-preview-wrap">
-                    <span class="gift-preview-ribbon">Gift</span>
-                    <p class="text-xs font-black uppercase text-stone-400 mb-3" x-text="t('gift.previewLabel')"></p>
-                    <div class="gift-card">
+                    <div class="gift-preview-head">
+                        <p class="text-xs font-black uppercase text-stone-500" x-text="t('gift.previewLabel')"></p>
+                        <span class="gift-preview-live">
+                            <span class="gift-preview-live__dot" aria-hidden="true"></span>
+                            Live
+                        </span>
+                    </div>
+                    <article class="gift-card" aria-label="Gift card preview">
+                        <span class="gift-card__ribbon">Gift</span>
+                        <header class="gift-card__header">
+                            <span class="gift-card__brand">
+                                <img src="assets/chopsticks/icons/gift-wrap.svg" alt="" decoding="async">
+                                Slurp!
+                            </span>
+                            <span class="gift-card__type">Gift Card</span>
+                        </header>
+                        <p class="gift-card__value">
+                            <span class="gift-card__value-label">Card value</span>
+                            <span x-text="formatPrice(giftBowlItem.price)"></span>
+                        </p>
                         <div class="gift-card-media">
                             <img :src="giftBowlItem.image" :alt="giftBowlItem.alt" width="600" height="375">
+                            <span class="gift-card-media__badge" x-text="giftBowlItem.badge"></span>
+                            <span class="gift-card-media__price" x-text="formatPrice(giftBowlItem.price)"></span>
                         </div>
-                        <p class="gift-card-to" x-text="`To: ${giftPreviewTo}`"></p>
-                        <p class="gift-card-message" x-text="giftPreviewMessage"></p>
-                        <p class="gift-card-from" x-text="giftPreviewFrom"></p>
+                        <div class="gift-card__body">
+                            <p class="gift-card-to" x-text="`To: ${giftPreviewTo}`"></p>
+                            <p class="gift-card-message"
+                               :class="!giftMessage.trim() ? 'gift-card-message--empty' : ''"
+                               x-text="giftPreviewMessage"></p>
+                            <p class="gift-card-from" x-text="giftPreviewFrom"></p>
+                        </div>
                         <div class="gift-card-delivery">
                             <span x-text="giftPreviewLocation"></span>
                             <span x-text="giftPreviewPhone"></span>
                         </div>
-                        <div class="gift-card-stamp">
-                            <span x-text="giftBowlItem.name"></span>
-                            <span x-text="t('gift.stamp')"></span>
-                        </div>
-                    </div>
+                        <footer class="gift-card__footer">
+                            <div class="gift-card-stamp">
+                                <span class="gift-card-stamp__bowl" x-text="giftBowlItem.name"></span>
+                                <span x-text="t('gift.stamp')"></span>
+                            </div>
+                            <p class="gift-card__code">SLURP · GIFT · <span x-text="giftBowlKey.toUpperCase().replace(/-/g, ' ')"></span></p>
+                            <div class="gift-card__shimmer" aria-hidden="true"></div>
+                        </footer>
+                    </article>
                 </div>
             </div>
         </div>
@@ -5518,9 +7586,9 @@
     <!-- Checkout -->
     <section id="checkout" class="py-20 bg-amber-50 border-t-4 border-stone-900">
         <div class="max-w-2xl mx-auto px-6">
-            <div class="text-center mb-10">
+            <div class="text-center mb-10 section-scroll-target">
                 <h2 class="text-4xl md:text-5xl font-black text-stone-900 uppercase tracking-tight mb-3">
-                    The <span class="text-orange-600">Checkout</span> Line
+                    <img class="chopstick-kicker-icon inline-block" src="assets/chopsticks/icons/parallel.svg" alt="" decoding="async">The <span class="text-orange-600">Checkout</span> Line
                 </h2>
                 <p class="text-lg font-bold text-stone-600">
                     You caught the craving — now lock in your bowl before the aliens beam away the chili oil.
@@ -5544,7 +7612,7 @@
                 <p x-show="checkoutError" x-cloak class="mb-4 text-sm font-black text-red-600" role="alert" x-text="checkoutError"></p>
 
                 <ul class="space-y-3 mb-6 font-bold text-stone-700" x-show="cartCount > 0" x-cloak>
-                    <template x-for="item in cart" :key="item.id">
+                    <template x-for="item in visibleSlice(cart, 'checkout')" :key="item.id">
                         <li class="flex justify-between items-start gap-3 border-b-2 border-dashed border-stone-200 pb-2">
                             <div class="text-left min-w-0 flex-1">
                                 <span x-show="item.isGift" x-cloak class="cart-gift-tag">Gift</span>
@@ -5574,6 +7642,17 @@
                             </div>
                         </li>
                     </template>
+                    <li x-show="sectionHasMore(cart, 'checkout')"
+                        x-cloak
+                        class="pt-1">
+                        <button type="button"
+                                class="section-show-more-btn w-full"
+                                @click="toggleSectionExpanded('checkout')"
+                                :aria-expanded="sectionExpanded.checkout.toString()">
+                            <span class="section-show-more-btn__icon-wrap" aria-hidden="true"><img src="assets/show-more-peacock.png" alt="" class="section-show-more-btn__icon" height="68" decoding="async"></span>
+                            <span x-text="sectionExpanded.checkout ? showLessLabel() : showMoreLabel('checkout', cart)"></span>
+                        </button>
+                    </li>
                     <li class="flex justify-between pt-1 text-stone-900 text-lg">
                         <span>Total</span>
                         <span x-text="formatPrice(cartTotal)"></span>
@@ -5608,8 +7687,8 @@
 
     <!-- The greeting -->
     <section id="greeting" class="py-20 bg-white border-t-4 border-stone-900">
-        <div class="max-w-4xl mx-auto px-6 editorial-greeting">
-            <span class="editorial-section-label">Lời chào · <span>The greeting</span></span>
+        <div class="max-w-4xl mx-auto px-6 editorial-greeting section-scroll-target">
+            <span class="editorial-section-label"><img class="chopstick-kicker-icon" src="assets/chopsticks/icons/crossed.svg" alt="" decoding="async">Lời chào · <span>The greeting</span></span>
             <h2 class="font-black text-stone-900 uppercase">Slurped yet?</h2>
             <p class="editorial-phonetic">"Have you slurped yet?"</p>
             <p class="editorial-prose">
@@ -5619,13 +7698,66 @@
                 There is no way to translate it that does not come out sounding like hunger — which, honestly, is the point.
             </p>
             <div class="mt-8 flex flex-wrap justify-center gap-3">
-                <a href="#checkout" @click.prevent="goToCheckout($event)" class="editorial-btn editorial-btn--primary">Set your bowl</a>
+                <a href="#checkout" class="editorial-btn editorial-btn--primary">Set your bowl</a>
                 <a href="#gift" class="editorial-btn editorial-btn--ghost">Gift a bowl 🎁</a>
             </div>
         </div>
     </section>
 
     </main>
+
+    <!-- Mobile bottom tab bar -->
+    <div class="mobile-bottom-nav-shell lg:hidden">
+        <svg class="mobile-bottom-nav__wave" viewBox="0 0 400 14" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0,7 C25,13 50,1 75,7 S125,13 150,7 S200,1 225,7 S275,13 300,7 S350,1 375,7 L400,7 L400,14 L0,14 Z" fill="rgba(255, 251, 235, 0.94)"/>
+            <path d="M0,7 C25,13 50,1 75,7 S125,13 150,7 S200,1 225,7 S275,13 300,7 S350,1 375,7" fill="none" stroke="#f97316" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M0,9 C25,15 50,3 75,9 S125,15 150,9 S200,3 225,9 S275,15 300,9 S350,3 375,9" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round" opacity="0.9"/>
+        </svg>
+        <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+        <template x-for="link in mobileBottomNavLinks" :key="link.section">
+            <a :href="link.href"
+               class="mobile-bottom-nav__item"
+               :class="activeSection === link.section ? 'mobile-bottom-nav__item--active' : ''"
+               :aria-label="link.ariaLabel"
+               :aria-current="activeSection === link.section ? 'page' : false">
+                <svg class="mobile-bottom-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <g x-show="link.icon === 'dare'">
+                        <circle cx="12" cy="12" r="9"/>
+                        <circle cx="12" cy="12" r="4"/>
+                        <path d="M12 3v2M12 19v2M3 12h2M19 12h2"/>
+                    </g>
+                    <g x-show="link.icon === 'menu'">
+                        <path d="M4 8h16M4 12h16M4 16h10"/>
+                        <path d="M18 16l2 2 4-4"/>
+                    </g>
+                    <g x-show="link.icon === 'build'">
+                        <path d="M12 3v18"/>
+                        <path d="M8 7h8"/>
+                        <path d="M7 12h10"/>
+                        <path d="M8 17h8"/>
+                    </g>
+                    <g x-show="link.icon === 'gift'">
+                        <rect x="4" y="10" width="16" height="10" rx="1"/>
+                        <path d="M12 10V20"/>
+                        <path d="M4 10h16"/>
+                        <path d="M12 10c-2-3-5-3-5 0s3 3 5 0 5-3 5 0-3-3-5 0"/>
+                    </g>
+                    <g x-show="link.icon === 'cart'">
+                        <path d="M6 13h12l-1.5 6H7.5L6 13z"/>
+                        <path d="M6 13l-1.5-5h15L18 13"/>
+                        <circle cx="9" cy="20" r="1"/>
+                        <circle cx="15" cy="20" r="1"/>
+                    </g>
+                </svg>
+                <span class="mobile-bottom-nav__label" x-text="link.label"></span>
+                <span x-show="link.isCheckout && cartCount > 0"
+                      x-cloak
+                      class="mobile-bottom-nav__badge"
+                      x-text="cartCount"></span>
+            </a>
+        </template>
+        </nav>
+    </div>
 
     <!-- Floating checkout bar (CollectUI-style) -->
     <div x-show="cartCount > 0 && !orderPlaced"
@@ -5646,7 +7778,6 @@
                 <button type="button" class="cart-qty__btn" @click="incrementCartItem(cart[0].id)" aria-label="Increase quantity">+</button>
             </div>
             <a href="#checkout"
-               @click.prevent="goToCheckout($event)"
                :aria-label="`Checkout ${cartCount} items, total ${formatPrice(cartTotal)}`"
                class="collect-btn collect-btn--cart">
                 <span class="collect-btn__cart-left">
@@ -5667,7 +7798,7 @@
             <img src="assets/slurp-logo.png" alt="" class="slurp-logo slurp-logo--footer" aria-hidden="true">
             <h3 class="text-3xl font-black text-amber-400 uppercase mb-4">Stop Staring, Start Slurping</h3>
             <p class="text-stone-400 font-medium mb-6">Hot, fresh noodles delivered to your doorstep in 30 minutes or less.</p>
-            <a href="#checkout" @click.prevent="goToCheckout($event)" class="collect-btn collect-btn--accent collect-btn--footer">
+            <a href="#checkout" class="collect-btn collect-btn--accent collect-btn--footer">
                 Order Your Bowl Now
                 <span x-show="cartCount > 0"
                       x-cloak
