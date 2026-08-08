@@ -139,12 +139,23 @@
         }
         .nav-link--active::before {
             content: '';
+            position: absolute;
+            top: -0.35rem;
+            right: -0.2rem;
+            width: 0.75rem;
+            height: 0.75rem;
+            background: url('assets/chopsticks/icons/crossed.svg') center / contain no-repeat;
+            transform: rotate(8deg);
+            pointer-events: none;
+        }
+        .site-nav-link--drawer.nav-link--active::before {
+            position: static;
             display: inline-block;
             width: 0.875rem;
             height: 0.875rem;
-            margin-right: 0.25rem;
+            margin-right: 0.35rem;
             vertical-align: -0.1em;
-            background: url('assets/chopsticks/icons/crossed.svg') center / contain no-repeat;
+            transform: none;
         }
         @media (max-width: 1023px) {
             .mobile-bottom-nav__item--active::after {
@@ -2394,15 +2405,17 @@
             height: auto;
             opacity: 0.72;
         }
-        /* Scroll progress + nav active state */
+        /* Scroll progress + site navigation */
         .scroll-progress {
             position: absolute;
             bottom: 0;
             left: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #f97316, #ea580c);
+            height: 4px;
+            background: linear-gradient(90deg, #fbbf24 0%, #f97316 55%, #ea580c 100%);
+            box-shadow: 0 0 10px rgba(249, 115, 22, 0.35);
             transition: width 0.12s ease-out;
-            z-index: 1;
+            z-index: 2;
+            border-radius: 0 2px 2px 0;
         }
         .site-nav {
             position: fixed;
@@ -2411,68 +2424,218 @@
             right: 0;
             width: 100%;
             z-index: 40;
-            background: rgba(255, 251, 235, 0.38);
-            backdrop-filter: blur(18px) saturate(1.5);
-            -webkit-backdrop-filter: blur(18px) saturate(1.5);
-            border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+            background: rgba(255, 251, 235, 0.78);
+            backdrop-filter: blur(20px) saturate(1.65);
+            -webkit-backdrop-filter: blur(20px) saturate(1.65);
+            border-bottom: 3px solid #1c1917;
             box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.42),
-                0 4px 24px rgba(28, 25, 23, 0.05);
+                inset 0 1px 0 rgba(255, 255, 255, 0.55),
+                0 6px 28px rgba(28, 25, 23, 0.07);
             transition:
                 box-shadow 0.28s ease,
-                background 0.25s ease,
-                border-color 0.25s ease;
+                background 0.25s ease;
         }
         .site-nav--scrolled {
-            background: rgba(255, 251, 235, 0.56);
-            border-bottom-color: rgba(251, 191, 36, 0.3);
+            background: rgba(255, 251, 235, 0.9);
             box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.5),
-                0 8px 32px rgba(28, 25, 23, 0.08);
+                inset 0 1px 0 rgba(255, 255, 255, 0.62),
+                0 10px 36px rgba(28, 25, 23, 0.1);
         }
         @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
             .site-nav {
-                background: rgba(255, 251, 235, 0.92);
-            }
-            .site-nav--scrolled {
                 background: rgba(255, 251, 235, 0.96);
             }
+            .site-nav--scrolled {
+                background: rgba(255, 251, 235, 0.98);
+            }
+        }
+        .site-nav__inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.55rem 1rem 0.65rem;
+        }
+        @media (min-width: 640px) {
+            .site-nav__inner {
+                padding: 0.65rem 1.5rem 0.75rem;
+                gap: 1rem;
+            }
+        }
+        @media (min-width: 1024px) {
+            .site-nav__inner {
+                gap: 1.25rem;
+            }
+        }
+        .site-nav__brand {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.15rem 0.35rem 0.15rem 0.15rem;
+            border-radius: 0.85rem;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .site-nav__brand:hover {
+            transform: rotate(-1deg) scale(1.02);
+            background: rgba(255, 255, 255, 0.45);
+        }
+        .site-nav__brand:focus-visible {
+            outline: 2px solid #ea580c;
+            outline-offset: 3px;
+        }
+        .site-nav__logo {
+            height: 2.5rem;
+        }
+        @media (min-width: 1024px) {
+            .site-nav__logo {
+                height: 2.85rem;
+            }
+        }
+        .site-nav__track {
+            flex: 1;
+            min-width: 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 0.1rem 0;
+            -webkit-mask-image: linear-gradient(90deg, transparent, #000 1.25rem, #000 calc(100% - 1.25rem), transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 1.25rem, #000 calc(100% - 1.25rem), transparent);
+        }
+        .site-nav__track::-webkit-scrollbar {
+            display: none;
+        }
+        .site-nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.15rem;
+            min-width: max-content;
+            margin: 0 auto;
+            padding: 0.2rem;
+            background: rgba(255, 255, 255, 0.62);
+            border: 2px solid rgba(28, 25, 23, 0.14);
+            border-radius: 9999px;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.85),
+                0 2px 0 rgba(28, 25, 23, 0.04);
+        }
+        .site-nav__divider {
+            flex-shrink: 0;
+            width: 1px;
+            height: 1.1rem;
+            margin: 0 0.1rem;
+            background: linear-gradient(180deg, transparent, rgba(251, 191, 36, 0.75), transparent);
+            border-radius: 1px;
+        }
+        .site-nav-link {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            flex-shrink: 0;
+            padding: 0.38rem 0.62rem;
+            border: 2px solid transparent;
+            border-radius: 9999px;
+            font-size: clamp(0.6875rem, 0.88vw, 0.8125rem);
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            line-height: 1.1;
+            color: #57534e;
+            white-space: nowrap;
+            text-decoration: none;
+            transition:
+                color 0.15s ease,
+                background 0.15s ease,
+                border-color 0.15s ease,
+                box-shadow 0.15s ease,
+                transform 0.15s ease;
+        }
+        .site-nav-link:hover {
+            color: #c2410c;
+            background: rgba(255, 237, 213, 0.75);
+        }
+        .site-nav-link:focus-visible {
+            outline: 2px solid #ea580c;
+            outline-offset: 2px;
+        }
+        .nav-link--active {
+            color: #fff !important;
+            background: linear-gradient(135deg, #fb923c 0%, #f97316 52%, #ea580c 100%);
+            border-color: #1c1917;
+            box-shadow: 2px 2px 0 #1c1917;
+            text-decoration: none;
+        }
+        .nav-link--active:hover {
+            color: #fff !important;
+            background: linear-gradient(135deg, #fdba74 0%, #fb923c 52%, #f97316 100%);
+            transform: translateY(-1px);
+        }
+        .site-nav__actions {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            flex-shrink: 0;
+        }
+        @media (min-width: 1024px) {
+            .site-nav__actions {
+                gap: 0.55rem;
+                padding-left: 0.85rem;
+                margin-left: 0.15rem;
+                border-left: 2px solid rgba(251, 191, 36, 0.45);
+            }
+        }
+        .site-nav__menu-btn {
+            width: 2.75rem;
+            height: 2.75rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #1c1917;
+            border-radius: 0.85rem;
+            background: #fff;
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: #1c1917;
+            box-shadow: 2px 2px 0 rgba(28, 25, 23, 0.85);
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+        .site-nav__menu-btn:hover {
+            background: #fff7ed;
+            transform: translateY(-1px);
+        }
+        .site-nav__menu-btn:focus-visible {
+            outline: 2px solid #ea580c;
+            outline-offset: 2px;
         }
         .site-nav__drawer {
-            background: rgba(255, 251, 235, 0.52);
+            background: rgba(255, 251, 235, 0.88);
             backdrop-filter: blur(18px) saturate(1.45);
             -webkit-backdrop-filter: blur(18px) saturate(1.45);
-            border-top: 1px solid rgba(251, 191, 36, 0.22);
+            border-top: 2px solid rgba(28, 25, 23, 0.12);
         }
         @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
             .site-nav__drawer {
-                background: rgba(255, 251, 235, 0.95);
+                background: rgba(255, 251, 235, 0.98);
             }
+        }
+        .site-nav-link--drawer.nav-link--active {
+            display: inline-flex;
+            width: fit-content;
+            color: #ea580c !important;
+            background: #fff;
+            border: 2px solid #1c1917;
+            box-shadow: 2px 2px 0 #1c1917;
+            text-decoration: none;
         }
         @media (prefers-reduced-motion: reduce) {
-            .site-nav {
+            .site-nav,
+            .site-nav-link,
+            .site-nav__brand,
+            .site-nav__menu-btn {
                 transition: none !important;
             }
-        }
-        .nav-link--active {
-            color: #ea580c !important;
-            text-decoration: underline;
-            text-decoration-style: wavy;
-            text-underline-offset: 0.25rem;
-            text-decoration-color: #fbbf24;
-        }
-        .site-nav-links {
-            flex: 1;
-            justify-content: center;
-            align-items: center;
-            gap: clamp(0.5rem, 1.1vw, 2rem);
-            min-width: 0;
-        }
-        .site-nav-links a {
-            white-space: nowrap;
-            flex-shrink: 0;
-            font-size: clamp(0.6875rem, 0.95vw, 0.875rem);
-            text-shadow: 0 0 10px rgba(255, 251, 235, 0.7);
+            .nav-link--active:hover,
+            .site-nav__brand:hover {
+                transform: none;
+            }
         }
         /* Mobile bottom tab bar */
         .mobile-bottom-nav-shell {
@@ -4525,6 +4688,10 @@
                     );
                     return showCustom ? [...filtered, custom] : filtered;
                 },
+                get giftLocationSearchHasNoStoreResults() {
+                    return this.giftLocationSearch.trim()
+                        && !this.filteredGiftLocationOptions.some((opt) => opt.key !== 'custom');
+                },
                 get giftLocationItem() {
                     if (this.giftLocationCustom) {
                         return {
@@ -4557,9 +4724,10 @@
                 get giftPresetItem() {
                     if (this.giftPresetIndex !== null && this.giftPresets[this.giftPresetIndex]) {
                         const text = this.giftPresets[this.giftPresetIndex];
+                        const short = text.length > 52 ? `${text.slice(0, 52)}…` : text;
                         return {
-                            label: this.t('gift.presetsLabel'),
-                            meta: text.length > 52 ? `${text.slice(0, 52)}…` : text,
+                            label: short,
+                            meta: this.t('gift.message'),
                         };
                     }
                     if (this.giftMessage.trim()) {
@@ -6006,19 +6174,26 @@
              :class="{ 'site-nav--scrolled': navScrolled }"
              aria-label="Main navigation">
             <div class="scroll-progress" :style="`width: ${scrollProgress}%`" aria-hidden="true"></div>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center gap-2 sm:gap-3">
-                <a href="#hero" class="inline-block shrink-0">
-                    <img src="assets/slurp-logo.png" alt="SLURP! — Tastiest Noodles on the Planet" class="slurp-logo" width="400" height="267">
+            <div class="site-nav__inner max-w-7xl mx-auto">
+                <a href="#hero" class="site-nav__brand shrink-0" aria-label="SLURP! — home">
+                    <img src="assets/slurp-logo.png" alt="" class="slurp-logo site-nav__logo" width="400" height="267">
                 </a>
-                <div class="site-nav-links hidden lg:flex font-bold text-stone-700">
-                    <template x-for="link in navLinks" :key="link.href">
-                        <a :href="link.href"
-                           class="hover:text-orange-600 transition"
-                           :class="activeSection === link.section ? 'nav-link--active' : ''"
-                           x-text="link.label"></a>
-                    </template>
+                <div class="site-nav__track hidden lg:block" aria-label="Page sections">
+                    <div class="site-nav-links">
+                        <template x-for="(link, index) in navLinks" :key="link.href">
+                            <span x-show="index === 1 || index === 3 || index === 6 || index === 8"
+                                  x-cloak
+                                  class="site-nav__divider"
+                                  aria-hidden="true"></span>
+                            <a :href="link.href"
+                               class="site-nav-link"
+                               :class="activeSection === link.section ? 'nav-link--active' : ''"
+                               :aria-current="activeSection === link.section ? 'page' : false"
+                               x-text="link.label"></a>
+                        </template>
+                    </div>
                 </div>
-                <div class="flex items-center gap-2 shrink-0">
+                <div class="site-nav__actions">
                     <div class="lang-picker relative" @click.outside="localeMenuOpen = false">
                         <button type="button"
                                 class="lang-picker__toggle"
@@ -6065,7 +6240,7 @@
                               x-text="cartCount"></span>
                     </a>
                     <button type="button"
-                            class="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl border-2 border-stone-900 bg-white font-black text-stone-900"
+                            class="site-nav__menu-btn lg:hidden"
                             @click="mobileMenuOpen = !mobileMenuOpen"
                             :aria-expanded="mobileMenuOpen.toString()"
                             aria-controls="mobile-menu">
@@ -6080,7 +6255,7 @@
                  x-cloak
                  x-transition
                  class="site-nav__drawer lg:hidden px-6 py-4 space-y-3 font-bold text-stone-700">
-                <div class="flex flex-wrap gap-2 pb-3 mb-1 border-b border-amber-200">
+                <div class="flex flex-wrap gap-2 pb-3 mb-1 border-b-2 border-amber-200/80">
                     <template x-for="opt in localeOptions" :key="opt.code">
                         <button type="button"
                                 @click="setLocale(opt.code); closeMobileMenu()"
@@ -6091,8 +6266,9 @@
                 </div>
                 <template x-for="link in navLinks" :key="link.href">
                     <a :href="link.href"
-                       class="block py-2 hover:text-orange-600 transition whitespace-nowrap"
+                       class="site-nav-link site-nav-link--drawer py-2 px-3 hover:text-orange-600 transition whitespace-nowrap"
                        :class="activeSection === link.section ? 'nav-link--active' : ''"
+                       :aria-current="activeSection === link.section ? 'page' : false"
                        x-text="link.label"></a>
                 </template>
             </div>
@@ -7398,7 +7574,7 @@
                                 <button type="button"
                                         id="gift-location"
                                         class="collect-picker__toggle"
-                                        @click="toggleGiftLocationMenu()"
+                                        @click.stop="toggleGiftLocationMenu()"
                                         :aria-expanded="giftLocationMenuOpen.toString()"
                                         aria-haspopup="listbox"
                                         aria-labelledby="gift-location-label">
@@ -7427,7 +7603,7 @@
                                                @click.stop
                                                @keydown.escape.prevent="closeGiftPickers()">
                                     </li>
-                                    <li x-show="giftLocationSearch.trim() && !filteredGiftLocationOptions.some((o) => o.key !== 'custom')"
+                                    <li x-show="giftLocationSearchHasNoStoreResults"
                                         x-cloak
                                         role="none"
                                         class="collect-picker__empty"
@@ -7439,7 +7615,7 @@
                                                     class="collect-picker__option"
                                                     :class="opt.key === 'custom' ? 'collect-picker__option--stacked' : ''"
                                                     :aria-selected="(giftLocationKey === opt.key).toString()"
-                                                    @click="selectGiftLocation(opt.key)">
+                                                    @click.stop="selectGiftLocation(opt.key)">
                                                 <span class="collect-picker__option-copy">
                                                     <span class="collect-picker__option-name" x-text="opt.label"></span>
                                                     <span class="collect-picker__option-meta" x-text="opt.meta"></span>
@@ -7480,7 +7656,7 @@
                                 <button type="button"
                                         id="gift-preset"
                                         class="collect-picker__toggle"
-                                        @click="toggleGiftPresetMenu()"
+                                        @click.stop="toggleGiftPresetMenu()"
                                         :aria-expanded="giftPresetMenuOpen.toString()"
                                         aria-haspopup="listbox"
                                         aria-labelledby="gift-preset-label">
@@ -7520,7 +7696,7 @@
                                                     role="option"
                                                     class="collect-picker__option collect-picker__option--stacked"
                                                     :aria-selected="(giftPresetIndex === opt.index).toString()"
-                                                    @click="selectGiftPreset(opt.index)">
+                                                    @click.stop="selectGiftPreset(opt.index)">
                                                 <span class="collect-picker__option-text" x-text="opt.text"></span>
                                             </button>
                                         </li>
