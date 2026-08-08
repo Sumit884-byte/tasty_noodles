@@ -24,6 +24,7 @@ The hook: Chef Marco is so confident in his noodles that he literally throws a b
 - **Pan India Store Finder** — 15 kitchens across 12 cities, searchable by city, area, or pincode, with Google Maps directions.
 - **Slurp Squad** — eight fake testimonials from regulars who also failed to catch the noodles.
 - **Social Feed Preview** — Reels/Stories/TikTok-style cards using the same self-hosted bowl photos (platform buttons are visual-only demos).
+- **Slurp Support** — contact channel cards (phone, WhatsApp, email, order help), seven-item FAQ accordion with peacock show-more, quick links to stores/gift/checkout, wired into desktop nav.
 - **CollectUI Checkout Flow** — Alpine.js cart with sticky bar, mobile bottom sheet, and a full client-side order flow.
 
 **Stack:** one `index.html` file — HTML, Tailwind CSS (CDN), Alpine.js 3.14, Three.js 0.172, vanilla JS, Lucide icons, Chewy font. No build step. All images self-hosted in `/assets`. MIT licensed.
@@ -59,7 +60,9 @@ I started with the splash hero because it set the tone. Pure SVG + CSS — no ca
 
 From there I built outward: menu cards with runtime-generated wavy SVG borders, the CSS-only bowl builder (my favorite section technically — a well-structured DOM + custom properties replaced a lot of image-swap logic), then the Three.js globe with performance guardrails (IntersectionObserver to pause off-screen, `visibilitychange` for hidden tabs, adaptive geometry, `pixelRatio` cap, static fallback for reduced motion).
 
-Alpine.js became the app's brain — one `slurpApp()` component handles cart, custom plate builder, store locator, menu filtering, splash overlay, mobile nav, and checkout. Accessibility was baked in from the start: skip link, splash dialog with focus management, `aria-pressed` on builder chips, `prefers-reduced-motion` disabling splash/globe/steam animations, semantic landmarks, lazy-loaded images with explicit dimensions.
+Alpine.js became the app's brain — one `slurpApp()` component handles cart, custom plate builder, store locator, menu filtering, splash overlay, mobile nav, gift flow, support FAQ, and checkout. Accessibility was baked in from the start: skip link, splash dialog with focus management, `aria-pressed` on builder chips, `prefers-reduced-motion` disabling splash/globe/steam animations, semantic landmarks, lazy-loaded images with explicit dimensions.
+
+Later passes added **Slurp Support** — contact cards, accordion FAQ, peacock show-more — and tightened the **Gift a Bowl** pickers. Nested `@click.outside` handlers were closing delivery-location and preset-message dropdowns before you could pick an option; scoping each picker (and `@click.stop` on the search inputs) fixed it.
 
 ### What I'm proud of
 
@@ -67,6 +70,7 @@ Alpine.js became the app's brain — one `slurpApp()` component handles cart, cu
 - The CSS bowl preview — instant, lightweight, infinitely recombinable
 - Wavy SVG card borders via `attachNoodleFrame()` — micro-detail that makes the UI feel designed
 - Progressive enhancement for motion and WebGL — fun features that don't punish users who prefer reduced motion or lack WebGL
+- **Slurp Support** — contact cards and FAQ that feel on-brand, not a generic help-desk widget pasted onto a landing page
 - Shipping everything in one file you can open locally without explaining npm
 
 ### What I learned
@@ -87,7 +91,7 @@ This was a challenge submission, not a production restaurant platform — but th
 - Add sound effects (with mute toggle)
 - Wire up real social links if SLURP! ever becomes a real brand
 - **India wireframe map with store pins** — a sketch-style outline of the country with clickable markers for each kitchen, tied into the existing store finder
-- **Peacock feather expansion on show-more** — the peacock buttons already reveal extra cards; next up is a feather-fan unfold animation on click, so expanding a section feels like the bird opening its tail
+- **Peacock feather expansion on show-more** — peacock buttons already reveal extra menu cards, testimonials, and support FAQs; next up is a feather-fan unfold animation on click, so expanding a section feels like the bird opening its tail
 
 For now, I'm happy with what I shipped: a page that makes people smile, teaches a few frontend tricks, and proves that comfort food deserves better than a stock photo and an "Order Now" button.
 
