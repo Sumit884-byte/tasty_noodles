@@ -2404,6 +2404,12 @@
             z-index: 1;
         }
         .site-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 40;
             background: rgba(255, 251, 235, 0.38);
             backdrop-filter: blur(18px) saturate(1.5);
             -webkit-backdrop-filter: blur(18px) saturate(1.5);
@@ -2412,11 +2418,9 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.42),
                 0 4px 24px rgba(28, 25, 23, 0.05);
             transition:
-                transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
                 box-shadow 0.28s ease,
                 background 0.25s ease,
                 border-color 0.25s ease;
-            will-change: transform;
         }
         .site-nav--scrolled {
             background: rgba(255, 251, 235, 0.56);
@@ -2433,10 +2437,6 @@
                 background: rgba(255, 251, 235, 0.96);
             }
         }
-        .site-nav--hidden {
-            transform: translateY(-100%);
-            box-shadow: none;
-        }
         .site-nav__drawer {
             background: rgba(255, 251, 235, 0.52);
             backdrop-filter: blur(18px) saturate(1.45);
@@ -2451,9 +2451,6 @@
         @media (prefers-reduced-motion: reduce) {
             .site-nav {
                 transition: none !important;
-            }
-            .site-nav--hidden {
-                transform: none !important;
             }
         }
         .nav-link--active {
@@ -4374,9 +4371,7 @@
                 ],
                 scrollProgress: 0,
                 activeSection: 'hero',
-                navHidden: false,
                 navScrolled: false,
-                _lastScrollY: 0,
                 _toastTimer: null,
                 _shareToastTimer: null,
                 locale: localStorage.getItem('slurp-locale') || 'en',
@@ -5230,8 +5225,6 @@
                     if (event?.preventDefault) event.preventDefault();
                     this.closeMobileMenu();
                     this.localeMenuOpen = false;
-                    this.navHidden = false;
-
                     if (id === 'hero') {
                         window.scrollTo({ top: 0, behavior: 'auto' });
                     } else {
@@ -5315,30 +5308,6 @@
                     const scrollHeight = doc.scrollHeight - doc.clientHeight;
                     this.scrollProgress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
                     this.navScrolled = scrollTop > 8;
-                    this.updateNavVisibility(scrollTop);
-                },
-                updateNavVisibility(scrollTop) {
-                    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                        this.navHidden = false;
-                        this._lastScrollY = scrollTop;
-                        return;
-                    }
-                    if (this.mobileMenuOpen || this.localeMenuOpen) {
-                        this.navHidden = false;
-                        this._lastScrollY = scrollTop;
-                        return;
-                    }
-                    const delta = scrollTop - this._lastScrollY;
-                    const revealThreshold = 6;
-                    const hideThreshold = 12;
-                    if (scrollTop <= 64) {
-                        this.navHidden = false;
-                    } else if (delta < -revealThreshold) {
-                        this.navHidden = false;
-                    } else if (delta > hideThreshold) {
-                        this.navHidden = true;
-                    }
-                    this._lastScrollY = scrollTop;
                 },
                 setupScrollSpy() {
                     const sectionIds = ['hero', 'menu', 'build', 'learn', 'story', 'slurp-code', 'stores', 'reviews', 'spread', 'social', 'gift', 'checkout', 'greeting'];
@@ -5979,8 +5948,8 @@
 
     <!-- Navigation -->
     <header>
-        <nav class="site-nav fixed top-0 w-full z-40 relative"
-             :class="{ 'site-nav--hidden': navHidden, 'site-nav--scrolled': navScrolled }"
+        <nav class="site-nav"
+             :class="{ 'site-nav--scrolled': navScrolled }"
              aria-label="Main navigation">
             <div class="scroll-progress" :style="`width: ${scrollProgress}%`" aria-hidden="true"></div>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center gap-2 sm:gap-3">
