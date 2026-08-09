@@ -45,17 +45,19 @@ Click **TRY AND CATCH THIS!** on the hero — that's the centerpiece interaction
 
 **Scroll demo** — full page top to bottom, every section (~57s):
 
-{% video https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-scroll-demo.mp4 %}
+<video controls width="100%" src="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-scroll-demo.mp4">
+  <a href="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-scroll-demo.mp4">Watch scroll demo (MP4)</a>
+</video>
 
 ### Interaction tour (with voiceover)
 
-**~59s desktop walkthrough** — narrated clicks through the main Alpine.js interactions (hero splash, nav scroll-spy, peacock show-more, bowl builder, gift pickers, FAQ accordion, checkout):
+**~69s desktop walkthrough** — narrated clicks through the main Alpine.js interactions (hero splash, nav scroll-spy, peacock show-more, bowl builder, gift pickers, FAQ accordion, checkout):
 
-{% video https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-tour.mp4 %}
+<video controls width="100%" src="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-tour.mp4">
+  <a href="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-tour.mp4">Watch interaction tour (MP4)</a>
+</video>
 
-<audio controls src="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-voiceover.mp3">
-  Your browser does not support the audio element. <a href="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-voiceover.mp3">Download the voiceover track</a>.
-</audio>
+Voiceover is synced into the video above (segments never overlap).
 
 **Interactions demonstrated:**
 
