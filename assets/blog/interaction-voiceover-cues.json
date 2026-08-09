@@ -2,81 +2,145 @@
   {
     "id": "01-intro",
     "start_ms": 0,
+    "cue_start_ms": 0,
+    "duration_ms": 3709,
+    "raw_duration_ms": 6677,
+    "atempo": 1.8,
     "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/01-intro.mp3"
   },
   {
     "id": "02-hero-catch",
-    "start_ms": 3500,
+    "start_ms": 3909,
+    "cue_start_ms": 3500,
+    "duration_ms": 6891,
+    "raw_duration_ms": 9417,
+    "atempo": 1.367,
     "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/02-hero-catch.mp3"
   },
   {
     "id": "03-splash",
     "start_ms": 11000,
+    "cue_start_ms": 11000,
+    "duration_ms": 4791,
+    "raw_duration_ms": 8624,
+    "atempo": 1.8,
     "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/03-splash.mp3"
   },
   {
     "id": "04-nav",
-    "start_ms": 15000,
+    "start_ms": 15991,
+    "cue_start_ms": 15000,
+    "duration_ms": 4065,
+    "raw_duration_ms": 7318,
+    "atempo": 1.8,
     "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/04-nav.mp3"
   },
   {
     "id": "05-menu-nav",
-    "start_ms": 19000,
+    "start_ms": 20256,
+    "cue_start_ms": 19000,
+    "duration_ms": 4178,
+    "raw_duration_ms": 7521,
+    "atempo": 1.8,
     "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/05-menu-nav.mp3"
   },
   {
     "id": "06-peacock-menu",
-    "start_ms": 24000,
+    "start_ms": 24634,
+    "cue_start_ms": 24000,
+    "duration_ms": 4311,
+    "raw_duration_ms": 7760,
+    "atempo": 1.8,
     "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/06-peacock-menu.mp3"
   },
   {
     "id": "07-build-nav",
-    "start_ms": 27000,
+    "start_ms": 29145,
+    "cue_start_ms": 27000,
+    "duration_ms": 4942,
+    "raw_duration_ms": 8897,
+    "atempo": 1.8,
     "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/07-build-nav.mp3"
   },
   {
     "id": "08-build-chips",
-    "start_ms": 30000,
+    "start_ms": 34287,
+    "cue_start_ms": 30000,
+    "duration_ms": 3803,
+    "raw_duration_ms": 6847,
+    "atempo": 1.8,
     "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/08-build-chips.mp3"
   },
   {
     "id": "09-lock-plate",
-    "start_ms": 33000,
+    "start_ms": 38290,
+    "cue_start_ms": 33000,
+    "duration_ms": 3117,
+    "raw_duration_ms": 5611,
+    "atempo": 1.8,
     "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/09-lock-plate.mp3"
   },
   {
     "id": "10-buy-bowl",
-    "start_ms": 36000,
+    "start_ms": 41607,
+    "cue_start_ms": 36000,
+    "duration_ms": 2165,
+    "raw_duration_ms": 3897,
+    "atempo": 1.8,
     "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/10-buy-bowl.mp3"
   },
   {
     "id": "11-gift-intro",
-    "start_ms": 39000,
+    "start_ms": 43972,
+    "cue_start_ms": 39000,
+    "duration_ms": 4594,
+    "raw_duration_ms": 8270,
+    "atempo": 1.8,
     "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/11-gift-intro.mp3"
   },
   {
     "id": "12-gift-location",
-    "start_ms": 42000,
+    "start_ms": 48766,
+    "cue_start_ms": 42000,
+    "duration_ms": 3182,
+    "raw_duration_ms": 5728,
+    "atempo": 1.8,
     "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/12-gift-location.mp3"
   },
   {
     "id": "13-gift-preset",
-    "start_ms": 45000,
+    "start_ms": 52148,
+    "cue_start_ms": 45000,
+    "duration_ms": 2723,
+    "raw_duration_ms": 4902,
+    "atempo": 1.8,
     "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/13-gift-preset.mp3"
   },
   {
     "id": "14-support-faq",
-    "start_ms": 50000,
+    "start_ms": 55071,
+    "cue_start_ms": 50000,
+    "duration_ms": 3793,
+    "raw_duration_ms": 6829,
+    "atempo": 1.8,
     "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/14-support-faq.mp3"
   },
   {
     "id": "15-support-more",
-    "start_ms": 53000,
+    "start_ms": 59064,
+    "cue_start_ms": 53000,
+    "duration_ms": 3825,
+    "raw_duration_ms": 6886,
+    "atempo": 1.8,
     "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/15-support-more.mp3"
   },
   {
     "id": "16-checkout",
-    "start_ms": 56000,
+    "start_ms": 63089,
+    "cue_start_ms": 56000,
+    "duration_ms": 5773,
+    "raw_duration_ms": 10392,
+    "atempo": 1.8,
     "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/16-checkout.mp3"
   }
 ]

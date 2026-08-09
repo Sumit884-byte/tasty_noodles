@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -66,7 +67,6 @@ def generate_segments() -> list[dict]:
         segments.append({"id": cue["id"], "start_ms": cue["start_ms"], "path": str(mp3)})
         print(f"  {cue['id']}: {mp3.name}")
 
-    CUES_FILE.write_text(json.dumps(segments, indent=2), encoding="utf-8")
     return segments
 
 
@@ -78,25 +78,95 @@ def probe_duration(path: Path) -> float:
     return float(out)
 
 
-def merge_audio(segments: list[dict], video_duration: float) -> Path:
+MIN_GAP_MS = 200  # silence between voiceover segments
+
+
+def schedule_segments(cues: list[dict], segments: list[dict], video_duration: float) -> list[dict]:
+    """Place clips on cue times; speed up (atempo) if a clip would overlap the next."""
+    scheduled: list[dict] = []
+    prev_end_ms = 0
+    video_end_ms = int(video_duration * 1000)
+
+    for i, (cue, seg) in enumerate(zip(cues, segments)):
+        path = Path(seg["path"])
+        raw_duration_ms = int(probe_duration(path) * 1000)
+        start_ms = max(cue["start_ms"], prev_end_ms + (MIN_GAP_MS if scheduled else 0))
+
+        next_boundary_ms = cues[i + 1]["start_ms"] if i + 1 < len(cues) else video_end_ms
+        max_duration_ms = max(next_boundary_ms - MIN_GAP_MS - start_ms, 400)
+
+        if raw_duration_ms > max_duration_ms:
+            atempo = min(raw_duration_ms / max_duration_ms, 1.8)
+            duration_ms = int(raw_duration_ms / atempo)
+        else:
+            atempo = 1.0
+            duration_ms = raw_duration_ms
+
+        scheduled.append(
+            {
+                **seg,
+                "start_ms": start_ms,
+                "cue_start_ms": cue["start_ms"],
+                "duration_ms": duration_ms,
+                "raw_duration_ms": raw_duration_ms,
+                "atempo": round(atempo, 3),
+            }
+        )
+        prev_end_ms = start_ms + duration_ms
+
+    return scheduled
+
+
+def extend_video_to_duration(src: Path, dst: Path, target_duration: float) -> None:
+    """Pad the last frame if voiceover runs slightly past the captured tour."""
+    current = probe_duration(src)
+    if target_duration <= current + 0.05:
+        if src != dst:
+            shutil.copy2(src, dst)
+        return
+
+    pad = target_duration - current
+    run([
+        "ffmpeg", "-y",
+        "-i", str(src),
+        "-vf", f"tpad=stop_mode=clone:stop_duration={pad:.3f}",
+        "-c:v", "libvpx-vp9", "-crf", "32", "-b:v", "0",
+        "-an",
+        str(dst),
+    ])
+
+
+def merge_audio(segments: list[dict], video_duration: float) -> tuple[Path, float]:
+    scheduled = schedule_segments(CUES, segments, video_duration)
+    total_ms = scheduled[-1]["start_ms"] + scheduled[-1]["duration_ms"]
+    audio_duration = max(video_duration, total_ms / 1000 + 0.15)
+
     mixed = ASSETS / "interaction-voiceover-mixed.wav"
-    pad_ms = int(video_duration * 1000) + 500
 
     inputs: list[str] = []
     filter_parts: list[str] = []
     mix_inputs: list[str] = []
 
-    for i, seg in enumerate(segments):
+    for i, seg in enumerate(scheduled):
         inputs.extend(["-i", seg["path"]])
         delay = seg["start_ms"]
         label = f"a{i}"
-        filter_parts.append(f"[{i}:a]adelay={delay}|{delay},apad=pad_dur={video_duration}[{label}]")
+        tempo = seg["atempo"]
+        if tempo > 1.001:
+            filter_parts.append(
+                f"[{i}:a]atempo={tempo},adelay={delay}|{delay},"
+                f"apad=pad_dur={audio_duration}[{label}]"
+            )
+        else:
+            filter_parts.append(
+                f"[{i}:a]adelay={delay}|{delay},apad=pad_dur={audio_duration}[{label}]"
+            )
         mix_inputs.append(f"[{label}]")
 
-    n = len(segments)
+    n = len(scheduled)
     filter_parts.append(
         f"{''.join(mix_inputs)}amix=inputs={n}:duration=longest:dropout_transition=0,"
-        f"apad=pad_dur={video_duration},atrim=0:{video_duration}[outa]"
+        f"apad=pad_dur={audio_duration},atrim=0:{audio_duration}[outa]"
     )
     filter_complex = ";".join(filter_parts)
 
@@ -109,7 +179,26 @@ def merge_audio(segments: list[dict], video_duration: float) -> Path:
         str(OUT_MP3),
     ])
     mixed.unlink(missing_ok=True)
-    return OUT_MP3
+
+    CUES_FILE.write_text(
+        json.dumps(
+            [
+                {
+                    "id": seg["id"],
+                    "start_ms": seg["start_ms"],
+                    "cue_start_ms": seg["cue_start_ms"],
+                    "duration_ms": seg["duration_ms"],
+                    "raw_duration_ms": seg["raw_duration_ms"],
+                    "atempo": seg["atempo"],
+                    "path": seg["path"],
+                }
+                for seg in scheduled
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return OUT_MP3, audio_duration
 
 
 def merge_video_audio() -> None:
@@ -120,17 +209,22 @@ def merge_video_audio() -> None:
     print(f"Raw video duration: {duration:.1f}s")
 
     segments = generate_segments()
-    merge_audio(segments, duration)
+    _, audio_duration = merge_audio(segments, duration)
+
+    padded_video = ASSETS / "interaction-tour-padded.webm"
+    extend_video_to_duration(RAW_VIDEO, padded_video, audio_duration)
+    print(f"Voiceover duration: {audio_duration:.1f}s")
 
     run([
         "ffmpeg", "-y",
-        "-i", str(RAW_VIDEO),
+        "-i", str(padded_video),
         "-i", str(OUT_MP3),
         "-c:v", "libx264", "-preset", "fast", "-crf", "23",
         "-c:a", "aac", "-b:a", "192k",
         "-shortest",
         str(OUT_MP4),
     ])
+    padded_video.unlink(missing_ok=True)
 
     run([
         "ffmpeg", "-y",
