@@ -15,3 +15,6 @@ story-section/
 splash-css*/
 screenshot-review/
 .env*
+
+# Blog voiceover intermediates (MP3 is committed)
+assets/blog/*.aiff
