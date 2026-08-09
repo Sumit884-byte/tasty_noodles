@@ -3,7 +3,7 @@ title: "I Built a Noodle Shop Landing Page That Throws Food at Your Screen 🍜"
 published: false
 description: "How I built SLURP! — a playful comfort-food landing page with SVG splash animations, a CSS bowl builder, and a Three.js spinning globe — for the DEV Frontend Challenge."
 tags: devchallenge, frontend, webdev, javascript, css, threejs
-cover_image: https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-cover.png
+cover_image: https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-cover.jpg
 canonical_url: https://tastynoodles.vercel.app
 ---
 
@@ -39,11 +39,33 @@ The hook: Chef Marco is so confident in his noodles that he literally throws a b
 
 Click **TRY AND CATCH THIS!** on the hero — that's the centerpiece interaction. Append `?splash` to the URL if you want to land directly in the splatter overlay.
 
-**Screenshots:**
+**Scroll demo** — full page top to bottom, every section (~50s):
 
-![SLURP! hero — "Our Noodles Are Tastiest"](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-cover.png)
+https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-scroll-demo.mp4
 
-![Build Your Bowl — live CSS plate preview](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/build-your-bowl.png)
+{% video https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-scroll-demo.mp4 %}
+
+**Screenshots** (desktop nav, support section, and current layout):
+
+![Hero — noodle splash landing](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/hero.jpg)
+
+![The Noodle Vault — menu cards](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/menu.jpg)
+
+![Build Your Bowl — live CSS plate preview](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/build.png)
+
+![Galactic Slurp — Three.js globe story](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/story.png)
+
+![Pan India Store Finder](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/stores.png)
+
+![Slurp Squad — testimonials](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/reviews.png)
+
+![Social Feed Preview](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/social.png)
+
+![Gift a Bowl](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/gift.png)
+
+![Slurp Support — contact and FAQ](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/support.png)
+
+![CollectUI Checkout Flow](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/checkout.png)
 
 **Links:**
 
@@ -67,6 +89,81 @@ Alpine.js became the app's brain — one `slurpApp()` component handles cart, cu
 Later passes added **Slurp Support** — contact cards, accordion FAQ, peacock show-more, quick links — and tightened the **Gift a Bowl** pickers. Nested `@click.outside` handlers were closing delivery-location and preset-message dropdowns before you could pick an option; scoping each picker (and `@click.stop` on the search inputs) fixed it, and a clearer `giftPresetItem` getter made the preset dropdown label behave.
 
 The desktop upper nav got a full polish pass: frosted-glass bar, pill-shaped link track with grouped dividers, orange-gradient active states, and a scroll-progress bar. That redesign surfaced an Alpine gotcha — `x-for` with multiple root nodes (divider span + link) only rendered the dividers. Wrapping each iteration in a single `.site-nav__item` fixed it, along with contrast, hover, and overflow tweaks at the 1024px breakpoint.
+
+### How responsivity is designed
+
+Responsivity on SLURP! is not a bolted-on `@media` pass at the end — it's baked into navigation, layout grids, scroll behavior, and motion from the start. The page uses Tailwind's default breakpoints (`sm` 640px, `md` 768px, `lg` 1024px, `xl` 1280px), but the **primary split is `lg` (1024px)**: below that you're in touch-first mode; above it you're in desktop mode.
+
+**Listen:** [Responsivity walkthrough (~96s)](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/responsivity-voiceover.mp3)
+
+<audio controls src="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/responsivity-voiceover.mp3">
+  Your browser does not support the audio element. <a href="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/responsivity-voiceover.mp3">Download the voiceover</a>.
+</audio>
+
+#### Navigation: bottom tabs vs pill track
+
+On **mobile and tablet** (`max-width: 1023px`):
+
+- The frosted top bar keeps logo, locale picker, and a hamburger drawer (full section list + locale chips).
+- Section navigation moves to a **fixed bottom tab bar** — five icons: Dare, Menu, Build, Gift, Cart — with a wavy noodle SVG divider and `env(safe-area-inset-bottom)` padding for notched phones.
+- The floating checkout bar sits **above** the tab bar (`bottom: calc(4.875rem + safe-area)`), never behind it.
+- `body` gets bottom padding so content isn't hidden under the chrome; when the cart bar is visible, padding doubles.
+
+On **desktop** (`lg:` / `min-width: 1024px`):
+
+- Hamburger and bottom tab bar hide (`lg:hidden`).
+- A **pill-shaped nav track** appears in the header (`hidden lg:block`) — frosted inner track, grouped dividers between section clusters, orange-gradient active link states, and a scroll-progress bar.
+- The track **scrolls horizontally** when the viewport is tight (1024–1279px): link font-size and padding compress, checkout button becomes icon-only, and locale picker label hides until `xl`.
+- Checkout moves into the header; the "Checkout" label appears at `xl`.
+
+Scroll offsets are wired through CSS variables on `:root`:
+
+```css
+--site-header-offset: 3.5rem;   /* mobile */
+--site-bottom-offset: 4.875rem; /* mobile tab bar */
+/* at 1024px+: header 5rem, bottom 0 */
+```
+
+`scroll-padding-top` and `.section-scroll-target { scroll-margin-top }` keep anchor jumps from landing under fixed chrome.
+
+#### Layout grids and section patterns
+
+| Section | Mobile | `md` (768px) | `lg` (1024px) |
+|---------|--------|--------------|---------------|
+| Menu cards | 1 col | 2 col | 3 col |
+| Gift a Bowl | stacked | — | 2-col grid + sticky preview |
+| Store results | 1 col | 2 col | — |
+| Social share cards | 1 col | 2 col (`sm`) | 4 col |
+| Build Your Bowl | stacked | 2 col | — |
+| Learn section | horizontal step strip | — | sticky step list |
+
+**Gift layout:** `.gift-layout` is a single-column grid on mobile; at `lg` it becomes `grid-template-columns: 1.05fr 0.95fr` with `.gift-preview-wrap { position: sticky; top: 6rem }`. Form fields use `sm:grid-cols-2` for To/From name pairs.
+
+**Store finder:** search row stacks vertically until `sm`, then row-aligns; decorative elephant SVGs are `display: none` until `md`. Store decor animations scale down or hide on small screens to reduce visual noise.
+
+**Menu cards:** CollectUI-style grid with horizontal-scrolling category filter pills (`menu-cat-scroll`, scrollbar hidden). Cards use runtime wavy SVG borders via `attachNoodleFrame()`.
+
+#### Overflow and progressive disclosure
+
+Instead of infinite scroll, long lists use **peacock show-more buttons** (`section-show-more-btn`) with Alpine `visibleSlice()` — initial limits of 3–4 items per section (menu, stores, reviews, spread, slurp-code, checkout, support FAQ). Tap expands in place; no route change, no pagination component.
+
+Other intentional overflow:
+
+- Desktop nav track: `overflow-x: auto` with edge fade masks.
+- Learn step strip on tablet: horizontal scroll + `scroll-snap-type: x mandatory`.
+- Category pills: `overflow-x-auto` with hidden scrollbars.
+
+#### Motion, cursors, and locale
+
+**`prefers-reduced-motion: reduce`** disables splash animations, globe spin, steam keyframes, store decoration animations, nav hover transforms, and chopstick card ornaments. JavaScript checks `matchMedia('(prefers-reduced-motion: reduce)')` before confetti, splash replay, and Three.js init — static fallback for the globe.
+
+**Chopstick theme** (`body.chopstick-theme`): custom noodle cursors apply only under `@media (pointer: fine)` — touch users keep the system cursor. Section-scoped accent colors via `body[data-section="…"] { --chopstick-accent }`. Active nav states show crossed-chopstick icons (inline on drawer links, overlay on desktop pills, above icon on mobile bottom nav).
+
+**Locale picker:** compact toggle in the header; full locale chip row in the mobile drawer. A floating locale-suggestion banner uses `max-width: calc(100vw - 1.5rem)` and repositions at `md`. Between 1024–1279px the picker label hides to save header space.
+
+#### Checkout UX across breakpoints
+
+The CollectUI-style flow uses a **floating checkout bar** when items are in cart — centered, max-width 24rem, with optional inline qty stepper for single-item carts. On mobile it floats above the bottom nav; on desktop it sits at `bottom: 1rem` with no body padding conflict. The checkout section itself is a centered `max-w-2xl` card with peacock show-more for long cart lists.
 
 ### What I'm proud of
 
