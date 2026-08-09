@@ -2,7 +2,7 @@
 title: "I Built a Noodle Shop Landing Page That Throws Food at Your Screen 🍜"
 published: false
 description: "How I built SLURP! — a playful comfort-food landing page with SVG splash animations, a CSS bowl builder, and a Three.js spinning globe — for the DEV Frontend Challenge."
-tags: devchallenge, frontend, webdev, javascript, css, threejs
+tags: devchallenge, frontend, webdev, javascript
 cover_image: https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-cover.jpg
 canonical_url: https://tastynoodles.vercel.app
 ---
@@ -15,11 +15,13 @@ I built **[SLURP! — Tastiest Noodles on the Planet](https://tastynoodles.verce
 
 The hook: Chef Marco is so confident in his noodles that he literally throws a bowl at your screen. The hero CTA is **"TRY AND CATCH THIS! 🍜"** — miss the catch, get roasted, then explore the rest of the shop.
 
+![Hero splash overlay — SVG/CSS noodle splatter](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/hero-splash.png)
+
 **What's on the page:**
 
 - **Noodle Splash Hero** — full-screen SVG + CSS animation (sauce smears, flying noodle clusters, garnishes, a frosted-glass "SPLAAAT!" modal). Each replay seeds random extra strands in JavaScript so the splatter feels slightly different every time.
 - **The Noodle Vault** — six signature bowls in a CollectUI-inspired card grid (Dragon Breath Chili Oil, Midnight Tonkotsu, Garlic Butter Dan Dan, Bombay Street Manchow, Golden Curry Udon, Peanut Crunch Yakisoba) with category filter chips and wavy noodle-strand SVG borders generated at runtime.
-- **Build Your Bowl** — live CSS plate preview (broth color, thick/thin/broth-only noodles, six toppings). No image swaps — just custom properties, positioned elements, and steam keyframes. Hit **"That's My Plate"** and it drops into the cart with a generated name.
+- **Build Your Bowl** — live CSS plate preview (broth color, thick/thin/broth-only noodles, six toppings). No image swaps — just custom properties, positioned elements, and steam keyframes. Hit **"Lock In My Plate"**, then **"Buy This Bowl"** — it drops into the cart with a generated name.
 - **Galactic Slurp** — story section with a Three.js spinning globe, alien rider, and twinkling stars (static fallback for `prefers-reduced-motion` and WebGL failures).
 - **Pan India Store Finder** — 15 kitchens across 12 cities, searchable by city, area, or pincode, with Google Maps directions.
 - **Slurp Squad** — eight fake testimonials from regulars who also failed to catch the noodles.
@@ -39,17 +41,15 @@ The hook: Chef Marco is so confident in his noodles that he literally throws a b
 
 Click **TRY AND CATCH THIS!** on the hero — that's the centerpiece interaction. Append `?splash` to the URL if you want to land directly in the splatter overlay.
 
-**Scroll demo** — full page top to bottom, every section (~50s):
+![Desktop nav — frosted pill track with scroll-spy](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/desktop-nav.png)
 
-https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-scroll-demo.mp4
+**Scroll demo** — full page top to bottom, every section (~57s):
 
 {% video https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-scroll-demo.mp4 %}
 
 ### Interaction tour (with voiceover)
 
 **~59s desktop walkthrough** — narrated clicks through the main Alpine.js interactions (hero splash, nav scroll-spy, peacock show-more, bowl builder, gift pickers, FAQ accordion, checkout):
-
-https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-tour.mp4
 
 {% video https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-tour.mp4 %}
 
@@ -67,9 +67,9 @@ https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/i
 6. **Support FAQ** — accordion expand + peacock show-more for hidden questions
 7. **Checkout** — cart summary after items are added
 
-Voiceover script and cue timestamps: [`assets/blog/interaction-voiceover-script.md`](https://github.com/Sumit884-byte/tasty_noodles/blob/main/assets/blog/interaction-voiceover-script.md)
+Voiceover script and cue timestamps: [`assets/blog/interaction-voiceover-script.md`](https://github.com/Sumit884-byte/tasty_noodles/blob/main/assets/blog/interaction-voiceover-script.md) · segmented audio + merge cues in [`assets/blog/interaction-voiceover-cues.json`](https://github.com/Sumit884-byte/tasty_noodles/blob/main/assets/blog/interaction-voiceover-cues.json)
 
-**Screenshots** (desktop nav, support section, and current layout):
+**Screenshots** (hero through checkout — current layout):
 
 ![Hero — noodle splash landing](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/hero.jpg)
 
@@ -106,6 +106,8 @@ The [DEV Frontend Challenge](https://dev.to/challenges/frontend-2026-07-29) prom
 
 I started with the splash hero because it set the tone. Pure SVG + CSS — no canvas, no video, no Lottie. `stroke-dashoffset` for smears and strands, staggered keyframes for clusters and garnishes, JavaScript to seed random extra strands on each replay.
 
+![Build Your Bowl — broth, noodles, toppings, and live plate preview](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/build-plate.png)
+
 From there I built outward: menu cards with runtime-generated wavy SVG borders, the CSS-only bowl builder (my favorite section technically — a well-structured DOM + custom properties replaced a lot of image-swap logic), then the Three.js globe with performance guardrails (IntersectionObserver to pause off-screen, `visibilitychange` for hidden tabs, adaptive geometry, `pixelRatio` cap, static fallback for reduced motion).
 
 Alpine.js became the app's brain — one `slurpApp()` component handles cart, custom plate builder, store locator, menu filtering, splash overlay, mobile nav, gift flow, support FAQ, and checkout. Accessibility was baked in from the start: skip link, splash dialog with focus management, `aria-pressed` on builder chips, `prefers-reduced-motion` disabling splash/globe/steam animations, semantic landmarks, lazy-loaded images with explicit dimensions.
@@ -114,15 +116,21 @@ Later passes added **Slurp Support** — contact cards, accordion FAQ, peacock s
 
 The desktop upper nav got a full polish pass: frosted-glass bar, pill-shaped link track with grouped dividers, orange-gradient active states, and a scroll-progress bar. That redesign surfaced an Alpine gotcha — `x-for` with multiple root nodes (divider span + link) only rendered the dividers. Wrapping each iteration in a single `.site-nav__item` fixed it, along with contrast, hover, and overflow tweaks at the 1024px breakpoint.
 
+For the blog demos I scripted the capture pipeline in-repo: Playwright scroll + interaction recordings (`scripts/capture-interaction-tour.py`), sixteen segmented voiceover clips merged to the tour track (`scripts/merge-interaction-tour.py`), and section screenshots via `scripts/capture-blog-assets.py`. Keeps the post reproducible without re-recording by hand.
+
 ### How responsivity is designed
 
 Responsivity on SLURP! is not a bolted-on `@media` pass at the end — it's baked into navigation, layout grids, scroll behavior, and motion from the start. The page uses Tailwind's default breakpoints (`sm` 640px, `md` 768px, `lg` 1024px, `xl` 1280px), but the **primary split is `lg` (1024px)**: below that you're in touch-first mode; above it you're in desktop mode.
+
+![Mobile layout — bottom tab bar and frosted header (390×844)](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/mobile-nav.png)
 
 **Listen:** [Responsivity walkthrough (~96s)](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/responsivity-voiceover.mp3)
 
 <audio controls src="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/responsivity-voiceover.mp3">
   Your browser does not support the audio element. <a href="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/responsivity-voiceover.mp3">Download the voiceover</a>.
 </audio>
+
+Responsivity script: [`assets/blog/responsivity-voiceover-script.md`](https://github.com/Sumit884-byte/tasty_noodles/blob/main/assets/blog/responsivity-voiceover-script.md)
 
 #### Navigation: bottom tabs vs pill track
 
