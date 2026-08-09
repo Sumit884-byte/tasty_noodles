@@ -1,0 +1,1 @@
+Gift a Bowl uses searchable CollectUI-style pickers for delivery location and preset messages — both wired with scoped click-outside handlers.

@@ -45,6 +45,30 @@ https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-s
 
 {% video https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-scroll-demo.mp4 %}
 
+### Interaction tour (with voiceover)
+
+**~59s desktop walkthrough** — narrated clicks through the main Alpine.js interactions (hero splash, nav scroll-spy, peacock show-more, bowl builder, gift pickers, FAQ accordion, checkout):
+
+https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-tour.mp4
+
+{% video https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-tour.mp4 %}
+
+<audio controls src="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-voiceover.mp3">
+  Your browser does not support the audio element. <a href="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-voiceover.mp3">Download the voiceover track</a>.
+</audio>
+
+**Interactions demonstrated:**
+
+1. **Hero splash** — `TRY AND CATCH THIS!` triggers the SVG/CSS splatter overlay; dismiss with *Wipe Screen & Place Order*
+2. **Desktop nav pills** — frosted pill track with scroll-spy active states
+3. **Peacock show-more** — menu vault expands from 3 → 6 bowls in place
+4. **Build Your Bowl** — broth/noodle/topping chips → Lock In My Plate → Buy This Bowl (cart bump)
+5. **Gift pickers** — searchable delivery-location and preset-message dropdowns with live card preview
+6. **Support FAQ** — accordion expand + peacock show-more for hidden questions
+7. **Checkout** — cart summary after items are added
+
+Voiceover script and cue timestamps: [`assets/blog/interaction-voiceover-script.md`](https://github.com/Sumit884-byte/tasty_noodles/blob/main/assets/blog/interaction-voiceover-script.md)
+
 **Screenshots** (desktop nav, support section, and current layout):
 
 ![Hero — noodle splash landing](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/hero.jpg)

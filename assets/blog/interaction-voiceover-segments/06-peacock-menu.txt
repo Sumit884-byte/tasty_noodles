@@ -1,0 +1,1 @@
+Long lists use peacock show-more buttons instead of pagination. Three bowls show first — click the peacock to fan out the rest of the vault.

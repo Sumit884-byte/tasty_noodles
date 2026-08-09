@@ -1,0 +1,1 @@
+Build Your Bowl is CSS-only: broth color, noodle style, and toppings all update a live plate preview via custom properties — no image swaps.

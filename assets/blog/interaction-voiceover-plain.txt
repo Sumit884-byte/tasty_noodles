@@ -1,0 +1,31 @@
+Welcome to SLURP! Every major interaction on this page is wired with Alpine.js — let's click through the highlights.
+
+First up: the hero dare. Tap the catch button and Chef Marco throws a full SVG splash at your screen — smears, strands, garnishes, the works.
+
+Pure CSS and SVG keyframes, with JavaScript seeding random extra noodle strands on each replay. Close the modal when you're done getting roasted.
+
+Back to the hero. Notice the frosted desktop nav — pill-shaped links with orange active states and a scroll-progress bar up top.
+
+Click a nav pill and the page scrolls to that section. The active link updates as you move — scroll spy baked into one Alpine component.
+
+Long lists use peacock show-more buttons instead of pagination. Three bowls show first — click the peacock to fan out the rest of the vault.
+
+Build Your Bowl is CSS-only: broth color, noodle style, and toppings all update a live plate preview via custom properties — no image swaps.
+
+Pick your broth, noodle style, and toppings. Each chip toggles with aria-pressed so screen readers know what's selected.
+
+Lock in your plate, then choose Buy or Learn. Buy drops a generated bowl name straight into the cart.
+
+Added to cart — the floating checkout bar and header badge bump to match.
+
+Gift a Bowl uses searchable CollectUI-style pickers for delivery location and preset messages — both wired with scoped click-outside handlers.
+
+Open the location picker, search a city or store, and the live gift card preview updates as you type.
+
+Same pattern for preset messages — pick a note and watch it land on the gift card preview.
+
+Slurp Support: contact channel cards plus an FAQ accordion. Click a question and the answer expands in place.
+
+Four FAQs show first; the peacock reveals the rest — same progressive-disclosure pattern as menu and reviews.
+
+Finally, checkout — your cart summary, qty steppers, and a client-side order flow. Every button click you just saw lives in one index.html file.

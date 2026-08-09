@@ -1,0 +1,1 @@
+Pick your broth, noodle style, and toppings. Each chip toggles with aria-pressed so screen readers know what's selected.

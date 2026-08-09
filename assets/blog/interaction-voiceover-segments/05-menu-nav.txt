@@ -1,0 +1,1 @@
+Click a nav pill and the page scrolls to that section. The active link updates as you move — scroll spy baked into one Alpine component.

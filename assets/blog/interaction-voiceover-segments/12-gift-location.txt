@@ -1,0 +1,1 @@
+Open the location picker, search a city or store, and the live gift card preview updates as you type.

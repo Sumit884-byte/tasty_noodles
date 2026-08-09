@@ -1,0 +1,1 @@
+Welcome to SLURP! Every major interaction on this page is wired with Alpine.js — let's click through the highlights.

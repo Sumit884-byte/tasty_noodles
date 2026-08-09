@@ -1,0 +1,1 @@
+Finally, checkout — your cart summary, qty steppers, and a client-side order flow. Every button click you just saw lives in one index.html file.

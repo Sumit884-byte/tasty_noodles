@@ -1,0 +1,82 @@
+[
+  {
+    "id": "01-intro",
+    "start_ms": 0,
+    "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/01-intro.mp3"
+  },
+  {
+    "id": "02-hero-catch",
+    "start_ms": 3500,
+    "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/02-hero-catch.mp3"
+  },
+  {
+    "id": "03-splash",
+    "start_ms": 11000,
+    "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/03-splash.mp3"
+  },
+  {
+    "id": "04-nav",
+    "start_ms": 15000,
+    "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/04-nav.mp3"
+  },
+  {
+    "id": "05-menu-nav",
+    "start_ms": 19000,
+    "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/05-menu-nav.mp3"
+  },
+  {
+    "id": "06-peacock-menu",
+    "start_ms": 24000,
+    "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/06-peacock-menu.mp3"
+  },
+  {
+    "id": "07-build-nav",
+    "start_ms": 27000,
+    "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/07-build-nav.mp3"
+  },
+  {
+    "id": "08-build-chips",
+    "start_ms": 30000,
+    "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/08-build-chips.mp3"
+  },
+  {
+    "id": "09-lock-plate",
+    "start_ms": 33000,
+    "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/09-lock-plate.mp3"
+  },
+  {
+    "id": "10-buy-bowl",
+    "start_ms": 36000,
+    "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/10-buy-bowl.mp3"
+  },
+  {
+    "id": "11-gift-intro",
+    "start_ms": 39000,
+    "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/11-gift-intro.mp3"
+  },
+  {
+    "id": "12-gift-location",
+    "start_ms": 42000,
+    "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/12-gift-location.mp3"
+  },
+  {
+    "id": "13-gift-preset",
+    "start_ms": 45000,
+    "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/13-gift-preset.mp3"
+  },
+  {
+    "id": "14-support-faq",
+    "start_ms": 50000,
+    "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/14-support-faq.mp3"
+  },
+  {
+    "id": "15-support-more",
+    "start_ms": 53000,
+    "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/15-support-more.mp3"
+  },
+  {
+    "id": "16-checkout",
+    "start_ms": 56000,
+    "path": "/Users/sumitmishra/dev/tasty_noodles/assets/blog/interaction-voiceover-segments/16-checkout.mp3"
+  }
+]

@@ -1,0 +1,1 @@
+Slurp Support: contact channel cards plus an FAQ accordion. Click a question and the answer expands in place.
