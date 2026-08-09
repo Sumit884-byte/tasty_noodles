@@ -24,7 +24,9 @@ The hook: Chef Marco is so confident in his noodles that he literally throws a b
 - **Pan India Store Finder** — 15 kitchens across 12 cities, searchable by city, area, or pincode, with Google Maps directions.
 - **Slurp Squad** — eight fake testimonials from regulars who also failed to catch the noodles.
 - **Social Feed Preview** — Reels/Stories/TikTok-style cards using the same self-hosted bowl photos (platform buttons are visual-only demos).
+- **Gift a Bowl** — send-a-bowl flow with searchable delivery-location and preset-message pickers, live gift card preview.
 - **Slurp Support** — contact channel cards (phone, WhatsApp, email, order help), seven-item FAQ accordion with peacock show-more, quick links to stores/gift/checkout, wired into desktop nav.
+- **Desktop section nav** — frosted-glass bar, pill-shaped link track with grouped dividers, orange-gradient active states, and a scroll-progress indicator.
 - **CollectUI Checkout Flow** — Alpine.js cart with sticky bar, mobile bottom sheet, and a full client-side order flow.
 
 **Stack:** one `index.html` file — HTML, Tailwind CSS (CDN), Alpine.js 3.14, Three.js 0.172, vanilla JS, Lucide icons, Chewy font. No build step. All images self-hosted in `/assets`. MIT licensed.
@@ -62,7 +64,9 @@ From there I built outward: menu cards with runtime-generated wavy SVG borders, 
 
 Alpine.js became the app's brain — one `slurpApp()` component handles cart, custom plate builder, store locator, menu filtering, splash overlay, mobile nav, gift flow, support FAQ, and checkout. Accessibility was baked in from the start: skip link, splash dialog with focus management, `aria-pressed` on builder chips, `prefers-reduced-motion` disabling splash/globe/steam animations, semantic landmarks, lazy-loaded images with explicit dimensions.
 
-Later passes added **Slurp Support** — contact cards, accordion FAQ, peacock show-more — and tightened the **Gift a Bowl** pickers. Nested `@click.outside` handlers were closing delivery-location and preset-message dropdowns before you could pick an option; scoping each picker (and `@click.stop` on the search inputs) fixed it.
+Later passes added **Slurp Support** — contact cards, accordion FAQ, peacock show-more, quick links — and tightened the **Gift a Bowl** pickers. Nested `@click.outside` handlers were closing delivery-location and preset-message dropdowns before you could pick an option; scoping each picker (and `@click.stop` on the search inputs) fixed it, and a clearer `giftPresetItem` getter made the preset dropdown label behave.
+
+The desktop upper nav got a full polish pass: frosted-glass bar, pill-shaped link track with grouped dividers, orange-gradient active states, and a scroll-progress bar. That redesign surfaced an Alpine gotcha — `x-for` with multiple root nodes (divider span + link) only rendered the dividers. Wrapping each iteration in a single `.site-nav__item` fixed it, along with contrast, hover, and overflow tweaks at the 1024px breakpoint.
 
 ### What I'm proud of
 
@@ -71,6 +75,7 @@ Later passes added **Slurp Support** — contact cards, accordion FAQ, peacock s
 - Wavy SVG card borders via `attachNoodleFrame()` — micro-detail that makes the UI feel designed
 - Progressive enhancement for motion and WebGL — fun features that don't punish users who prefer reduced motion or lack WebGL
 - **Slurp Support** — contact cards and FAQ that feel on-brand, not a generic help-desk widget pasted onto a landing page
+- The desktop nav — frosted glass, pill track, scroll progress, and a real Alpine `x-for` debugging story
 - Shipping everything in one file you can open locally without explaining npm
 
 ### What I learned
