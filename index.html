@@ -140,10 +140,10 @@
         .nav-link--active::before {
             content: '';
             position: absolute;
-            top: -0.35rem;
-            right: -0.2rem;
-            width: 0.75rem;
-            height: 0.75rem;
+            top: -0.2rem;
+            right: -0.15rem;
+            width: 0.7rem;
+            height: 0.7rem;
             background: url('assets/chopsticks/icons/crossed.svg') center / contain no-repeat;
             transform: rotate(8deg);
             pointer-events: none;
@@ -2470,7 +2470,8 @@
         .site-nav__brand {
             display: inline-flex;
             align-items: center;
-            padding: 0.15rem 0.35rem 0.15rem 0.15rem;
+            padding: 0.15rem 0.45rem 0.15rem 0.25rem;
+            margin-left: -0.1rem;
             border-radius: 0.85rem;
             transition: transform 0.2s ease, background 0.2s ease;
         }
@@ -2494,11 +2495,13 @@
             flex: 1;
             min-width: 0;
             overflow-x: auto;
+            overscroll-behavior-x: contain;
+            scroll-padding-inline: 0.75rem;
             scrollbar-width: none;
             -ms-overflow-style: none;
-            padding: 0.1rem 0;
-            -webkit-mask-image: linear-gradient(90deg, transparent, #000 1.25rem, #000 calc(100% - 1.25rem), transparent);
-            mask-image: linear-gradient(90deg, transparent, #000 1.25rem, #000 calc(100% - 1.25rem), transparent);
+            padding: 0.15rem 0.25rem;
+            -webkit-mask-image: linear-gradient(90deg, transparent, #000 0.85rem, #000 calc(100% - 0.85rem), transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 0.85rem, #000 calc(100% - 0.85rem), transparent);
         }
         .site-nav__track::-webkit-scrollbar {
             display: none;
@@ -2506,24 +2509,29 @@
         .site-nav-links {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.15rem;
+            justify-content: flex-start;
+            gap: 0.1rem;
             min-width: max-content;
             margin: 0 auto;
-            padding: 0.2rem;
-            background: rgba(255, 255, 255, 0.62);
-            border: 2px solid rgba(28, 25, 23, 0.14);
+            padding: 0.28rem 0.32rem 0.22rem;
+            background: rgba(255, 255, 255, 0.72);
+            border: 2px solid rgba(28, 25, 23, 0.16);
             border-radius: 9999px;
             box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.85),
-                0 2px 0 rgba(28, 25, 23, 0.04);
+                inset 0 1px 0 rgba(255, 255, 255, 0.92),
+                0 2px 0 rgba(28, 25, 23, 0.05);
+        }
+        .site-nav__item {
+            display: inline-flex;
+            align-items: center;
+            flex-shrink: 0;
         }
         .site-nav__divider {
             flex-shrink: 0;
             width: 1px;
-            height: 1.1rem;
-            margin: 0 0.1rem;
-            background: linear-gradient(180deg, transparent, rgba(251, 191, 36, 0.75), transparent);
+            height: 1.15rem;
+            margin: 0 0.12rem;
+            background: linear-gradient(180deg, transparent, rgba(251, 191, 36, 0.85), transparent);
             border-radius: 1px;
         }
         .site-nav-link {
@@ -2531,14 +2539,14 @@
             display: inline-flex;
             align-items: center;
             flex-shrink: 0;
-            padding: 0.38rem 0.62rem;
+            padding: 0.4rem 0.58rem;
             border: 2px solid transparent;
             border-radius: 9999px;
-            font-size: clamp(0.6875rem, 0.88vw, 0.8125rem);
+            font-size: clamp(0.6875rem, 0.82vw, 0.8125rem);
             font-weight: 800;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.025em;
             line-height: 1.1;
-            color: #57534e;
+            color: #44403c;
             white-space: nowrap;
             text-decoration: none;
             transition:
@@ -2549,8 +2557,9 @@
                 transform 0.15s ease;
         }
         .site-nav-link:hover {
-            color: #c2410c;
-            background: rgba(255, 237, 213, 0.75);
+            color: #9a3412;
+            background: rgba(255, 237, 213, 0.88);
+            border-color: rgba(251, 146, 60, 0.35);
         }
         .site-nav-link:focus-visible {
             outline: 2px solid #ea580c;
@@ -2576,10 +2585,45 @@
         }
         @media (min-width: 1024px) {
             .site-nav__actions {
-                gap: 0.55rem;
-                padding-left: 0.85rem;
-                margin-left: 0.15rem;
-                border-left: 2px solid rgba(251, 191, 36, 0.45);
+                gap: 0.5rem;
+                padding-left: 0.75rem;
+                margin-left: 0.1rem;
+                border-left: 2px solid rgba(251, 191, 36, 0.55);
+                align-self: stretch;
+                align-items: center;
+            }
+        }
+        @media (min-width: 1024px) and (max-width: 1279px) {
+            .site-nav__inner {
+                gap: 0.65rem;
+                padding-inline: 1rem;
+            }
+            .site-nav-link {
+                padding: 0.32rem 0.42rem;
+                font-size: 0.6875rem;
+                letter-spacing: 0.015em;
+            }
+            .site-nav__logo {
+                height: 2.45rem;
+            }
+            .site-nav__actions {
+                gap: 0.4rem;
+                padding-left: 0.55rem;
+            }
+            .collect-btn--nav {
+                min-width: 2.5rem;
+                width: 2.5rem;
+                padding: 0;
+                justify-content: center;
+            }
+            .lang-picker__toggle span {
+                display: none;
+            }
+            .lang-picker__toggle {
+                min-width: 2.5rem;
+                width: 2.5rem;
+                padding: 0;
+                justify-content: center;
             }
         }
         .site-nav__menu-btn {
@@ -2616,14 +2660,32 @@
                 background: rgba(255, 251, 235, 0.98);
             }
         }
+        .site-nav-link--drawer {
+            border: 2px solid transparent;
+            border-radius: 9999px;
+            transition:
+                color 0.15s ease,
+                background 0.15s ease,
+                border-color 0.15s ease,
+                box-shadow 0.15s ease;
+        }
+        .site-nav-link--drawer:hover {
+            color: #9a3412 !important;
+            background: rgba(255, 237, 213, 0.88);
+            border-color: rgba(251, 146, 60, 0.35);
+        }
         .site-nav-link--drawer.nav-link--active {
             display: inline-flex;
             width: fit-content;
-            color: #ea580c !important;
-            background: #fff;
+            color: #fff !important;
+            background: linear-gradient(135deg, #fb923c 0%, #f97316 52%, #ea580c 100%);
             border: 2px solid #1c1917;
             box-shadow: 2px 2px 0 #1c1917;
             text-decoration: none;
+        }
+        .site-nav-link--drawer.nav-link--active:hover {
+            color: #fff !important;
+            background: linear-gradient(135deg, #fdba74 0%, #fb923c 52%, #f97316 100%);
         }
         @media (prefers-reduced-motion: reduce) {
             .site-nav,
@@ -6181,15 +6243,17 @@
                 <div class="site-nav__track hidden lg:block" aria-label="Page sections">
                     <div class="site-nav-links">
                         <template x-for="(link, index) in navLinks" :key="link.href">
-                            <span x-show="index === 1 || index === 3 || index === 6 || index === 8"
-                                  x-cloak
-                                  class="site-nav__divider"
-                                  aria-hidden="true"></span>
-                            <a :href="link.href"
-                               class="site-nav-link"
-                               :class="activeSection === link.section ? 'nav-link--active' : ''"
-                               :aria-current="activeSection === link.section ? 'page' : false"
-                               x-text="link.label"></a>
+                            <span class="site-nav__item">
+                                <span x-show="index === 1 || index === 3 || index === 6 || index === 8"
+                                      x-cloak
+                                      class="site-nav__divider"
+                                      aria-hidden="true"></span>
+                                <a :href="link.href"
+                                   class="site-nav-link"
+                                   :class="activeSection === link.section ? 'nav-link--active' : ''"
+                                   :aria-current="activeSection === link.section ? 'page' : false"
+                                   x-text="link.label"></a>
+                            </span>
                         </template>
                     </div>
                 </div>
@@ -6233,7 +6297,7 @@
                         <svg class="collect-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <path d="M6 13h12l-1.5 6H7.5L6 13z"/><path d="M6 13l-1.5-5h15L18 13"/><circle cx="9" cy="20" r="1"/><circle cx="15" cy="20" r="1"/>
                         </svg>
-                        <span class="hidden lg:inline" x-text="t('nav.checkout')"></span>
+                        <span class="hidden xl:inline" x-text="t('nav.checkout')"></span>
                         <span x-show="cartCount > 0"
                               x-cloak
                               class="collect-btn__count"
@@ -6266,7 +6330,7 @@
                 </div>
                 <template x-for="link in navLinks" :key="link.href">
                     <a :href="link.href"
-                       class="site-nav-link site-nav-link--drawer py-2 px-3 hover:text-orange-600 transition whitespace-nowrap"
+                       class="site-nav-link site-nav-link--drawer py-2 px-3 whitespace-nowrap"
                        :class="activeSection === link.section ? 'nav-link--active' : ''"
                        :aria-current="activeSection === link.section ? 'page' : false"
                        x-text="link.label"></a>
