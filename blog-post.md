@@ -51,13 +51,13 @@ Click **TRY AND CATCH THIS!** on the hero — that's the centerpiece interaction
 
 ### Interaction tour (with voiceover)
 
-**~111s desktop walkthrough** (111.1s) — narrated clicks through the main Alpine.js interactions (hero splash, nav scroll-spy, peacock show-more, bowl builder, gift pickers, FAQ accordion, checkout):
+I recorded a **~111s desktop walkthrough** (111.1s) — narrated clicks through the main Alpine.js interactions: hero splash, nav scroll-spy, peacock show-more, bowl builder, gift pickers, FAQ accordion, and checkout.
 
 <video controls width="100%" src="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-tour.mp4">
   <a href="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-tour.mp4">Watch interaction tour (MP4)</a>
 </video>
 
-Narration is synced via the Playwright interaction timeline and a vLLM cue planner (Arka) — voice is baked into the MP4 above at 1× pace; segments never overlap and are never sped up.
+I synced narration to on-screen actions with a three-step pipeline: Playwright captures the click tour and writes an interaction timeline JSON; Arka/vLLM reads that timeline plus segment MP3 lengths and assigns cue start times at **1× pace** with no overlap; sixteen TTS segments get muxed onto the raw webm, extending the last frame if voice runs past the capture. Voice is baked into the MP4 above — segments never overlap and are never sped up.
 
 **Interactions demonstrated:**
 
@@ -112,17 +112,23 @@ I started with the splash hero because it set the tone. Pure SVG + CSS — no ca
 
 From there I built outward: menu cards with runtime-generated wavy SVG borders, the CSS-only bowl builder (my favorite section technically — a well-structured DOM + custom properties replaced a lot of image-swap logic), then the Three.js globe with performance guardrails (IntersectionObserver to pause off-screen, `visibilitychange` for hidden tabs, adaptive geometry, `pixelRatio` cap, static fallback for reduced motion).
 
-Alpine.js became the app's brain — one `slurpApp()` component handles cart, custom plate builder, store locator, menu filtering, splash overlay, mobile nav, gift flow, support FAQ, and checkout. Accessibility was baked in from the start: skip link, splash dialog with focus management, `aria-pressed` on builder chips, `prefers-reduced-motion` disabling splash/globe/steam animations, semantic landmarks, lazy-loaded images with explicit dimensions.
+Alpine.js became the app's brain — one `slurpApp()` component handles cart, custom plate builder, store locator, menu filtering, splash overlay, mobile nav, gift flow, support FAQ, and checkout. I baked accessibility in from the start: skip link, splash dialog with focus management, `aria-pressed` on builder chips, `prefers-reduced-motion` disabling splash/globe/steam animations, semantic landmarks, lazy-loaded images with explicit dimensions.
 
 Later passes added **Slurp Support** — contact cards, accordion FAQ, peacock show-more, quick links — and tightened the **Gift a Bowl** pickers. Nested `@click.outside` handlers were closing delivery-location and preset-message dropdowns before you could pick an option; scoping each picker (and `@click.stop` on the search inputs) fixed it, and a clearer `giftPresetItem` getter made the preset dropdown label behave.
 
 The desktop upper nav got a full polish pass: frosted-glass bar, pill-shaped link track with grouped dividers, orange-gradient active states, and a scroll-progress bar. That redesign surfaced an Alpine gotcha — `x-for` with multiple root nodes (divider span + link) only rendered the dividers. Wrapping each iteration in a single `.site-nav__item` fixed it, along with contrast, hover, and overflow tweaks at the 1024px breakpoint.
 
-For the blog demos I built a three-step voiceover pipeline in-repo: **capture** — Playwright records the desktop click tour and writes an interaction timeline JSON (`scripts/capture-interaction-tour.py`); **plan** — Arka/vLLM reads that timeline plus segment MP3 lengths and assigns cue start times so narration lands on each on-screen action at 1× pace with no overlap (`scripts/plan-interaction-voiceover.py`); **merge** — sixteen TTS segments are muxed onto the raw webm, extending the last frame if voice runs past the capture (`scripts/merge-interaction-tour.py`). Scroll demo and section screenshots come from `scripts/capture-blog-assets.py`. Keeps the post reproducible without re-recording by hand.
+For the blog demos I built a reproducible voiceover pipeline in-repo:
+
+1. **Capture** — `scripts/capture-interaction-tour.py` records the desktop click tour and writes interaction timeline JSON
+2. **Plan** — `scripts/plan-interaction-voiceover.py` sends the timeline plus segment MP3 lengths to Arka/vLLM, which assigns cue start times so narration lands on each on-screen action at 1× pace with no overlap
+3. **Merge** — `scripts/merge-interaction-tour.py` muxes sixteen TTS segments onto the raw webm, extending the last frame if voice runs past the capture
+
+Scroll demo and section screenshots come from `scripts/capture-blog-assets.py`. The whole thing stays reproducible without re-recording by hand.
 
 ### How responsivity is designed
 
-Responsivity on SLURP! is not a bolted-on `@media` pass at the end — it's baked into navigation, layout grids, scroll behavior, and motion from the start. The page uses Tailwind's default breakpoints (`sm` 640px, `md` 768px, `lg` 1024px, `xl` 1280px), but the **primary split is `lg` (1024px)**: below that you're in touch-first mode; above it you're in desktop mode.
+Responsivity on SLURP! is not a bolted-on `@media` pass at the end — I designed it into navigation, layout grids, scroll behavior, and motion from the start. The page uses Tailwind's default breakpoints (`sm` 640px, `md` 768px, `lg` 1024px, `xl` 1280px), but the **primary split is `lg` (1024px)**: below that you're in touch-first mode; above it you're in desktop mode.
 
 ![Mobile layout — bottom tab bar and frosted header (390×844)](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/mobile-nav.png)
 
@@ -207,6 +213,7 @@ The CollectUI-style flow uses a **floating checkout bar** when items are in cart
 - Progressive enhancement for motion and WebGL — fun features that don't punish users who prefer reduced motion or lack WebGL
 - **Slurp Support** — contact cards and FAQ that feel on-brand, not a generic help-desk widget pasted onto a landing page
 - The desktop nav — frosted glass, pill track, scroll progress, and a real Alpine `x-for` debugging story
+- The voiceover pipeline — reproducible capture → vLLM cue planning → merge, all at 1× with no overlapping narration
 - Shipping everything in one file you can open locally without explaining npm
 
 ### What I learned
@@ -218,6 +225,8 @@ The CollectUI-style flow uses a **floating checkout bar** when items are in cart
 **Constraints spark creativity.** "Comfort food" pushed me toward warmth and interactivity instead of a generic SaaS layout.
 
 **Single-file projects are underrated.** For a challenge submission or portfolio piece, one `index.html` felt like a superpower.
+
+**Timing narration to UI is a pipeline problem.** Splitting capture, cue planning, and merge into separate scripts made the ~111s tour reproducible — and vLLM cue assignment beat hand-editing timestamps.
 
 ### What's next?
 
