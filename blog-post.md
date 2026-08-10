@@ -57,8 +57,6 @@ I recorded a **~111s desktop walkthrough** (111.1s) — narrated clicks through 
   <a href="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-tour.mp4">Watch interaction tour (MP4)</a>
 </video>
 
-I synced narration to on-screen actions with a three-step pipeline: Playwright captures the click tour and writes an interaction timeline JSON; Arka/vLLM reads that timeline plus segment MP3 lengths and assigns cue start times at **1× pace** with no overlap; sixteen TTS segments get muxed onto the raw webm, extending the last frame if voice runs past the capture. Voice is baked into the MP4 above — segments never overlap and are never sped up.
-
 **Interactions demonstrated:**
 
 1. **Hero splash** — `TRY AND CATCH THIS!` triggers the SVG/CSS splatter overlay; dismiss with *Wipe Screen & Place Order*
@@ -68,8 +66,6 @@ I synced narration to on-screen actions with a three-step pipeline: Playwright c
 5. **Gift pickers** — searchable delivery-location and preset-message dropdowns with live card preview
 6. **Support FAQ** — accordion expand + peacock show-more for hidden questions
 7. **Checkout** — cart summary after items are added
-
-Voiceover script and cue timestamps: [`assets/blog/interaction-voiceover-script.md`](https://github.com/Sumit884-byte/tasty_noodles/blob/main/assets/blog/interaction-voiceover-script.md) · vLLM-planned cues in [`assets/blog/interaction-voiceover-planned-cues.json`](https://github.com/Sumit884-byte/tasty_noodles/blob/main/assets/blog/interaction-voiceover-planned-cues.json) · merged segment sheet in [`assets/blog/interaction-voiceover-cues.json`](https://github.com/Sumit884-byte/tasty_noodles/blob/main/assets/blog/interaction-voiceover-cues.json)
 
 **Screenshots** (hero through checkout — current layout):
 
@@ -118,27 +114,11 @@ Later passes added **Slurp Support** — contact cards, accordion FAQ, peacock s
 
 The desktop upper nav got a full polish pass: frosted-glass bar, pill-shaped link track with grouped dividers, orange-gradient active states, and a scroll-progress bar. That redesign surfaced an Alpine gotcha — `x-for` with multiple root nodes (divider span + link) only rendered the dividers. Wrapping each iteration in a single `.site-nav__item` fixed it, along with contrast, hover, and overflow tweaks at the 1024px breakpoint.
 
-For the blog demos I built a reproducible voiceover pipeline in-repo:
-
-1. **Capture** — `scripts/capture-interaction-tour.py` records the desktop click tour and writes interaction timeline JSON
-2. **Plan** — `scripts/plan-interaction-voiceover.py` sends the timeline plus segment MP3 lengths to Arka/vLLM, which assigns cue start times so narration lands on each on-screen action at 1× pace with no overlap
-3. **Merge** — `scripts/merge-interaction-tour.py` muxes sixteen TTS segments onto the raw webm, extending the last frame if voice runs past the capture
-
-Scroll demo and section screenshots come from `scripts/capture-blog-assets.py`. The whole thing stays reproducible without re-recording by hand.
-
 ### How responsivity is designed
 
 Responsivity on SLURP! is not a bolted-on `@media` pass at the end — I designed it into navigation, layout grids, scroll behavior, and motion from the start. The page uses Tailwind's default breakpoints (`sm` 640px, `md` 768px, `lg` 1024px, `xl` 1280px), but the **primary split is `lg` (1024px)**: below that you're in touch-first mode; above it you're in desktop mode.
 
 ![Mobile layout — bottom tab bar and frosted header (390×844)](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog-sections/mobile-nav.png)
-
-**Listen:** [Responsivity walkthrough (~96s)](https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/responsivity-voiceover.mp3)
-
-<audio controls src="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/responsivity-voiceover.mp3">
-  Your browser does not support the audio element. <a href="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/responsivity-voiceover.mp3">Download the voiceover</a>.
-</audio>
-
-Responsivity script: [`assets/blog/responsivity-voiceover-script.md`](https://github.com/Sumit884-byte/tasty_noodles/blob/main/assets/blog/responsivity-voiceover-script.md)
 
 #### Navigation: bottom tabs vs pill track
 
@@ -213,7 +193,6 @@ The CollectUI-style flow uses a **floating checkout bar** when items are in cart
 - Progressive enhancement for motion and WebGL — fun features that don't punish users who prefer reduced motion or lack WebGL
 - **Slurp Support** — contact cards and FAQ that feel on-brand, not a generic help-desk widget pasted onto a landing page
 - The desktop nav — frosted glass, pill track, scroll progress, and a real Alpine `x-for` debugging story
-- The voiceover pipeline — reproducible capture → vLLM cue planning → merge, all at 1× with no overlapping narration
 - Shipping everything in one file you can open locally without explaining npm
 
 ### What I learned
@@ -225,8 +204,6 @@ The CollectUI-style flow uses a **floating checkout bar** when items are in cart
 **Constraints spark creativity.** "Comfort food" pushed me toward warmth and interactivity instead of a generic SaaS layout.
 
 **Single-file projects are underrated.** For a challenge submission or portfolio piece, one `index.html` felt like a superpower.
-
-**Timing narration to UI is a pipeline problem.** Splitting capture, cue planning, and merge into separate scripts made the ~111s tour reproducible — and vLLM cue assignment beat hand-editing timestamps.
 
 ### What's next?
 
