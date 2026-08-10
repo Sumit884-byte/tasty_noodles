@@ -51,7 +51,7 @@ Click **TRY AND CATCH THIS!** on the hero — that's the centerpiece interaction
 
 ### Interaction tour (with voiceover)
 
-**~93s desktop walkthrough** — narrated clicks through the main Alpine.js interactions (hero splash, nav scroll-spy, peacock show-more, bowl builder, gift pickers, FAQ accordion, checkout):
+**~111s desktop walkthrough** — narrated clicks through the main Alpine.js interactions (hero splash, nav scroll-spy, peacock show-more, bowl builder, gift pickers, FAQ accordion, checkout):
 
 <video controls width="100%" src="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-tour.mp4">
   <a href="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-tour.mp4">Watch interaction tour (MP4)</a>

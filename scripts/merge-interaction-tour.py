@@ -79,28 +79,19 @@ def probe_duration(path: Path) -> float:
 
 
 MIN_GAP_MS = 250  # silence between voiceover segments
-MAX_ATEMPO = 1.2  # modest speed-up cap; overflow handled via sequential scheduling + video padding
+MAX_ATEMPO = 1.0  # never speed up voice — extend video via tpad instead
 
 
 def schedule_segments(cues: list[dict], segments: list[dict], video_duration: float) -> list[dict]:
-    """Place clips on cue times; apply modest atempo when needed, else defer via sequential start."""
+    """Place clips at cue times; defer via sequential start when needed — never compress with atempo."""
     scheduled: list[dict] = []
     prev_end_ms = 0
-    video_end_ms = int(video_duration * 1000)
 
-    for i, (cue, seg) in enumerate(zip(cues, segments)):
+    for cue, seg in zip(cues, segments):
         path = Path(seg["path"])
         raw_duration_ms = int(probe_duration(path) * 1000)
         start_ms = max(cue["start_ms"], prev_end_ms + (MIN_GAP_MS if scheduled else 0))
-
-        next_boundary_ms = cues[i + 1]["start_ms"] if i + 1 < len(cues) else video_end_ms
-        max_duration_ms = max(next_boundary_ms - MIN_GAP_MS - start_ms, 400)
-
-        if raw_duration_ms > max_duration_ms:
-            atempo = min(raw_duration_ms / max_duration_ms, MAX_ATEMPO)
-        else:
-            atempo = 1.0
-        duration_ms = int(raw_duration_ms / atempo)
+        duration_ms = raw_duration_ms
 
         scheduled.append(
             {
@@ -109,7 +100,7 @@ def schedule_segments(cues: list[dict], segments: list[dict], video_duration: fl
                 "cue_start_ms": cue["start_ms"],
                 "duration_ms": duration_ms,
                 "raw_duration_ms": raw_duration_ms,
-                "atempo": round(atempo, 3),
+                "atempo": 1.0,
             }
         )
         prev_end_ms = start_ms + duration_ms
@@ -140,11 +131,15 @@ def print_schedule_table(scheduled: list[dict]) -> None:
             print(f"  ⚠ gap {gap}ms < MIN_GAP_MS ({MIN_GAP_MS}ms)")
         prev_end = end
     total_s = scheduled[-1]["start_ms"] + scheduled[-1]["duration_ms"]
+    max_atempo = max(seg["atempo"] for seg in scheduled)
     print(f"\nTotal voiceover: {total_s/1000:.1f}s")
+    print(f"Max atempo used: {max_atempo:.3f}")
     if overlaps:
         print(f"ERROR: {overlaps} overlapping segment(s)")
     else:
         print("No segment overlaps.")
+    if max_atempo > 1.001:
+        print(f"ERROR: atempo exceeded MAX_ATEMPO ({MAX_ATEMPO})")
 
 
 def extend_video_to_duration(src: Path, dst: Path, target_duration: float) -> None:
@@ -166,7 +161,7 @@ def extend_video_to_duration(src: Path, dst: Path, target_duration: float) -> No
     ])
 
 
-def merge_audio(segments: list[dict], video_duration: float) -> tuple[Path, float]:
+def merge_audio(segments: list[dict], video_duration: float) -> tuple[Path, float, list[dict]]:
     scheduled = schedule_segments(CUES, segments, video_duration)
     print_schedule_table(scheduled)
     total_ms = scheduled[-1]["start_ms"] + scheduled[-1]["duration_ms"]
@@ -182,16 +177,9 @@ def merge_audio(segments: list[dict], video_duration: float) -> tuple[Path, floa
         inputs.extend(["-i", seg["path"]])
         delay = seg["start_ms"]
         label = f"a{i}"
-        tempo = seg["atempo"]
-        if tempo > 1.001:
-            filter_parts.append(
-                f"[{i}:a]atempo={tempo},adelay={delay}|{delay},"
-                f"apad=pad_dur={audio_duration}[{label}]"
-            )
-        else:
-            filter_parts.append(
-                f"[{i}:a]adelay={delay}|{delay},apad=pad_dur={audio_duration}[{label}]"
-            )
+        filter_parts.append(
+            f"[{i}:a]adelay={delay}|{delay},apad=pad_dur={audio_duration}[{label}]"
+        )
         mix_inputs.append(f"[{label}]")
 
     n = len(scheduled)
@@ -229,7 +217,7 @@ def merge_audio(segments: list[dict], video_duration: float) -> tuple[Path, floa
         ),
         encoding="utf-8",
     )
-    return OUT_MP3, audio_duration
+    return OUT_MP3, audio_duration, scheduled
 
 
 def merge_video_audio() -> None:
@@ -240,11 +228,17 @@ def merge_video_audio() -> None:
     print(f"Raw video duration: {duration:.1f}s")
 
     segments = generate_segments()
-    _, audio_duration = merge_audio(segments, duration)
+    _, audio_duration, scheduled = merge_audio(segments, duration)
 
     padded_video = ASSETS / "interaction-tour-padded.webm"
     extend_video_to_duration(RAW_VIDEO, padded_video, audio_duration)
+    pad_s = max(0.0, audio_duration - duration)
     print(f"Voiceover duration: {audio_duration:.1f}s")
+    if pad_s > 1.0:
+        print(
+            f"Note: video extended {pad_s:.1f}s via tpad (holds last checkout frame). "
+            "Re-capture with longer tail in capture-interaction-tour.py if static hold is too long."
+        )
 
     run([
         "ffmpeg", "-y",
@@ -265,10 +259,13 @@ def merge_video_audio() -> None:
         str(OUT_WEBM),
     ])
 
+    final_duration = probe_duration(OUT_MP4)
+    max_atempo = max(seg["atempo"] for seg in scheduled)
     print(f"\nSaved composite video:")
-    print(f"  {OUT_MP4} ({OUT_MP4.stat().st_size // 1024} KB)")
+    print(f"  {OUT_MP4} ({OUT_MP4.stat().st_size // 1024} KB, {final_duration:.1f}s)")
     print(f"  {OUT_WEBM} ({OUT_WEBM.stat().st_size // 1024} KB)")
     print(f"  {OUT_MP3} ({OUT_MP3.stat().st_size // 1024} KB)")
+    print(f"\nVerification: ffprobe duration={final_duration:.1f}s, max atempo={max_atempo:.3f}, voice 1x={'yes' if max_atempo <= 1.001 else 'NO'}")
 
 
 def write_plain_text() -> None:

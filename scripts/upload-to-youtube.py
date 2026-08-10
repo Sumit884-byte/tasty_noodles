@@ -37,7 +37,7 @@ DESCRIPTION = """A narrated walkthrough of SLURP! — Tastiest Noodles on the Pl
 📦 Source code: https://github.com/Sumit884-byte/tasty_noodles
 🏆 Challenge: https://dev.to/challenges/frontend-2026-07-29
 
-What's covered in this ~93s tour:
+What's covered in this ~111s tour:
 • Hero splash — SVG/CSS noodle splatter animation
 • Desktop nav — frosted pill track with scroll-spy
 • Peacock show-more — menu vault expands in place

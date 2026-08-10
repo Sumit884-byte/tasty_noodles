@@ -1,6 +1,6 @@
 # Interaction Tour Voiceover Script
 
-**Target length:** ~59 seconds (synced to `interaction-tour.mp4`)  
+**Target length:** ~111 seconds (natural 1x TTS pace; video padded via tpad when narration runs long)  
 **Tone:** DEV challenge walkthrough — narrate each click as it happens on screen  
 **Sync approach:** Per-segment TTS clips merged onto video with ffmpeg `adelay` (Option C)
 
