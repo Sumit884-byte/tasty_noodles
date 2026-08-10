@@ -2,7 +2,32 @@
 
 **Target length:** ~111 seconds (natural 1x TTS pace; video padded via tpad when narration runs long)  
 **Tone:** DEV challenge walkthrough — narrate each click as it happens on screen  
-**Sync approach:** Per-segment TTS clips merged onto video with ffmpeg `adelay` (Option C)
+**Sync approach:** Interaction timeline → vLLM/heuristic cue planner → per-segment TTS merged with ffmpeg `adelay`
+
+---
+
+## Pipeline
+
+```bash
+# 1. Record timed clicks + interaction timeline JSON
+python3 scripts/capture-interaction-tour.py
+# → assets/blog/interaction-tour-raw.webm
+# → assets/blog/interaction-tour-timeline.json
+
+# 2. Plan cue start times (vLLM via Arka, or --no-llm heuristic)
+python3 scripts/plan-interaction-voiceover.py
+# → assets/blog/interaction-voiceover-planned-cues.json
+
+# 3. Generate TTS segments + merge video + voiceover
+python3 scripts/merge-interaction-tour.py
+# → assets/blog/interaction-tour.mp4 + interaction-tour.webm
+```
+
+**vLLM:** Uses Arka `llm_complete` with `vllm-cloud/gpt-oss:20b` when configured (`VLLM_CLOUD_URL`, `VLLM_CLOUD_API_KEY`). Falls back to anchor-based heuristic if LLM is unavailable.
+
+**Heuristic-only:** `python3 scripts/plan-interaction-voiceover.py --no-llm`
+
+If no timeline JSON exists yet, the planner derives event times from capture script delays.
 
 ---
 
@@ -31,9 +56,12 @@
 
 ## Recording notes
 
-**Video:** `python3 scripts/capture-interaction-tour.py` → `assets/blog/interaction-tour-raw.webm`  
-**Audio:** Segment files in `assets/blog/interaction-voiceover-segments/` via macOS `say`  
+**Video:** `python3 scripts/capture-interaction-tour.py` → `interaction-tour-raw.webm` + `interaction-tour-timeline.json`  
+**Plan:** `python3 scripts/plan-interaction-voiceover.py` → `interaction-voiceover-planned-cues.json`  
+**Audio:** Segment files in `interaction-voiceover-segments/` via macOS `say`  
 **Merge:** `python3 scripts/merge-interaction-tour.py` → `interaction-tour.mp4` + `interaction-tour.webm`
+
+Voice stays at 1x (`MAX_ATEMPO=1.0`). When narration exceeds raw video length, the merge step pads the last frame via ffmpeg `tpad`. Re-run capture with longer section holds if the static tail is too long.
 
 Regenerate a single segment:
 

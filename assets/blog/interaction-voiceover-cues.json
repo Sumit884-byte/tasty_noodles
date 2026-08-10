@@ -11,7 +11,7 @@
   {
     "id": "02-hero-catch",
     "start_ms": 6443,
-    "cue_start_ms": 3500,
+    "cue_start_ms": 6443,
     "duration_ms": 8733,
     "raw_duration_ms": 8733,
     "atempo": 1.0,
@@ -20,7 +20,7 @@
   {
     "id": "03-splash",
     "start_ms": 15426,
-    "cue_start_ms": 11000,
+    "cue_start_ms": 15426,
     "duration_ms": 7999,
     "raw_duration_ms": 7999,
     "atempo": 1.0,
@@ -29,7 +29,7 @@
   {
     "id": "04-nav",
     "start_ms": 23675,
-    "cue_start_ms": 15000,
+    "cue_start_ms": 23675,
     "duration_ms": 6786,
     "raw_duration_ms": 6786,
     "atempo": 1.0,
@@ -38,7 +38,7 @@
   {
     "id": "05-menu-nav",
     "start_ms": 30711,
-    "cue_start_ms": 19000,
+    "cue_start_ms": 30711,
     "duration_ms": 6977,
     "raw_duration_ms": 6977,
     "atempo": 1.0,
@@ -47,7 +47,7 @@
   {
     "id": "06-peacock-menu",
     "start_ms": 37938,
-    "cue_start_ms": 24000,
+    "cue_start_ms": 37938,
     "duration_ms": 7192,
     "raw_duration_ms": 7192,
     "atempo": 1.0,
@@ -56,7 +56,7 @@
   {
     "id": "07-build-nav",
     "start_ms": 45380,
-    "cue_start_ms": 27000,
+    "cue_start_ms": 45380,
     "duration_ms": 8249,
     "raw_duration_ms": 8249,
     "atempo": 1.0,
@@ -65,7 +65,7 @@
   {
     "id": "08-build-chips",
     "start_ms": 53879,
-    "cue_start_ms": 30000,
+    "cue_start_ms": 53879,
     "duration_ms": 6361,
     "raw_duration_ms": 6361,
     "atempo": 1.0,
@@ -74,7 +74,7 @@
   {
     "id": "09-lock-plate",
     "start_ms": 60490,
-    "cue_start_ms": 33000,
+    "cue_start_ms": 60490,
     "duration_ms": 5206,
     "raw_duration_ms": 5206,
     "atempo": 1.0,
@@ -83,7 +83,7 @@
   {
     "id": "10-buy-bowl",
     "start_ms": 65946,
-    "cue_start_ms": 36000,
+    "cue_start_ms": 65946,
     "duration_ms": 3619,
     "raw_duration_ms": 3619,
     "atempo": 1.0,
@@ -92,7 +92,7 @@
   {
     "id": "11-gift-intro",
     "start_ms": 69815,
-    "cue_start_ms": 39000,
+    "cue_start_ms": 69815,
     "duration_ms": 7668,
     "raw_duration_ms": 7668,
     "atempo": 1.0,
@@ -101,7 +101,7 @@
   {
     "id": "12-gift-location",
     "start_ms": 77733,
-    "cue_start_ms": 42000,
+    "cue_start_ms": 77733,
     "duration_ms": 5312,
     "raw_duration_ms": 5312,
     "atempo": 1.0,
@@ -110,7 +110,7 @@
   {
     "id": "13-gift-preset",
     "start_ms": 83295,
-    "cue_start_ms": 45000,
+    "cue_start_ms": 83295,
     "duration_ms": 4554,
     "raw_duration_ms": 4554,
     "atempo": 1.0,
@@ -119,7 +119,7 @@
   {
     "id": "14-support-faq",
     "start_ms": 88099,
-    "cue_start_ms": 50000,
+    "cue_start_ms": 88099,
     "duration_ms": 6342,
     "raw_duration_ms": 6342,
     "atempo": 1.0,
@@ -128,7 +128,7 @@
   {
     "id": "15-support-more",
     "start_ms": 94691,
-    "cue_start_ms": 53000,
+    "cue_start_ms": 94691,
     "duration_ms": 6388,
     "raw_duration_ms": 6388,
     "atempo": 1.0,
@@ -137,7 +137,7 @@
   {
     "id": "16-checkout",
     "start_ms": 101329,
-    "cue_start_ms": 56000,
+    "cue_start_ms": 101329,
     "duration_ms": 9639,
     "raw_duration_ms": 9639,
     "atempo": 1.0,

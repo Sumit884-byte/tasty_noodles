@@ -17,9 +17,10 @@ OUT_MP4 = ASSETS / "interaction-tour.mp4"
 OUT_WEBM = ASSETS / "interaction-tour.webm"
 OUT_MP3 = ASSETS / "interaction-voiceover.mp3"
 CUES_FILE = ASSETS / "interaction-voiceover-cues.json"
+PLANNED_CUES_FILE = ASSETS / "interaction-voiceover-planned-cues.json"
 
-# Timestamps (ms) aligned to ~59s capture-interaction-tour.py pacing.
-CUES = [
+# Fallback timestamps when no planned-cues JSON exists (from plan-interaction-voiceover.py).
+DEFAULT_CUES = [
     {"id": "01-intro", "start_ms": 0, "text": "Welcome to SLURP! Every major interaction on this page is wired with Alpine.js — let's click through the highlights."},
     {"id": "02-hero-catch", "start_ms": 3500, "text": "First up: the hero dare. Tap the catch button and Chef Marco throws a full SVG splash at your screen — smears, strands, garnishes, the works."},
     {"id": "03-splash", "start_ms": 11000, "text": "Pure CSS and SVG keyframes, with JavaScript seeding random extra noodle strands on each replay. Close the modal when you're done getting roasted."},
@@ -39,16 +40,28 @@ CUES = [
 ]
 
 
+def load_cues() -> list[dict]:
+    """Load cue sheet from planned JSON or fall back to embedded defaults."""
+    if PLANNED_CUES_FILE.exists():
+        data = json.loads(PLANNED_CUES_FILE.read_text(encoding="utf-8"))
+        cues = data.get("cues") if isinstance(data, dict) else data
+        if isinstance(cues, list) and cues:
+            print(f"Using planned cues: {PLANNED_CUES_FILE} (planner={data.get('planner', '?')})")
+            return [{"id": c["id"], "start_ms": c["start_ms"], "text": c["text"]} for c in cues]
+    print(f"No {PLANNED_CUES_FILE.name} — using embedded DEFAULT_CUES")
+    return list(DEFAULT_CUES)
+
+
 def run(cmd: list[str]) -> None:
     print("$", " ".join(cmd))
     subprocess.run(cmd, check=True)
 
 
-def generate_segments() -> list[dict]:
+def generate_segments(cues: list[dict]) -> list[dict]:
     SEG_DIR.mkdir(parents=True, exist_ok=True)
     segments: list[dict] = []
 
-    for cue in CUES:
+    for cue in cues:
         aiff = SEG_DIR / f"{cue['id']}.aiff"
         mp3 = SEG_DIR / f"{cue['id']}.mp3"
         txt = SEG_DIR / f"{cue['id']}.txt"
@@ -161,8 +174,8 @@ def extend_video_to_duration(src: Path, dst: Path, target_duration: float) -> No
     ])
 
 
-def merge_audio(segments: list[dict], video_duration: float) -> tuple[Path, float, list[dict]]:
-    scheduled = schedule_segments(CUES, segments, video_duration)
+def merge_audio(cues: list[dict], segments: list[dict], video_duration: float) -> tuple[Path, float, list[dict]]:
+    scheduled = schedule_segments(cues, segments, video_duration)
     print_schedule_table(scheduled)
     total_ms = scheduled[-1]["start_ms"] + scheduled[-1]["duration_ms"]
     audio_duration = max(video_duration, total_ms / 1000 + 0.15)
@@ -224,11 +237,12 @@ def merge_video_audio() -> None:
     if not RAW_VIDEO.exists():
         raise FileNotFoundError(f"Missing raw video: {RAW_VIDEO}. Run capture-interaction-tour.py first.")
 
+    cues = load_cues()
     duration = probe_duration(RAW_VIDEO)
     print(f"Raw video duration: {duration:.1f}s")
 
-    segments = generate_segments()
-    _, audio_duration, scheduled = merge_audio(segments, duration)
+    segments = generate_segments(cues)
+    _, audio_duration, scheduled = merge_audio(cues, segments, duration)
 
     padded_video = ASSETS / "interaction-tour-padded.webm"
     extend_video_to_duration(RAW_VIDEO, padded_video, audio_duration)
@@ -268,13 +282,14 @@ def merge_video_audio() -> None:
     print(f"\nVerification: ffprobe duration={final_duration:.1f}s, max atempo={max_atempo:.3f}, voice 1x={'yes' if max_atempo <= 1.001 else 'NO'}")
 
 
-def write_plain_text() -> None:
-    blocks = [c["text"] for c in CUES]
+def write_plain_text(cues: list[dict]) -> None:
+    blocks = [c["text"] for c in cues]
     (ASSETS / "interaction-voiceover-plain.txt").write_text("\n\n".join(blocks) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":
-    write_plain_text()
+    cues = load_cues()
+    write_plain_text(cues)
     try:
         merge_video_audio()
     except FileNotFoundError as exc:
