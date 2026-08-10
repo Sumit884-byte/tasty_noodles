@@ -55,7 +55,7 @@ def generate_segments() -> list[dict]:
         txt.write_text(cue["text"], encoding="utf-8")
 
         if not mp3.exists() or mp3.stat().st_mtime < txt.stat().st_mtime:
-            run(["say", "-v", "Samantha", "-r", "180", "-o", str(aiff), "-f", str(txt)])
+            run(["say", "-v", "Samantha", "-r", "190", "-o", str(aiff), "-f", str(txt)])
             run([
                 "ffmpeg", "-y", "-i", str(aiff),
                 "-codec:a", "libmp3lame", "-qscale:a", "2",
@@ -78,11 +78,12 @@ def probe_duration(path: Path) -> float:
     return float(out)
 
 
-MIN_GAP_MS = 200  # silence between voiceover segments
+MIN_GAP_MS = 250  # silence between voiceover segments
+MAX_ATEMPO = 1.2  # modest speed-up cap; overflow handled via sequential scheduling + video padding
 
 
 def schedule_segments(cues: list[dict], segments: list[dict], video_duration: float) -> list[dict]:
-    """Place clips on cue times; speed up (atempo) if a clip would overlap the next."""
+    """Place clips on cue times; apply modest atempo when needed, else defer via sequential start."""
     scheduled: list[dict] = []
     prev_end_ms = 0
     video_end_ms = int(video_duration * 1000)
@@ -96,11 +97,10 @@ def schedule_segments(cues: list[dict], segments: list[dict], video_duration: fl
         max_duration_ms = max(next_boundary_ms - MIN_GAP_MS - start_ms, 400)
 
         if raw_duration_ms > max_duration_ms:
-            atempo = min(raw_duration_ms / max_duration_ms, 1.8)
-            duration_ms = int(raw_duration_ms / atempo)
+            atempo = min(raw_duration_ms / max_duration_ms, MAX_ATEMPO)
         else:
             atempo = 1.0
-            duration_ms = raw_duration_ms
+        duration_ms = int(raw_duration_ms / atempo)
 
         scheduled.append(
             {
@@ -115,6 +115,36 @@ def schedule_segments(cues: list[dict], segments: list[dict], video_duration: fl
         prev_end_ms = start_ms + duration_ms
 
     return scheduled
+
+
+def print_schedule_table(scheduled: list[dict]) -> None:
+    """Print segment schedule and verify no overlaps."""
+    print("\nVoiceover schedule:")
+    print(f"{'ID':<18} {'start':>7} {'end':>7} {'dur':>6} {'atempo':>6} {'cue':>7} {'shift':>6}")
+    print("-" * 62)
+    prev_end = 0
+    overlaps = 0
+    for seg in scheduled:
+        start = seg["start_ms"]
+        end = start + seg["duration_ms"]
+        shift = start - seg["cue_start_ms"]
+        gap = start - prev_end if prev_end else 0
+        if prev_end and start < prev_end:
+            overlaps += 1
+        print(
+            f"{seg['id']:<18} {start/1000:>6.1f}s {end/1000:>6.1f}s "
+            f"{seg['duration_ms']/1000:>5.1f}s {seg['atempo']:>6.3f} "
+            f"{seg['cue_start_ms']/1000:>6.1f}s {shift/1000:>+5.1f}s"
+        )
+        if prev_end and gap < MIN_GAP_MS - 1:
+            print(f"  ⚠ gap {gap}ms < MIN_GAP_MS ({MIN_GAP_MS}ms)")
+        prev_end = end
+    total_s = scheduled[-1]["start_ms"] + scheduled[-1]["duration_ms"]
+    print(f"\nTotal voiceover: {total_s/1000:.1f}s")
+    if overlaps:
+        print(f"ERROR: {overlaps} overlapping segment(s)")
+    else:
+        print("No segment overlaps.")
 
 
 def extend_video_to_duration(src: Path, dst: Path, target_duration: float) -> None:
@@ -138,6 +168,7 @@ def extend_video_to_duration(src: Path, dst: Path, target_duration: float) -> No
 
 def merge_audio(segments: list[dict], video_duration: float) -> tuple[Path, float]:
     scheduled = schedule_segments(CUES, segments, video_duration)
+    print_schedule_table(scheduled)
     total_ms = scheduled[-1]["start_ms"] + scheduled[-1]["duration_ms"]
     audio_duration = max(video_duration, total_ms / 1000 + 0.15)
 

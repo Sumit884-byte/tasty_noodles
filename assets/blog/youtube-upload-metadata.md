@@ -1,6 +1,6 @@
 # YouTube upload — SLURP! interaction tour
 
-**Video file:** `assets/blog/interaction-tour.mp4` (~59s, 4.5 MB, H.264 with synced voiceover)
+**Video file:** `assets/blog/interaction-tour.mp4` (~93s, 5.3 MB, H.264 with synced voiceover)
 
 **Fallback (scroll-only, no voiceover):** `assets/blog-scroll-demo.mp4` (~50s)
 
@@ -21,7 +21,7 @@ A narrated walkthrough of SLURP! — Tastiest Noodles on the Planet, my submissi
 📦 Source code: https://github.com/Sumit884-byte/tasty_noodles
 🏆 Challenge: https://dev.to/challenges/frontend-2026-07-29
 
-What's covered in this ~59s tour:
+What's covered in this ~93s tour:
 • Hero splash — SVG/CSS noodle splatter animation
 • Desktop nav — frosted pill track with scroll-spy
 • Peacock show-more — menu vault expands in place
