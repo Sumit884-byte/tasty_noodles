@@ -51,13 +51,13 @@ Click **TRY AND CATCH THIS!** on the hero — that's the centerpiece interaction
 
 ### Interaction tour (with voiceover)
 
-**~111s desktop walkthrough** — narrated clicks through the main Alpine.js interactions (hero splash, nav scroll-spy, peacock show-more, bowl builder, gift pickers, FAQ accordion, checkout):
+**~111s desktop walkthrough** (111.1s) — narrated clicks through the main Alpine.js interactions (hero splash, nav scroll-spy, peacock show-more, bowl builder, gift pickers, FAQ accordion, checkout):
 
 <video controls width="100%" src="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-tour.mp4">
   <a href="https://raw.githubusercontent.com/Sumit884-byte/tasty_noodles/main/assets/blog/interaction-tour.mp4">Watch interaction tour (MP4)</a>
 </video>
 
-Voiceover is synced into the video above (segments never overlap).
+Narration is synced via the Playwright interaction timeline and a vLLM cue planner (Arka) — voice is baked into the MP4 above at 1× pace; segments never overlap and are never sped up.
 
 **Interactions demonstrated:**
 
@@ -69,7 +69,7 @@ Voiceover is synced into the video above (segments never overlap).
 6. **Support FAQ** — accordion expand + peacock show-more for hidden questions
 7. **Checkout** — cart summary after items are added
 
-Voiceover script and cue timestamps: [`assets/blog/interaction-voiceover-script.md`](https://github.com/Sumit884-byte/tasty_noodles/blob/main/assets/blog/interaction-voiceover-script.md) · segmented audio + merge cues in [`assets/blog/interaction-voiceover-cues.json`](https://github.com/Sumit884-byte/tasty_noodles/blob/main/assets/blog/interaction-voiceover-cues.json)
+Voiceover script and cue timestamps: [`assets/blog/interaction-voiceover-script.md`](https://github.com/Sumit884-byte/tasty_noodles/blob/main/assets/blog/interaction-voiceover-script.md) · vLLM-planned cues in [`assets/blog/interaction-voiceover-planned-cues.json`](https://github.com/Sumit884-byte/tasty_noodles/blob/main/assets/blog/interaction-voiceover-planned-cues.json) · merged segment sheet in [`assets/blog/interaction-voiceover-cues.json`](https://github.com/Sumit884-byte/tasty_noodles/blob/main/assets/blog/interaction-voiceover-cues.json)
 
 **Screenshots** (hero through checkout — current layout):
 
@@ -118,7 +118,7 @@ Later passes added **Slurp Support** — contact cards, accordion FAQ, peacock s
 
 The desktop upper nav got a full polish pass: frosted-glass bar, pill-shaped link track with grouped dividers, orange-gradient active states, and a scroll-progress bar. That redesign surfaced an Alpine gotcha — `x-for` with multiple root nodes (divider span + link) only rendered the dividers. Wrapping each iteration in a single `.site-nav__item` fixed it, along with contrast, hover, and overflow tweaks at the 1024px breakpoint.
 
-For the blog demos I scripted the capture pipeline in-repo: Playwright scroll + interaction recordings (`scripts/capture-interaction-tour.py`), sixteen segmented voiceover clips merged to the tour track (`scripts/merge-interaction-tour.py`), and section screenshots via `scripts/capture-blog-assets.py`. Keeps the post reproducible without re-recording by hand.
+For the blog demos I built a three-step voiceover pipeline in-repo: **capture** — Playwright records the desktop click tour and writes an interaction timeline JSON (`scripts/capture-interaction-tour.py`); **plan** — Arka/vLLM reads that timeline plus segment MP3 lengths and assigns cue start times so narration lands on each on-screen action at 1× pace with no overlap (`scripts/plan-interaction-voiceover.py`); **merge** — sixteen TTS segments are muxed onto the raw webm, extending the last frame if voice runs past the capture (`scripts/merge-interaction-tour.py`). Scroll demo and section screenshots come from `scripts/capture-blog-assets.py`. Keeps the post reproducible without re-recording by hand.
 
 ### How responsivity is designed
 
